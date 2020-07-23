@@ -3,7 +3,7 @@
 # Kenneth John Mighell
 # Kepler Support Scientist
 # Kepler / K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
 
 
 def mkpy3_finder_chart_image_show_v1(\
@@ -41,7 +41,7 @@ Returns: nothing
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
     """    
     from astropy.visualization import ImageNormalize, PercentileInterval, SqrtStretch
     #
