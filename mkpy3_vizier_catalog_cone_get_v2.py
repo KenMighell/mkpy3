@@ -3,7 +3,7 @@
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
 
 
 def mkpy3_vizier_catalog_cone_get_v2(  
@@ -47,8 +47,7 @@ vizier_catalog_result :
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
-# kenneth.j.mighell@nasa.gov / kmighell@seti.org
+# NASA Ames Research Center / SETI Institute
     """
     version_ = 'xb'
     import numpy as np
