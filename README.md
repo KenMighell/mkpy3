@@ -27,6 +27,6 @@ the remaining blue squares show the sky background pixels.
 
 * The green X shows the only VSX (International Variable Star Index) variable object in this field (the target object).
 
-* The cyan plus signs mark GAIA DR2 stars in this field.
+* The cyan plus signs mark nearby GAIA DR2 stars in this field.
 
 
