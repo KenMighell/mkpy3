@@ -3,7 +3,7 @@
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
 
 
 def mkpy3_vizier_gaia_dr2_cone_get_v1(\
@@ -42,7 +42,7 @@ vizier_gaia_dr2_result :
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute   
+# NASA Ames Research Center / SETI Institute   
     """
     import mkpy3_vizier_catalog_cone_get_v2 as km1
     if (verbose is None): verbose = False
