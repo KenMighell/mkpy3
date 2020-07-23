@@ -3,7 +3,7 @@
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
 
 
 def mkpy3_tpf_get_coordinates_v1(tpf=None, cadence='all', recreate_bug=False):
@@ -37,7 +37,7 @@ dec : numpy array, same shape as tpf.flux[cadence]
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
 
 ORIGINAL CODE: BEGIN
 Call example:
