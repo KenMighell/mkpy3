@@ -3,7 +3,7 @@
 # Kenneth John Mighell
 # Kepler Support Scientist
 # Kepler / K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
 
 def mkpy3_finder_chart_survey_fits_image_get_v1(\
   ra_deg=None,
@@ -51,7 +51,7 @@ cframe :
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
     """
     import astropy.units as u
     from astropy.coordinates import SkyCoord
