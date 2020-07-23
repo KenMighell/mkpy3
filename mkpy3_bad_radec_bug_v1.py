@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+# Kenneth John Mighell
+# Kepler/K2 Support Scientist
+# Kepler/K2 Science Office
+# NASA Ames Research Center / SETI Institute
+
+
 def mkpy3_bad_radec_bug_v1(tpf=None, verbose=None):
     """
 Function : mkpy3_bad_radec_bug_v1()
@@ -21,7 +27,7 @@ bad_radec : bool
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
     """
     import numpy as np
     import os
