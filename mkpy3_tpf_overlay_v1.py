@@ -3,8 +3,8 @@
 # Kenneth John Mighell
 # Kepler Support Scientist
 # Kepler / K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
-# kenneth.j.mighell@nasa.gov / kmighell@seti.org"
+# NASA Ames Research Center / SETI Institute
+
 
 def mkpy3_tpf_overlay_v1():
     import matplotlib.pyplot as plt
