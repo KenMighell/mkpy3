@@ -18,7 +18,7 @@ should produce this plot:
 
 ![](mkpy3_plot_figa.png)
 
-* The finder chart is a 2 arcmin x 2 arcmin field from the 2MASS-J survey.
+* The finder chart is a 2 arcmin x 2 arcmin field from the 2MASS-J survey; bright stars are black and the faint background is light-grey/white.
 
 * The red squares show the target aperture pixels of this Kepler mission observation of the exoplanet Kepler-138b (KIC 7603200);
 the remaining blue squares show the sky background pixels.
