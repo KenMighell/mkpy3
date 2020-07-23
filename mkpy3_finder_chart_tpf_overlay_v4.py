@@ -3,8 +3,8 @@
 # Kenneth John Mighell
 # Kepler Support Scientist
 # Kepler / K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
-# kenneth.j.mighell@nasa.gov / kmighell@seti.org"
+# NASA Ames Research Center / SETI Institute
+
 
 def mkpy3_finder_chart_tpf_overlay_v4(
   ax=None,
@@ -38,7 +38,7 @@ Returns: nothing
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
     """
     version_ = 'xe' 
     #
