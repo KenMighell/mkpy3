@@ -3,7 +3,7 @@
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
 
 
 def mkpy3_tpf_plot_add_compass_rose_v1(\
@@ -71,7 +71,7 @@ plt.savefig('mkpy3_spud.png', bbox_inches="tight")
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
-# NASA Ames Reserch Center / SETI Institute
+# NASA Ames Research Center / SETI Institute
     """
     import matplotlib.pyplot as plt 
     import numpy as np
