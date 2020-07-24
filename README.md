@@ -8,7 +8,7 @@ NASA Ames Research Center / SETI Institute
 
 ---
 
-### Example
+### Example: Kepler observations of the exoplanet Kepler-138b
 
 The command
 <pre>
@@ -31,7 +31,7 @@ the remaining blue squares show the sky background pixels.
 
 ---
 
-### Example
+### Example: TESS observations of XZ Cyg (a RR Lyrae type variable star)
 
 The command
 <pre>
