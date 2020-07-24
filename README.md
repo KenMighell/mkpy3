@@ -43,11 +43,11 @@ should produce this plot:
 
 * The finder chart is a 6 arcmin x 6 arcmin field from the 2MASS-J near-infared survey; bright stars are black and the faint background is light-grey/white.
 
-* The blue squares show the target aperture pixels of this TESS mission observation (10x10 TESS FFI cutout) of RR Lyrae type variable star XZ Cyg.
+* The blue squares show the target aperture pixels of this TESS mission observation (10x10 TESS FFI cutout) of the RR Lyrae type variable star XZ Cyg.
 
 * The yellow circle shows the target of the observation (XZ Cyg).
 
-* The green X shows the only VSX (International Variable Star Index) variable object in this field (the target object).
+* The red X shows the only VSX (International Variable Star Index) variable object in this field (the target object).
 
 * The cyan circles mark nearby GAIA DR2 stars in this field.
 
