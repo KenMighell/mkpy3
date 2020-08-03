@@ -35,7 +35,7 @@ the remaining blue squares show the sky background pixels.
 
 The command
 <pre>
-python3 ./mkpy3_tess_tpf_overlay_v1.py
+python3 ./mkpy3_tess_tpf_overlay_v2.py
 </pre>
 should produce this plot:
 
