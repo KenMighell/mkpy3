@@ -6,7 +6,7 @@
 # NASA Ames Research Center / SETI Institute
 
 
-def mkpy3_tess_tpf_overlay_v1():
+def mkpy3_tess_tpf_overlay_v2():
     import matplotlib.pyplot as plt
     from astropy.coordinates import SkyCoord
     import astropy.units as u
@@ -20,7 +20,7 @@ def mkpy3_tess_tpf_overlay_v1():
     
     import mkpy3_finder_chart_survey_fits_image_get_v1 as km1
     import mkpy3_finder_chart_image_show_v1 as km2
-    import mkpy3_finder_chart_tpf_overlay_v4 as km3
+    import mkpy3_finder_chart_tpf_overlay_v5 as km3
     import mkpy3_vizier_vsx_cone_get_v1 as km4
     import mkpy3_vizier_gaia_dr2_cone_get_v1 as km5
 
@@ -64,7 +64,7 @@ def mkpy3_tess_tpf_overlay_v1():
     
     # show the TPF overlay                                                                                                                            
     frame = 0
-    km3.mkpy3_finder_chart_tpf_overlay_v4(ax=ax, survey_wcs=survey_wcs, \
+    km3.mkpy3_finder_chart_tpf_overlay_v5(ax=ax, survey_wcs=survey_wcs, \
       tpf=tpf, frame=frame, verbose=True)
     
     # put a yellow circle at the target position
@@ -135,6 +135,6 @@ pass#def
 
 
 if (__name__ == '__main__'):
-    mkpy3_tess_tpf_overlay_v1()
+    mkpy3_tess_tpf_overlay_v2()
 pass#if
 
