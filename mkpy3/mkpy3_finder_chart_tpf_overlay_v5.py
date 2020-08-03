@@ -6,15 +6,18 @@
 # NASA Ames Research Center / SETI Institute
 
 
-def mkpy3_finder_chart_tpf_overlay_v4(
+def mkpy3_finder_chart_tpf_overlay_v5(
   ax=None,
   survey_wcs=None,
   tpf=None,
   frame=None,
+  colors=[None,'cornflowerblue','red'],
+  lws=[0,3,4],
+  zorders=[0,1,2],
   verbose=None
 ):
     """
-Function: mkpy3_finder_chart_tpf_overlay_v4()
+Function: mkpy3_finder_chart_tpf_overlay_v5()
 
 Purpose: 
     
@@ -30,6 +33,12 @@ tpf : lightkurve tpf object (optional)
     a lightkurve object of a Kepler/K2/TESS Target Pixel File
 frame : int (optional)
     frame number of the Target Pixel File [starting at zero]
+colors : 3-item list of color names [Matplotlib] (optional)
+    Default: [None, 'cornflowerblue', 'red']
+lws : 3-item list of line widths [Matplotlib] (optional)
+    Default: [0,3,4]
+zorders : 3-item list of zorder values (ioptional)
+    Default: [0,1,2]
 verbose : bool (optional)
     if True, print extra information
 
@@ -40,7 +49,9 @@ Returns: nothing
 # Kepler/K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
-    version_ = 'xe' 
+    func_ = 'mkpy3_finder_chart_tpf_overlay_v5'
+    date_ = '2020AUG03'
+    version_ = 'xe'
     #
     import numpy as np
     import astropy.units as u
@@ -55,24 +66,22 @@ Returns: nothing
     if (verbose is None): verbose = False
     if (verbose):
         print(frame,'=frame')
+        print(colors,'=colors')
+        print(lws,'=lws')
+        print(zorders,'=zorders')
         print(verbose,'=verbose')
-        print()
         print(ntpath.basename(tpf.path),'<--- TPF filename')
         print(os.path.dirname(tpf.path),'<--- TPF dirname')
-        print()
     pass#if
     #
     # ===== add overlay to plot =====
     tpf_data = tpf.flux[frame]  # get frame data
     #
     # determine which pixels have data (not nans) or are in aperture mask
-    # 0 = no data (nans); 1 = data, 2 = mask
+    # valid values: 0 = no data (nans), 1 = data, 2 = mask
     d = np.zeros(tpf_data.size,dtype=int)
     d[np.isfinite(tpf_data).flatten()] += 1
     d[tpf.pipeline_mask.flatten()] += 1
-    colors = ['None','cornflowerblue','red']
-    lws = [0,3,4]  # line widths
-    zorders = [0,1,2]
     #
     #**********
     #-----
@@ -103,30 +112,32 @@ Returns: nothing
     #
     #==========================================================================
     #
-    # See comments by  Keaton Bell: 
+    # See comments by Keaton Bell: 
     # https://github.com/KeplerGO/lightkurve/issues/14
     #
     # convert RA,DEC to pixel coordinates of the *survey* image
     origin0 = 0
     pixels = survey_wcs.wcs_world2pix(pxrav*u.degree, pxdecv*u.degree, origin0)
-    xpx = pixels[0]  # alias
-    ypx = pixels[1]  # alias
+    # wcs_world2pix documentation: origin=0 (ZERO) when using Numpy ---------^ 
+    #
+    xpx = pixels[0]  # useful alias
+    ypx = pixels[1]  # useful alias
     #
     # reshape for plotting
     xy = np.reshape(pixels,(2,pixels[0].size)).T
     npixels = len(xy)
     #
-    # compute median offsets [Units: *survey* pixels] between TPF pixels
+    # compute median offsets [in *survey* pixels] between TPF pixels
     dx = np.nanmedian(np.diff(xpx))
     dy = np.nanmedian(np.diff(ypx))        
     #
     # define locations of corners relative to pixel centers
     corners = np.array([[1.,1.],[1.,-1.],[-1.,-1.],[-1.,1],[1.,1.]])        
     #
-    # KJM: offsetmatrix is a rotation matrix:
+    # offsetmatrix is a rotation/scaling matrix:
     offsetmatrix = np.array(((dx,-dy), (dy, dx)))/2.
-    # KJM: dx=cosine(theta) ---^         ^--- dy=sine(theta)  
-    # KJM: where theta is the rotation angle
+    #      dx=cosine(theta) ---^         ^--- dy=sine(theta)  
+    # where theta is the rotation angle of offsetmatrix
     for i in range(len(corners)):
         corners[i] = np.cross(offsetmatrix,corners[i])
     #
@@ -145,12 +156,15 @@ Returns: nothing
     #
     if (verbose): 
         cadenceno = tpf.cadenceno[frame]
-        print(cadenceno,'=cadenceno')
+        print()
+        print('%d =cadenceno  <---  %d=frame' % (cadenceno,frame))
+        print()
+        print('%s %s %s' % (func_,date_,version_))
     pass#if
 pass#def
 
 
-def mkpy3_finder_chart_tpf_overlay_demo():
+if (__name__ == '__main__'):
     import matplotlib.pyplot as plt
     import astropy.units as u
     import os
@@ -194,11 +208,11 @@ def mkpy3_finder_chart_tpf_overlay_demo():
       percentile=percentile, verbose=True)
     
     # replace title with a custom title
-    ax.set_title(title_,size=24)
+    plt.suptitle(title_,size=24)
     
     # show the TPF overlay                                                                                                                            
     frame = 0
-    mkpy3_finder_chart_tpf_overlay_v4(ax=ax, survey_wcs=survey_wcs, tpf=tpf,\
+    mkpy3_finder_chart_tpf_overlay_v5(ax=ax, survey_wcs=survey_wcs, tpf=tpf,\
       frame=frame, verbose=True)
     
     # put a yellow circle at the target position
@@ -206,15 +220,14 @@ def mkpy3_finder_chart_tpf_overlay_demo():
       transform=ax.get_transform(survey_cframe), \
       s=600, edgecolor='yellow', facecolor='None', lw=3, zorder=10);
     
+    # adjust the plot margins
+    plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
+
     pname = 'mkpy3_plot.png'
     if (pname != ''): 
         plt.savefig(pname, bbox_inches = "tight")
-        print(pname,' <--- plot filename has been written!  :-)\n')
+        print()
+        print(pname,' <--- plot filename has been written.\n')
     pass#if
-pass#def
-
-
-if (__name__ == '__main__'):
-    mkpy3_finder_chart_tpf_overlay_demo()
 pass#if
-
+#EOF
