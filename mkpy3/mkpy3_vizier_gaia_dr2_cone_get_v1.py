@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 # Kenneth John Mighell
-# Kepler/K2 Support Scientist
-# Kepler/K2 Science Office
+# Kepler Support Scientist
+# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
 
@@ -78,7 +78,7 @@ if (__name__ == '__main__'):
       ra_deg=ra_deg, dec_deg=dec_deg, radius_arcsec=radius_arcsec, verbose=True)
     #
     name = np.array(gaia_dr2_result['DR2Name'],dtype=np.str)
-    print('\n#VSX:')
+    print('\n#GAIA2_DR2:')
     print('#index raj2000 dej2000 sep_arcsec')
     for j in range(raj2000.size):
         print(j,raj2000[j],dej2000[j],sep_arcsec[j],"'"+name[j]+"'")
