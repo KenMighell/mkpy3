@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 # Kenneth John Mighell
-# Kepler/K2 Support Scientist
-# Kepler/K2 Science Office
+# Kepler Support Scientist
+# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
 
