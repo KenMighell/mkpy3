@@ -48,5 +48,5 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
         print('%d of %d files FAIL  8=X' % (bad,good))
     pass#if
     print()
-pass#id
+pass#if
 #EOF
