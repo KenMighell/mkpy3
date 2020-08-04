@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+#file://mkpy3_vizier_catalog_cone_get_v2.py
+
+__version__ = '2020AUG04T1541 0.10c'
+
 # Kenneth John Mighell
 # Kepler Support Scientist
 # Kepler / K2 Science Office
@@ -118,7 +122,7 @@ vizier_catalog_result :
         print()
         print(sep_arcsec)
         print('^--- =sep_arcsec')
-        print('\n#VSX:')
+        print('\n#%s:' % (vizier_catalog))
         print('#index RAJ2000 DEJ000 sep_arcsec')
         for j in range(RAJ2000.size):
             print(j,RAJ2000[j],DEJ2000[j],sep_arcsec[j])
