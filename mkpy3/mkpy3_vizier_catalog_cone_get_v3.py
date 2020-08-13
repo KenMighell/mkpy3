@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-#file://mkpy3_vizier_catalog_cone_get_v2.py
+# file://mkpy3_vizier_catalog_cone_get_v3.py
 
-__version__ = '2020AUG04T1541 0.10c'
+__version__ = '2020AUG12T1947 0.12e'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -10,15 +10,15 @@ __version__ = '2020AUG04T1541 0.10c'
 # NASA Ames Research Center / SETI Institute
 
 
-def mkpy3_vizier_catalog_cone_get_v2(  
+def mkpy3_vizier_catalog_cone_get_v3(
   ra_deg=None,
   dec_deg=None,
   radius_arcsec=None,
-  vizier_catalog=None,                      
+  vizier_catalog=None,
   verbose=None
 ):
-    """         
-Function : mkpy3_vizier_catalog_cone_get_v2()
+    """
+Function : mkpy3_vizier_catalog_cone_get_v3()
 
 Purpose: Perform a cone search of a Vizier catalog using astroquery.
 
@@ -36,7 +36,7 @@ vizier_catalog : str (optional)
     'I/345/gaia2'  <--- GAIA DR2
 verbose : bool (optional)
     verbose output [default: False]
- 
+
 Returns
 -------
 raj2000 : float array
@@ -45,15 +45,15 @@ dej2000 : float array
     declination (J2000) [deg]
 sep_arcsec : float array
     separation from target [arcsec]
-vizier_catalog_result : 
+vizier_catalog_result :
     catalog table returned by Vizier
-        
+
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
 # Kepler/K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
-    version_ = 'xb'
+    version_ = 'xd'
     import numpy as np
     from astropy.coordinates import SkyCoord
     import astropy.units as u
@@ -65,34 +65,36 @@ vizier_catalog_result :
     assert(dec_deg is not None)
     assert(radius_arcsec is not None)
     assert(vizier_catalog is not None)
-    if (verbose is None): verbose = False
+    if (verbose is None):
+        verbose = False
     assert(ra_deg >= 0.0)
     assert(ra_deg < 360.0)
     assert(dec_deg >= -90.0)
     assert(dec_deg <= +90.0)
     assert(radius_arcsec > 0.0)
     assert(vizier_catalog is not None)
-    if (verbose is None): verbose = False
+    if (verbose is None):
+        verbose = False
     #
     if (verbose):
         print()
-        print(ra_deg,'=ra_deg')
-        print(dec_deg,'=dec_deg')
-        print(radius_arcsec,'=radius_arcsec')
-        print(vizier_catalog,'=vizier_catalog')
-    pass#if
-    #   
+        print(ra_deg, '=ra_deg')
+        print(dec_deg, '=dec_deg')
+        print(radius_arcsec, '=radius_arcsec')
+        print(vizier_catalog, '=vizier_catalog')
+    # pass:if
+    #
     # target
     sc = SkyCoord(ra_deg, dec_deg, frame='icrs', unit='deg')
     #
     radius = radius_arcsec * u.arcsec
     #
     v = Vizier(columns=["**", "+_r"], catalog=vizier_catalog)
-    #     all columns ---^     ^---> add column for angular separtion (increasing separation)
+    #     all columns ---^     ^---> add column for angular (increasing) separation
     # N.B.: "*" <--- a *single* asterisk gets only the *default* columns
     v.ROW_LIMIT = -1  # no row limit
-    result_query = v.query_region(sc,radius=radius)
-    no_targets_found_message = ValueError(\
+    result_query = v.query_region(sc, radius=radius)
+    no_targets_found_message = ValueError(
       'Either no sources were found in the query region or Vizier is unavailable')
     if result_query is None:
         raise no_targets_found_message
@@ -125,32 +127,67 @@ vizier_catalog_result :
         print('\n#%s:' % (vizier_catalog))
         print('#index RAJ2000 DEJ000 sep_arcsec')
         for j in range(RAJ2000.size):
-            print(j,RAJ2000[j],DEJ2000[j],sep_arcsec[j])
-        pass#for
-    pass#if
-    return (RAJ2000,DEJ2000,sep_arcsec,vizier_result)
-pass#def    
+            print(j, RAJ2000[j], DEJ2000[j], sep_arcsec[j])
+        # pass:for
+    # pass:if
+    return (RAJ2000, DEJ2000, sep_arcsec, vizier_result)
+# pass:def
 
 
 if (__name__ == '__main__'):
-    import numpy as np
     #
-    ra_deg = 291.3663013467642  # RR Ly      
+    # RR Lyrae test ===========================================================
+    #
+    ra_deg = 291.3663013467642   # RR Lyr
     dec_deg = +42.7843585094725  # RR Lyr
     radius_arcsec = 300
-    vizier_catalog = 'B/vsx/vsx' 
+    vizier_catalog = 'B/vsx/vsx'
     verbose = True
     #
-    raj2000, dej2000, sep_arcsec, vizier_vsx_result = \
-      mkpy3_vizier_catalog_cone_get_v2( \
-      ra_deg=ra_deg, dec_deg=dec_deg, radius_arcsec=radius_arcsec, \
-      vizier_catalog=vizier_catalog, verbose=verbose)
+    proceed = True
+    try:
+        raj2000, dej2000, sep_arcsec, vizier_vsx_result = \
+            mkpy3_vizier_catalog_cone_get_v3(
+              ra_deg=ra_deg, dec_deg=dec_deg, radius_arcsec=radius_arcsec,
+              vizier_catalog=vizier_catalog, verbose=verbose)
+    except Exception:
+        proceed = False
+    # pass:try
     #
+    assert(proceed is True)
     print('\n#VSX:')
     print('#index raj2000 dej2000 sep_arcsec')
     for j in range(raj2000.size):
-        print(j,raj2000[j],dej2000[j],sep_arcsec[j])
-    pass#for
-pass#def
-#EOF
-    
+        print(j, raj2000[j], dej2000[j], sep_arcsec[j])
+    # pass:for
+    #
+    # =========================================================================
+    #
+    # empty catalog test:
+    ra_deg = 0.0
+    dec_deg = 0.0
+    radius_arcsec = 0.1
+    vizier_catalog = 'B/vsx/vsx'
+    verbose = True
+    #
+    proceed = True
+    try:
+        raj2000, dej2000, sep_arcsec, vizier_vsx_result = \
+            mkpy3_vizier_catalog_cone_get_v3(
+              ra_deg=ra_deg, dec_deg=dec_deg, radius_arcsec=radius_arcsec,
+              vizier_catalog=vizier_catalog, verbose=verbose)
+    except Exception:
+        proceed = False
+    # pass:try
+    #
+    if (proceed):
+        print('\n#VSX:')
+        print('#index raj2000 dej2000 sep_arcsec')
+        for j in range(raj2000.size):
+            print(j, raj2000[j], dej2000[j], sep_arcsec[j])
+        # pass:for
+    else:
+        print('\n*** WARNING *** : Search catalog is empty!\n')
+    # pass:if
+# pass:def
+# EOF

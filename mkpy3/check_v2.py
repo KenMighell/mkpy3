@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-#file:///check.py
+# file:///check_v2.py
 
-version_ = '2020AUG03T1030'
+version_ = '2020AUG13T1033 0.02'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
