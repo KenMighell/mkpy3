@@ -1,4 +1,6 @@
 __pycache__
 .ipynb_checkpoints
 *~
+*.py.gz
 mkpy3_plot.png
+

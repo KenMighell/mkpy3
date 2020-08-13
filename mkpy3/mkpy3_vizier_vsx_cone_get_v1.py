@@ -44,7 +44,7 @@ vizier_vsx_result :
 # Kepler/K2 Science Office
 # NASA Ames Research Center / SETI Institute    
     """
-    import mkpy3_vizier_catalog_cone_get_v2 as km1
+    import mkpy3_vizier_catalog_cone_get_v3 as km1
     if (verbose is None): verbose = False
     if ((ra_deg is None) or (dec_deg is None)): 
         ra_deg  = 291.3663013467642  # RR Ly      
@@ -55,7 +55,7 @@ vizier_vsx_result :
     #
     vizier_catalog = 'B/vsx/vsx'
     raj2000, dej2000, sep_arcsec, vizier_vsx_result = \
-      km1.mkpy3_vizier_catalog_cone_get_v2(\
+      km1.mkpy3_vizier_catalog_cone_get_v3(\
       ra_deg=ra_deg, 
       dec_deg=dec_deg, 
       radius_arcsec=radius_arcsec, 
