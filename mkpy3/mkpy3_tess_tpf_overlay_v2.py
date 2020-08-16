@@ -22,7 +22,7 @@ def mkpy3_tess_tpf_overlay_v2():
     import mkpy3_finder_chart_image_show_v1 as km2
     import mkpy3_finder_chart_tpf_overlay_v5 as km3
     import mkpy3_vizier_vsx_cone_get_v1 as km4
-    import mkpy3_vizier_gaia_dr2_cone_get_v1 as km5
+    import mkpy3_vizier_gaia_dr2_cone_get_v2 as km5
 
     # XZ Cyg (RR Lyrae type variable) [GAIA DR2 2142052889490819328]
     search_result = lk.search_tesscut('XZ Cyg',sector=14)
@@ -93,7 +93,7 @@ def mkpy3_tess_tpf_overlay_v2():
     pass#if
 
     raj2000, dej2000, sep_arcsec, gaia_dr2_result = \
-      km5.mkpy3_vizier_gaia_dr2_cone_get_v1(\
+      km5.mkpy3_vizier_gaia_dr2_cone_get_v2(\
       ra_deg=ra_deg, dec_deg=dec_deg, radius_arcsec=180)
     
     mark_gaia_dr2 = True
