@@ -5,6 +5,8 @@
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
+__version__ = '2020AUG161508 0.12'
+
 
 def mkpy3_tpf_overlay_v2():
     import matplotlib.pyplot as plt
@@ -16,33 +18,34 @@ def mkpy3_tpf_overlay_v2():
 
     import lightkurve as lk
     lk.log.setLevel('INFO')
-    
+
     import mkpy3_finder_chart_survey_fits_image_get_v1 as km1
     import mkpy3_finder_chart_image_show_v1 as km2
     import mkpy3_finder_chart_tpf_overlay_v5 as km3
     import mkpy3_vizier_vsx_cone_get_v1 as km4
-    import mkpy3_vizier_gaia_dr2_cone_get_v1 as km5
+    import mkpy3_vizier_gaia_dr2_cone_get_v2 as km5
 
     # Exoplanet Kelper-138b is "KIC 7603200":
-    tpf = lk.search_targetpixelfile(target='kepler-138b',mission='kepler',\
-      quarter=10).download(quality_bitmask=0)  
+    tpf = lk.search_targetpixelfile(
+        target='kepler-138b', mission='kepler',
+        quarter=10).download(quality_bitmask=0)
     print('TPF filename:', ntpath.basename(tpf.path))
     print('TPF dirname: ', os.path.dirname(tpf.path))
-    
+
     target = 'Kepler-138b'
     title_ = tpf.hdu[0].header['object']
     title_ += ' : Exoplanet '+target
 
     ra_deg = tpf.ra
     dec_deg = tpf.dec
-    
+
     # get survey image data
     width_height_arcmin = 2.00
     survey = '2MASS-J'
     survey_hdu, survey_hdr, survey_data, survey_wcs, survey_cframe = \
       km1.mkpy3_finder_chart_survey_fits_image_get_v1(ra_deg, dec_deg, 
       radius_arcmin=width_height_arcmin, survey=survey, verbose=True)
-    
+
     # create a matplotlib figure object
     fig = plt.figure(figsize=(12,12));
     
@@ -88,7 +91,7 @@ def mkpy3_tpf_overlay_v2():
     pass#if
 
     raj2000, dej2000, sep_arcsec, gaia_dr2_result = \
-      km5.mkpy3_vizier_gaia_dr2_cone_get_v1(\
+      km5.mkpy3_vizier_gaia_dr2_cone_get_v2(\
       ra_deg=ra_deg, dec_deg=dec_deg, radius_arcsec=60)
     
     mark_gaia_dr2 = True
