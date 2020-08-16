@@ -21,7 +21,7 @@ def mkpy3_tess_tpf_overlay_v2():
     import mkpy3_finder_chart_survey_fits_image_get_v1 as km1
     import mkpy3_finder_chart_image_show_v1 as km2
     import mkpy3_finder_chart_tpf_overlay_v5 as km3
-    import mkpy3_vizier_vsx_cone_get_v1 as km4
+    import mkpy3_vizier_vsx_cone_get_v2 as km4
     import mkpy3_vizier_gaia_dr2_cone_get_v2 as km5
 
     # XZ Cyg (RR Lyrae type variable) [GAIA DR2 2142052889490819328]
@@ -72,9 +72,8 @@ def mkpy3_tess_tpf_overlay_v2():
       transform=ax.get_transform(survey_cframe), \
       s=600, edgecolor='yellow', facecolor='None', lw=3, zorder=10);
     
-    #import mkpy3_vizier_vsx_cone_get_v1 as km4
     raj2000, dej2000, sep_arcsec, vsx_result = \
-      km4.mkpy3_vizier_vsx_cone_get_v1(\
+      km4.mkpy3_vizier_vsx_cone_get_v2(\
       ra_deg=ra_deg, dec_deg=dec_deg, radius_arcsec=300)
             
     name = np.array(vsx_result['Name'],dtype=np.str)
