@@ -2,12 +2,14 @@
 
 # file://mkpy3_vizier_catalog_cone_get_v3.py
 
-__version__ = '2020AUG12T1947 0.12e'
+__version__ = '2020AUG17T1535 0.14'  # mkpy3_vizier_catalog_cone_get_v3.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
+
+# PEP8:OK
 
 
 def mkpy3_vizier_catalog_cone_get_v3(
@@ -49,11 +51,10 @@ vizier_catalog_result :
     catalog table returned by Vizier
 
 # Kenneth John Mighell
-# Kepler/K2 Support Scientist
-# Kepler/K2 Science Office
+# Kepler Support Scientist
+# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
-    version_ = 'xd'
     import numpy as np
     from astropy.coordinates import SkyCoord
     import astropy.units as u
@@ -90,12 +91,15 @@ vizier_catalog_result :
     radius = radius_arcsec * u.arcsec
     #
     v = Vizier(columns=["**", "+_r"], catalog=vizier_catalog)
-    #     all columns ---^     ^---> add column for angular (increasing) separation
-    # N.B.: "*" <--- a *single* asterisk gets only the *default* columns
+    #     all columns ---^     ^---> add column for (increasing) angular
+    #                                separation
+    # N.B.: "*" <--- a *single* asterisk in the first argument gets only the
+    # *default* columns
     v.ROW_LIMIT = -1  # no row limit
     result_query = v.query_region(sc, radius=radius)
     no_targets_found_message = ValueError(
-      'Either no sources were found in the query region or Vizier is unavailable')
+        'Either no sources were found in the query region or Vizier is unavail'
+        'able')
     if result_query is None:
         raise no_targets_found_message
     elif len(result_query) == 0:
@@ -111,7 +115,8 @@ vizier_catalog_result :
     if (verbose):
         print()
         print(vizier_result)
-        print('^--- =vizier_result [dumps partial table (first ... last columns)]')
+        print('^--- =vizier_result [dumps partial table (first ... last column'
+              's)]')
         print()
         print(vizier_result.info)
         print('^--- vizier_result.info [show all columns]')

@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
-# file:///check_v2.py
-
-version_ = '2020AUG13T1033 0.02'
+version_ = '2020AUG17T1516 0.04'  # check_v2.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-if (__name__ == '__main__'): 
+# PEP8:OK
+
+
+if (__name__ == '__main__'):
     """
 Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
 
@@ -33,20 +34,20 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
         returncode = result.returncode
         if (returncode != 0):
             bad += 1
-            print('\r',name, ': ***** ERROR FOUND *****\n')
+            print('\r', name, ': ***** ERROR FOUND *****\n')
         else:
             good += 1
-            print('\r',name,': OK',end='')
+            print('\r', name, ': OK', end='')
             print('                                                        \r',
-              end='')
-        pass#if
-    pass#for
+                  end='')
+        # pass:if
+    # pass:for
     print()
     if (good == len(filel)):
         print('\nAll %d files PASS  :-)' % good)
     else:
-        print('%d of %d files FAIL  8=X' % (bad,good))
-    pass#if
+        print('%d of %d files FAIL  8=X' % (bad, good))
+    # pass:if
     print()
-pass#if
-#EOF
+# pass:if
+# EOF
