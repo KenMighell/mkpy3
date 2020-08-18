@@ -7,7 +7,7 @@ __version__ = '2020AUG17T1726 0.22'  # mkpy3_tpf_get_coordinates_v1.py
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-# PEP8: OK
+# PEP8:OK
 
 
 def mkpy3_tpf_get_coordinates_v1(tpf=None, cadence='all', recreate_bug=False):
