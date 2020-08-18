@@ -7,7 +7,7 @@
 
 __version__ = '2020AUG18T1115 0.16'
 
-# PEP9:OK
+# PEP8:OK
 
 
 def mkpy3_tpf_plot_add_compass_rose_v1(
