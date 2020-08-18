@@ -5,7 +5,9 @@
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-__version__ = '2020AUG16T1552 0.13'
+__version__ = '2020AUG18T1042 0.14'
+
+# PEP8:OK
 
 
 def mkpy3_vizier_vsx_cone_get_v2(
