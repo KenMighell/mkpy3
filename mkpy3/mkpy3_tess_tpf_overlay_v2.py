@@ -20,7 +20,7 @@ def mkpy3_tess_tpf_overlay_v2():
     
     import mkpy3_finder_chart_survey_fits_image_get_v1 as km1
     import mkpy3_finder_chart_image_show_v1 as km2
-    import mkpy3_finder_chart_tpf_overlay_v5 as km3
+    import mkpy3_finder_chart_tpf_overlay_v6 as km3
     import mkpy3_vizier_vsx_cone_get_v2 as km4
     import mkpy3_vizier_gaia_dr2_cone_get_v2 as km5
 
@@ -64,7 +64,7 @@ def mkpy3_tess_tpf_overlay_v2():
     
     # show the TPF overlay                                                                                                                            
     frame = 0
-    km3.mkpy3_finder_chart_tpf_overlay_v5(ax=ax, survey_wcs=survey_wcs, \
+    km3.mkpy3_finder_chart_tpf_overlay_v6(ax=ax, survey_wcs=survey_wcs, \
       tpf=tpf, frame=frame, verbose=True)
     
     # put a yellow circle at the target position
