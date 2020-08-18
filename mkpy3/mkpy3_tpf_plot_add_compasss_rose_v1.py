@@ -5,7 +5,7 @@
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-__version__ = '2020AUG18T1115 0.15'
+__version__ = '2020AUG18T1115 0.16'
 
 # PEP9:OK
 

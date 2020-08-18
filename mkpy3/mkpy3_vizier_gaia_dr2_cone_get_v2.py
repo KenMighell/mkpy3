@@ -5,7 +5,7 @@
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-_version_ = '2020AUG18T1043 0.13'
+_version_ = '2020AUG18T1043 0.14'
 
 # PEP8:OK
 
@@ -165,4 +165,3 @@ if (__name__ == '__main__'):
 
 # pass:if
 # EOF
-12345678901234567890123456789012345678901234567890123456789012345678901234567890
