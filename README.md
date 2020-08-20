@@ -29,6 +29,18 @@ the remaining blue squares show the sky background pixels.
 
 * The cyan circles mark nearby GAIA DR2 stars in this field.
 
+The command
+<pre>
+python mkpy3_kepler_tpf_overlay_v1.py --shrink=0.0
+</pre>
+turns off the display of the GAIA DR2 and VSX objects.
+
+The command
+<pre>
+python mkpy3_kepler_tpf_overlay_v1.py --help
+</pre>
+shows describes all of the argument options of this application.
+
 ---
 
 ### Example: TESS mission observations of XZ Cyg (a RR Lyrae type variable star)
