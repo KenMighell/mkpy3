@@ -39,7 +39,7 @@ The command
 <pre>
 python mkpy3_kepler_tpf_overlay_v1.py --help
 </pre>
-shows describes all of the argument options of this application.
+describes the argument options of this application.
 
 ---
 
