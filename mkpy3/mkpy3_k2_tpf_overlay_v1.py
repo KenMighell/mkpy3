@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# file://mkpy3_kepler_tpf_overlay_v1.py
+# file://mkpy3_k2_tpf_overlay_v1.py
 
-__version__ = '2020AUG20T1135 0.33'
+__version__ = '2020AUG20T1112 0.33'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -204,20 +204,20 @@ if (__name__ == '__main__'):
     else:
         print('No TargetPixelFile (TPF) filename given.\n')
         tpf = lk.search_targetpixelfile(
-            target='kepler-138b', mission='kepler',
-            quarter=10).download(quality_bitmask=0)
-        # ^--- exoplanet Kelper-138b is "KIC 7603200"
+            target='k2-34b', mission='k2',
+            campaign=18).download(quality_bitmask=0)
+        # ^--- exoplanet K2-34b is "EPIC 21211088"
         print()
         print(
-            'Using default TPF [Kepler Q10 observations of exoplanet Kepler'
-            '-138b (KIC 760320)].')
+            'Using default TPF [K2 C18 observations of exoplanet K2-34b '
+            '(EPIC 21211088)].')
         print()
         shrink *= 0.8
     # pass:if
     try:
         print('TPF filename:', ntpath.basename(tpf.path))
         print('TPF dirname: ', os.path.dirname(tpf.path))
-        assert(tpf.mission == 'Kepler')
+        assert(tpf.mission == 'K2')
         print()
     except Exception:
         print(tpf_filename, '=tpf_filename')
