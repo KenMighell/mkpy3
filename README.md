@@ -12,7 +12,7 @@ NASA Ames Research Center / SETI Institute
 
 The command
 <pre>
-python3 mkpy3_tpf_overlay_v2.py 
+python mkpy3_kepler_tpf_overlay_v1.py
 </pre>
 should produce this plot:
 
@@ -27,7 +27,7 @@ the remaining blue squares show the sky background pixels.
 
 * The green X shows the only VSX (International Variable Star Index) variable object in this field (the target object).
 
-* The cyan plus signs mark nearby GAIA DR2 stars in this field.
+* The cyan circles mark nearby GAIA DR2 stars in this field.
 
 ---
 
