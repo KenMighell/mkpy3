@@ -12,7 +12,7 @@ NASA Ames Research Center / SETI Institute
 
 The command
 <pre>
-python mkpy3\_kepler\_tpf\_overlay\_v1.py
+python mkpy3_kepler_tpf_overlay_v1.py
 </pre>
 should produce this plot:
 
@@ -35,7 +35,7 @@ the remaining blue squares show the sky background pixels.
 
 The command
 <pre>
-python mkpy3\_tess\_tpf\_overlay_v3.py
+python mkpy3_tess_tpf_overlay_v3.py
 </pre>
 should produce this plot:
 
