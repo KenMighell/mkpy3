@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# file://mkpy3_k2_tpf_overlay_v1.py
+# file://mkpy3_tess_tpf_overlay_v3.py
 
-__version__ = '2020AUG20T1429 0.34'
+__version__ = '2020AUG20T1431 0.35'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -97,8 +97,8 @@ if (__name__ == '__main__'):
         '--survey', action="store", type=str, default='2MASS-J',
         help="Survey name (str) [default: '2MASS-J']")
     parser.add_argument(
-        '--width_height_arcmin', action="store", type=float, default=2.0,
-        help='Width and height size in arcmin (float) [default: 2.0]')
+        '--width_height_arcmin', action="store", type=float, default=6.0,
+        help='Width and height size in arcmin (float) [default: 6.0]')
     parser.add_argument(
         '--shrink', type=float, default=1.0,
         help='Survey search radius shrink factor (float) [default: 1.0]')
@@ -129,9 +129,9 @@ if (__name__ == '__main__'):
         help="Colormap name [Matplotlib] (str) [default: 'gray_r']")
     parser.add_argument(
         '--colors_str', action="store",
-        type=ast.literal_eval, default="[None,'cornflowerblue','red']",
+        type=ast.literal_eval, default="[None,'coral','red']",
         help="string of a 3-item list of overlay color names [Matplotlib] "
-        "(str) [default: \"['None','cornflowerblue','red']\"")
+        "(str) [default: \"['None','coral','red']\"")
     parser.add_argument(
         '--lws_str', action="store",
         type=ast.literal_eval, default="[0,3,4]",
@@ -149,7 +149,7 @@ if (__name__ == '__main__'):
         type=ast.literal_eval, default=kwargs_,
         help="marker kwargs (string of a dictonary) for ax.scatter() "
         "[Matplotlib] "+'(str) [default: "' + kwargs_ + '"')
-    kwargs_ = "{'edgecolor':'cyan', 's':300, 'facecolor':'None', 'lw':3, "\
+    kwargs_ = "{'edgecolor':'cyan', 's':150, 'facecolor':'None', 'lw':3, "\
         "'zorder':20}"
     parser.add_argument(
         '--gaia_dr2_kwargs_str', action="store",
@@ -203,25 +203,26 @@ if (__name__ == '__main__'):
         tpf = lk.open(tpf_filename)
     else:
         print('No TargetPixelFile (TPF) filename given.\n')
-        tpf = lk.search_targetpixelfile(
-            target='k2-34b', mission='k2',
-            campaign=18).download(quality_bitmask=0)
-        # ^--- exoplanet K2-34b is "EPIC 21211088"
+        search_result = lk.search_tesscut('XZ Cyg', sector=14)
+        # print(search_result,'\n^--- search_result')
+        tpf = search_result.download(cutout_size=10, quality_bitmask=0)
+        # ^--- RR Lryae variable star XZ Cyg
         print()
         print(
-            'Using default TPF [K2 C18 observations of exoplanet K2-34b '
-            '(EPIC 21211088)].')
+            'Using default 10x10 TPF cutout of TESS Sector 14 '
+            'observations of XZ Cyg.')
         print()
         shrink *= 0.8
+        title = 'XZ Cyg : TESS : Sector 14'
     # pass:if
     try:
         print('TPF filename:', ntpath.basename(tpf.path))
         print('TPF dirname: ', os.path.dirname(tpf.path))
-        assert(tpf.mission == 'K2')
+        assert(tpf.mission == 'TESS')
         print()
     except Exception:
         print(tpf_filename, '=tpf_filename')
-        print('^--- *** ERROR *** This file does not appear to be a K2 '
+        print('^--- *** ERROR *** This file does not appear to be a TESS '
               'TargetPixelFile')
         print()
         print('Bye...\n', flush=True)
