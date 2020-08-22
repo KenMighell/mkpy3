@@ -2,7 +2,7 @@
 
 # file://mkpy3_tpf_overlay_v4.py
 
-__version__ = '2020AUG19T1355 0.34'
+__version__ = '2020AUG22T0741 0.35'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -52,11 +52,13 @@ def mkpy3_tpf_overlay_v4(
   lws_str='[0,3,4]',
   zorders_str='[0,1,2]',
   marker_kwargs_str="{'edgecolor':'yellow', 's':600, 'facecolor':'None',\
-    'lw':3, 'zorder':10}",
+    'lw':3, 'zorder':10}",  # or 'None'
+  print_gaia_dr2=True,
   gaia_dr2_kwargs_str="{'edgecolor':'cyan', 's':300, 'facecolor':'None',\
-    'lw':3, 'zorder':20}",
+    'lw':3, 'zorder':20}",  # or 'None'
+  print_vsx=True,
   vsx_kwargs_str="{'s':900, 'color':'lawngreen', 'marker':'x', 'lw':5,\
-    'zorder':30}",
+    'zorder':30}",  # or 'None'
   sexagesimal=False,
   verbose=False
 ):
@@ -126,12 +128,17 @@ marker_kwargs_str : (str) (optional)
     If set to None, the target is *not* marked.
     [default: "{'edgecolor':'yellow', 's':600, 'facecolor':'None', 'lw':3,
     'zorder':10}"]
+print_gaia_dr2 : (bool) (optional)
+    If True, print the GAIA DR2 catalog results.
+    [default=True]
 gaia_dr2_kwargs_str : (str) (optional)
     A string of a dictionary of arguments for ax.scatter() [Matplotlib].
     GAIA DR2 stars are marked accordinbg to the kwarg values.
     If set to None, no GAIA DR2 data are shown and plotted.
     [default: "{'edgecolor':'cyan', 's':300, 'facecolor':'None', 'lw':3,
     'zorder':20}"]
+print_vsx : (bool) (optional)
+    If True, print the VSX catalog results.
 vsx_kwargs_str : (str) (optional)
     A string of a dictionary of arguments for ax.scatter() [Matplotlib].
     VSX varaible stars are marked accordinbg to the kwarg values.
@@ -261,20 +268,20 @@ ax : (matplotlib axes object) or (None)
         hdr = tpf.hdu[0].header  # alias
         try:  # Kepler?
             quarter = hdr['quarter']
-            tag3_ = ('QUARTER %02d' % quarter)
+            tag3_ = ('Quarter %02d' % quarter)
             tag2_ = hdr['object']
-            tag1_ = 'KEPLER'
-            title_ = tag1_ + ' : ' + tag2_ + ' : ' + tag3_
+            tag1_ = 'Kepler'
+            title_ = tag2_ + ' : ' + tag1_ + ' : ' + tag3_
         except Exception:
             try:  # K2?
                 campaign = hdr['campaign']
-                tag3_ = ('CAMPAIGN %02d' % campaign)
+                tag3_ = ('Campaign %02d' % campaign)
                 tag2_ = hdr['object']
                 tag1_ = 'K2'
-                title_ = tag1_ + ' : ' + tag2_ + ' : ' + tag3_
+                title_ = tag2_ + ' : ' + tag1_ + ' : ' + tag3_
             except Exception:  # TESS!
                 sector = hdr['sector']
-                tag2_ = ('SECTOR %02d' % sector)
+                tag2_ = ('Sector %02d' % sector)
                 tag1_ = 'TESS'
                 title_ = tag1_ + ' : ' + tag2_
             # pass:try
@@ -329,50 +336,61 @@ ax : (matplotlib axes object) or (None)
         pmde = np.array(gaia_dr2_result['pmDE'])
 
         print()
-        print()
-        print('# GAIA DR2 : Global Astrometric Interferometer for Astrophysics'
-              '-- Data Release 2')
-        print('# n GAIA2_Source             sep    RA_ICRS      DE_ICRS       '
-              'pmRA     pmDE      Plx     Gmag')
-        print('#                       [arcsec]    [deg]        [deg]      '
-              '[mas/yr] [mas/yr]    [mas]    [mag]')
-        for k in range(len(xra)):
-            j = k  # idx[k]
-            raj = xra[j]
-            dej = yde[j]
-            gmagj = gmag[j]
-            sepj = sep_arcsec[j]
-            kk = k + 1
-            srcj = src[j]
-            pmraj = pmra[j]
-            pmdej = pmde[j]
-            plxj = plx[j]
-            print('%3d %d %8.3f %12.7f %12.7f %8.3f %8.3f %8.3f %8.3f' % (
-              kk, srcj, sepj, raj, dej, pmraj, pmdej, plxj, gmagj))
-        #  pass:for
-
-        if (sexagesimal):
+        print(print_gaia_dr2, '=print_gaia_dr2')
+        if (print_gaia_dr2):
+            print('^--- set this argument to False to *not* print', end='')
+        else:
+            print('^--- set this argument to True to print', end='')
+        # pass:if
+        print(' the GAIA DR2 catalog results.')
+        if (print_gaia_dr2):
+            print()
             print()
             print('# GAIA DR2 : Global Astrometric Interferometer for Astrophy'
-                  'sics -- Data Release 2')
-            print('# n GAIA2_Source          RA_ICRS       DE_ICRS      RA_ICR'
-                  'S         DE_ICRS')
-            print('#                         [deg]         [deg]        [hms] '
-                  '          [dms]')
+                  'sics-- Data Release 2')
+            print('# n GAIA2_Source             sep    RA_ICRS      DE_ICRS   '
+                  '    pmRA     pmDE      Plx     Gmag')
+            print('#                       [arcsec]    [deg]        [deg]     '
+                  ' [mas/yr] [mas/yr]    [mas]    [mag]')
             for k in range(len(xra)):
                 j = k  # idx[k]
-                xraj = xra[j]
-                ydej = yde[j]
+                raj = xra[j]
+                dej = yde[j]
                 gmagj = gmag[j]
-                sc1 = SkyCoord(ra=xraj, dec=ydej, frame='icrs', unit='degree')
-                ra_ = sc1.ra.to_string(u.hour)
-                dec_ = sc1.dec
                 sepj = sep_arcsec[j]
                 kk = k + 1
                 srcj = src[j]
-                print('%3d %d %12.7f %12.7f  %15s %15s' % (
-                  kk, srcj, xraj, ydej, ra_, dec_))
-            # pass:for
+                pmraj = pmra[j]
+                pmdej = pmde[j]
+                plxj = plx[j]
+                print('%3d %d %8.3f %12.7f %12.7f %8.3f %8.3f %8.3f %8.3f' % (
+                  kk, srcj, sepj, raj, dej, pmraj, pmdej, plxj, gmagj))
+            #  pass:for
+
+            if (sexagesimal):
+                print()
+                print('# GAIA DR2 : Global Astrometric Interferometer for Astr'
+                      'ophysics -- Data Release 2')
+                print('# n GAIA2_Source          RA_ICRS       DE_ICRS      RA'
+                      '_ICRS         DE_ICRS')
+                print('#                         [deg]         [deg]        [h'
+                      'ms]           [dms]')
+                for k in range(len(xra)):
+                    j = k  # idx[k]
+                    xraj = xra[j]
+                    ydej = yde[j]
+                    gmagj = gmag[j]
+                    sc1 = SkyCoord(
+                        ra=xraj, dec=ydej, frame='icrs', unit='degree')
+                    ra_ = sc1.ra.to_string(u.hour)
+                    dec_ = sc1.dec
+                    sepj = sep_arcsec[j]
+                    kk = k + 1
+                    srcj = src[j]
+                    print('%3d %d %12.7f %12.7f  %15s %15s' % (
+                      kk, srcj, xraj, ydej, ra_, dec_))
+                # pass:for
+            # pass:if
         # pass:if
         break
     # pass:while
@@ -402,41 +420,55 @@ ax : (matplotlib axes object) or (None)
         vsx_type = np.array(vsx_result['Type'], dtype=np.str)
 
         print()
-        print()
-        print('# VSX : AAVSO International Variable Star indeX')
-        print('# n      sep    RAJ2000      DEJ2000       Period     '
-              'VSX_max   VSX_min  VSX_Name      VSX_Type')
-        print('#   [arcsec]    [deg]        [deg]         [days]     '
-              '[mag]     [mag]')
-        for j in range(raj2000.size):
-            k = j + 1
-            raj = raj2000[j]
-            dej = dej2000[j]
-            sepj = sep_arcsec[j]
-            pj = period[j]
-            mxj = mag_max[j]
-            mnj = mag_min[j]
-            namej = name[j]
-            vsxtypej = vsx_type[j]
-            print("%3d %8.3f %12.7f %12.7f %12.6f %9.3f %9.3f '%s' '%s'" % (
-              k, sepj, raj, dej, pj, mxj, mnj, namej, vsxtypej))
-        # pass:for
-
-        if (sexagesimal):
+        print(print_vsx, '=print_vsx')
+        if (print_vsx):
+            print('^--- set this argument to False to *not* print', end='')
+        else:
+            print('^--- set this argument to True to print', end='')
+        # pass:if
+        print(' the VSX catalog results.')
+        if (print_vsx):
+            print()
             print()
             print('# VSX : AAVSO International Variable Star indeX')
-            print('# n   RAJ2000       DEJ2000        RAJ2000        DEJ2000')
-            print('#     [deg]         [deg]          [hms]          [dms]')
+            print('# n      sep    RAJ2000      DEJ2000       Period     '
+                  'VSX_max   VSX_min  VSX_Name      VSX_Type')
+            print('#   [arcsec]    [deg]        [deg]         [days]     '
+                  '[mag]     [mag]')
             for j in range(raj2000.size):
                 k = j + 1
-                xraj = raj2000[j]
-                ydej = dej2000[j]
-                sc1 = SkyCoord(ra=xraj, dec=ydej, frame='icrs', unit='degree')
-                ra_ = sc1.ra.to_string(u.hour)
-                dec_ = sc1.dec
-                print('%3d %12.7f %12.7f  %15s %15s' % (
-                  k, xraj, ydej, ra_, dec_))
+                raj = raj2000[j]
+                dej = dej2000[j]
+                sepj = sep_arcsec[j]
+                pj = period[j]
+                mxj = mag_max[j]
+                mnj = mag_min[j]
+                namej = name[j]
+                vsxtypej = vsx_type[j]
+                print(
+                    "%3d %8.3f %12.7f %12.7f %12.6f %9.3f %9.3f '%s' '%s'" %
+                    (k, sepj, raj, dej, pj, mxj, mnj, namej, vsxtypej))
             # pass:for
+
+            if (sexagesimal):
+                print()
+                print('# VSX : AAVSO International Variable Star indeX')
+                print('# n   RAJ2000       DEJ2000        RAJ2000        DEJ20'
+                      '00')
+                print('#     [deg]         [deg]          [hms]          '
+                      '[dms]')
+                for j in range(raj2000.size):
+                    k = j + 1
+                    xraj = raj2000[j]
+                    ydej = dej2000[j]
+                    sc1 = SkyCoord(
+                        ra=xraj, dec=ydej, frame='icrs', unit='degree')
+                    ra_ = sc1.ra.to_string(u.hour)
+                    dec_ = sc1.dec
+                    print('%3d %12.7f %12.7f  %15s %15s' % (
+                      k, xraj, ydej, ra_, dec_))
+                # pass:for
+            # pass:if
         # pass:if
         break
     # pass:while
