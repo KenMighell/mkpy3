@@ -76,5 +76,20 @@ should produce this plot:
 
 * The cyan circles mark nearby GAIA DR2 stars in this field.
 
+The above command retrieved the TESScut file
+<pre>
+tess-s0014-2-1_293.122090_56.388190_10x10_astrocut.fits
+</pre>
+from  the Mikulski Archive for Space Telescopes (MAST) of the Space Telescope Science Institute (STScI)
+and placed it in a local cache folder for faster retrieval in the future.
 
-
+One can work with TargetPixelFiles that are stored locally.
+For example, suppose that the above TESScut file is stored in the current working directory, then the command
+<pre>
+python mkpy3_tess_tpf_overlay_v3.py --tpf=tess-s0014-2-1_293.122090_56.388190_10x10_astrocut.fits
+</pre>
+will produce the same results (plot and text) as the command
+<pre>
+python mkpy3_tess_tpf_overlay_v3.py
+</pre>
+which uses that particular observation as the default TargetPiexlFile.
