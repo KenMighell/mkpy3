@@ -92,4 +92,4 @@ will produce the same results (plot and text) as the command
 <pre>
 python mkpy3_tess_tpf_overlay_v3.py
 </pre>
-which uses that particular observation as the default TargetPiexlFile.
+which uses that particular observation as the default TargetPixelFile.
