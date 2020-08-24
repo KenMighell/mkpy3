@@ -42,8 +42,19 @@ python mkpy3_kepler_tpf_overlay_v1.py --help
 describes the argument options of this application.
 
 ---
+### Example: A Jupyter notebook of TESS Mission observations of XZ Cyg
 
-### Example: TESS mission observations of XZ Cyg (a RR Lyrae type variable star)
+The RR Lyrae variable star XZ Cyg has been observed by the TESS mission in Sectors 14, 15, 16, 20, and 23.  This notebook shows how to get 10x10 TESScut observations from the Mikulski Archive for Space Telescopes (MAST) at the Space Telescope Science Institute (STScI) using Python3 packages and functions.  Finder charts are created using the  **mkpy3** package.  The period of this RR Lyrae variable star is determined from the raw TESS 30-minute light curve using the **lightkurve** package.  Based on the analyss presented in this Jupyter notebook of the raw TESS light curve, **XZ Cyg has a period of 0.470399 days**. In comparison, the (AAVSO International) Variable Star indeX (VSX) catalog gives the period as 0.466600 days.
+
+Click on the link below to see the Jupyter notebook:
+
+[https://github.com/KenMighell/mkpy3/blob/master/mkpy3/docs/source/tutorials/nb_xz_cyg_tess_v3.ipynb](https://github.com/KenMighell/mkpy3/blob/master/mkpy3/docs/source/tutorials/nb_xz_cyg_tess_v3.ipynb)
+
+
+
+---
+
+### Example: Finding charts of a TESS mission observation of XZ Cyg
 
 The command
 <pre>
