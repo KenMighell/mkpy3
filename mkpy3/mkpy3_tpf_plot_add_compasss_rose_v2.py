@@ -5,12 +5,10 @@
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-__version__ = '2020AUG18T1115 0.16'
-
-# PEP8:OK
+__version__ = '2020SEP19T1222 0.18'
 
 
-def mkpy3_tpf_plot_add_compass_rose_v1(
+def mkpy3_tpf_plot_add_compass_rose_v2(
   ax=None,
   tpf=None,
   cx=None,
@@ -23,7 +21,7 @@ def mkpy3_tpf_plot_add_compass_rose_v1(
   verbose=None
 ):
     """
-Function : mkpy3_tpf_plot_add_compass_rose_v1()
+Function : mkpy3_tpf_plot_add_compass_rose_v2()
 
 Purpose: Add a compass rose to a tpf.plot() graph.
     NOTE: Long arm points North (increasing declination)
@@ -61,14 +59,14 @@ import matplotlib.pyplot as plt
 import lightkurve as lk
 #
 tpf = lk.search_targetpixelfile(
-        target='Kepler-138b',mission='Kepler',quarter=10).download()
-#        ^---> Exoplanet Kelper-138b is "KIC 7603200"
+  target='Kepler-138b',mission='Kepler',quarter=10).download()
+#         ^---> Exoplanet Kelper-138b is "KIC 7603200"
 #
 # Plot the 2nd frame of the TPF
 ax = tpf.plot(frame=1)
 #
 # add a compass rose
-mkpy3_tpf_plot_add_compass_rose_v1(ax=ax, tpf=tpf)
+mkpy3_tpf_plot_add_compass_rose_v2(ax=ax, tpf=tpf)
 #
 plt.savefig('mkpy3_spud.png', bbox_inches="tight")
 #==========
@@ -78,18 +76,17 @@ plt.savefig('mkpy3_spud.png', bbox_inches="tight")
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
-    import matplotlib.pyplot as plt
-    import numpy as np
+    import mkpy3_wcs_plot_add_compasss_rose_v1 as km1
 
-    assert(tpf is not None)
     assert(ax is not None)
+    assert(tpf is not None)
     if (cx is None):
         xlim = ax.get_xlim()
-        cx = (xlim[0]+xlim[1])/2.0  # center of the X axis
+        cx = (xlim[0] + xlim[1]) / 2.0  # center of the X axis
     # pass:if
     if (cy is None):
         ylim = ax.get_ylim()
-        cy = (ylim[0]+ylim[1])/2.0  # center of the Y axis
+        cy = (ylim[0] + ylim[1]) / 2.0  # center of the Y axis
     # pass:if
     if (north_arrow_length_arcsec is None):
         north_arrow_length_arcsec = 6  # default for Kepler/K2 observations
@@ -123,52 +120,18 @@ plt.savefig('mkpy3_spud.png', bbox_inches="tight")
     # pass:if
 
     wcs = tpf.wcs
-    cx0 = cx
-    cy0 = cy
-    north_arrow_length_deg = north_arrow_length_arcsec/3600.0
-    # east arm is half as long as north arm:
-    east_arrow_length_deg = north_arrow_length_deg/2.0
-
-    # north arm of compass rose
-    pixcrd0 = np.array([[cx0, cy0]], dtype=np.float_)
-    # ^--- pixcrd0 must be a numpy 2-d array
-    # pixels --> right ascension and declination:
-    world = wcs.wcs_pix2world(pixcrd0, 0)
-    world[0][1] += north_arrow_length_deg
-    # right ascension and declination --> pixels:
-    pixcrd1 = wcs.wcs_world2pix(world, 0)
-    n_x0 = pixcrd0[0][0]
-    n_y0 = pixcrd0[0][1]
-    n_x1 = pixcrd1[0][0]
-    n_y1 = pixcrd1[0][1]
-
-    # east arm of compass rose
-    pixcrd0 = np.array([[cx0, cy0]], dtype=np.float_)
-    # ^--- pixcrd0 must be a numpy 2-d array
-    # pixels --> right ascension and declination:
-    world = wcs.wcs_pix2world(pixcrd0, 0)
-    declination = world[0][1]
-    world[0][0] += east_arrow_length_deg/np.cos(np.deg2rad(declination))
-    # right ascension and declination --> pixels:
-    pixcrd1 = wcs.wcs_world2pix(world, 0)
-    e_x0 = pixcrd0[0][0]
-    e_y0 = pixcrd0[0][1]
-    e_x1 = pixcrd1[0][0]
-    e_y1 = pixcrd1[0][1]
-
-    # draw edge of compass rose with thick lines
-    line = plt.Line2D((n_x0, n_x1), (n_y0, n_y1), lw=edge_lw, color=edge_color)
-    ax.add_line(line)
-    line = plt.Line2D((e_x0, e_x1), (e_y0, e_y1), lw=edge_lw, color=edge_color)
-    ax.add_line(line)
-
-    # draw middle of compass rose with thin lines
-    line = plt.Line2D(
-            (n_x0, n_x1), (n_y0, n_y1), lw=inside_lw, color=inside_color)
-    ax.add_line(line)
-    line = plt.Line2D(
-            (e_x0, e_x1), (e_y0, e_y1), lw=inside_lw, color=inside_color)
-    ax.add_line(line)
+    km1.mkpy3_wcs_plot_add_compass_rose_v1(
+      ax=ax,
+      wcs=wcs,
+      cx=cx,
+      cy=cy,
+      north_arrow_length_arcsec=north_arrow_length_arcsec,
+      edge_color=edge_color,
+      inside_color=inside_color,
+      edge_lw=edge_lw,
+      inside_lw=inside_lw,
+      verbose=verbose
+    )
 
     return
 # pass:def
@@ -179,14 +142,14 @@ if (__name__ == '__main__'):
     import lightkurve as lk
     #
     tpf = lk.search_targetpixelfile(
-            target='Kepler-138b', mission='Kepler', quarter=10).download()
-    #       ^--- Exoplanet Kelper-138b is "KIC 7603200"
+      target='Kepler-138b', mission='Kepler', quarter=10).download()
+    #         ^--- Exoplanet Kelper-138b is "KIC 7603200"
     #
     # Plot the 2nd frame of the TPF
     ax = tpf.plot(frame=1)
     #
     # add a compass rose
-    mkpy3_tpf_plot_add_compass_rose_v1(ax=ax, tpf=tpf)
+    mkpy3_tpf_plot_add_compass_rose_v2(ax=ax, tpf=tpf)
     #
     plot_file = 'mkpy3_plot.png'
     plt.savefig(plot_file, bbox_inches="tight")
