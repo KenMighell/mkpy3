@@ -5,7 +5,7 @@
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-__version__ = '2020SEP19T0851 0.17'
+__version__ = '2020SEP19T1222 0.18'
 
 
 def mkpy3_tpf_plot_add_compass_rose_v2(
