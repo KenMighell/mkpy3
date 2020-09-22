@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
 
-# file://mkpy3_vizier_catalog_cone_get_v3.py
+# file://mkpy3_vizier_catalog_cone_get_v4.py
 
-__version__ = '2020AUG17T1535 0.14'  # mkpy3_vizier_catalog_cone_get_v3.py
+__version__ = '2020SEP22T1401  0.15'  # mkpy3_vizier_catalog_cone_get_v4.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-# PEP8:OK
 
-
-def mkpy3_vizier_catalog_cone_get_v3(
+def mkpy3_vizier_catalog_cone_get_v4(
   ra_deg=None,
   dec_deg=None,
   radius_arcsec=None,
@@ -140,9 +138,10 @@ vizier_catalog_result :
 
 
 if (__name__ == '__main__'):
-    #
-    # RR Lyrae test ===========================================================
-    #
+    print()
+    print('#')
+    print('# RR Lyrae test ==================================================')
+    print('#')
     ra_deg = 291.3663013467642   # RR Lyr
     dec_deg = +42.7843585094725  # RR Lyr
     radius_arcsec = 300
@@ -152,7 +151,7 @@ if (__name__ == '__main__'):
     proceed = True
     try:
         raj2000, dej2000, sep_arcsec, vizier_vsx_result = \
-            mkpy3_vizier_catalog_cone_get_v3(
+            mkpy3_vizier_catalog_cone_get_v4(
               ra_deg=ra_deg, dec_deg=dec_deg, radius_arcsec=radius_arcsec,
               vizier_catalog=vizier_catalog, verbose=verbose)
     except Exception:
@@ -167,8 +166,10 @@ if (__name__ == '__main__'):
     # pass:for
     #
     # =========================================================================
-    #
-    # empty catalog test:
+    print()
+    print('#')
+    print('# empty catalog test  ============================================')
+    print('#')
     ra_deg = 0.0
     dec_deg = 0.0
     radius_arcsec = 0.1
@@ -178,7 +179,7 @@ if (__name__ == '__main__'):
     proceed = True
     try:
         raj2000, dej2000, sep_arcsec, vizier_vsx_result = \
-            mkpy3_vizier_catalog_cone_get_v3(
+            mkpy3_vizier_catalog_cone_get_v4(
               ra_deg=ra_deg, dec_deg=dec_deg, radius_arcsec=radius_arcsec,
               vizier_catalog=vizier_catalog, verbose=verbose)
     except Exception:
@@ -192,7 +193,7 @@ if (__name__ == '__main__'):
             print(j, raj2000[j], dej2000[j], sep_arcsec[j])
         # pass:for
     else:
-        print('\n*** WARNING *** : Search catalog is empty!\n')
+        print('\nSearch catalog is empty!  (as expected)\n')
     # pass:if
 # pass:def
 # EOF

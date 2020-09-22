@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
-version_ = '2020AUG19T1402 0.05'  # check_v3.py
+version_ = '2020SEP22T1414 V0.06'  # check_mkpy3_v4.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
-
-# PEP8:OK
 
 
 if (__name__ == '__main__'):
@@ -29,6 +27,7 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
     bad = 0
     print()
     filel = sorted(glob.glob('./mkpy3*.py'))
+    sz = len(filel)
     for name in filel:
         result = subprocess.run(['python3', name], capture_output=True)
         returncode = result.returncode
@@ -43,10 +42,10 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
         # pass:if
     # pass:for
     print()
-    if (good == len(filel)):
+    if (good == sz):
         print('\nAll %d files PASS  :-)' % good)
     else:
-        print('%d of %d files FAIL  8=X' % (bad, good))
+        print('%d of %d files FAIL  8=X' % (bad, sz))
     # pass:if
     print()
 # pass:if
