@@ -5,9 +5,7 @@
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-_version_ = '2020AUG18T1043 0.14'
-
-# PEP8:OK
+_version_ = '2020SEP22T1434 V0.15'
 
 
 def mkpy3_vizier_gaia_dr2_cone_get_v2(
@@ -48,7 +46,7 @@ vizier_gaia_dr2_result :
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
-    import mkpy3_vizier_catalog_cone_get_v3 as km1
+    import mkpy3_vizier_catalog_cone_get_v4 as km1
     if (verbose is None):
         verbose = False
     if ((ra_deg is None) or (dec_deg is None)):
@@ -62,7 +60,7 @@ vizier_gaia_dr2_result :
     vizier_catalog = 'I/345/gaia2'
     try:
         raj2000, dej2000, sep_arcsec, vizier_gaia_dr2_result = \
-            km1.mkpy3_vizier_catalog_cone_get_v3(
+            km1.mkpy3_vizier_catalog_cone_get_v4(
               ra_deg=ra_deg,
               dec_deg=dec_deg,
               radius_arcsec=radius_arcsec,

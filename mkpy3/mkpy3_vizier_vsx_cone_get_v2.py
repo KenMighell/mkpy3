@@ -5,9 +5,7 @@
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-__version__ = '2020AUG18T1042 0.15'
-
-# PEP8:OK
+__version__ = '2020SEP22T1418 V0.16'
 
 
 def mkpy3_vizier_vsx_cone_get_v2(
@@ -48,7 +46,7 @@ vizier_vsx_result :
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
-    import mkpy3_vizier_catalog_cone_get_v3 as km1
+    import mkpy3_vizier_catalog_cone_get_v4 as km1
     if (verbose is None):
         verbose = False
     if ((ra_deg is None) or (dec_deg is None)):
@@ -62,7 +60,7 @@ vizier_vsx_result :
     vizier_catalog = 'B/vsx/vsx'
     try:
         raj2000, dej2000, sep_arcsec, vizier_vsx_result = \
-            km1.mkpy3_vizier_catalog_cone_get_v3(
+            km1.mkpy3_vizier_catalog_cone_get_v4(
               ra_deg=ra_deg,
               dec_deg=dec_deg,
               radius_arcsec=radius_arcsec,
@@ -94,7 +92,7 @@ if (__name__ == '__main__'):
     print('\n#VSX:')
     print('#index raj2000 dej2000 sep_arcsec name')
     for j in range(raj2000.size):
-        print(j, raj2000[j], dej2000[j], sep_arcsec[j], "'"+name[j]+"'")
+        print(j, raj2000[j], dej2000[j], sep_arcsec[j], "'" + name[j] + "'")
     # pass:for
     #
     # empty catalog test
