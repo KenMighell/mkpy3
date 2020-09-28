@@ -5,15 +5,15 @@
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-__version__ = '2020SEP27T0831 v0.22'
+__version__ = '2020SEP27T1821 v0.23'
 
 
-def mkpy3_plot_add_compass_rose_v3(
+def mkpy3_plot_add_compass_rose_v4(
   ax=None,
   wcs=None,
   cx=None,
   cy=None,
-  north_arrow_length_arcsec=None,
+  north_arm_arcsec=None,
   edge_color=None,
   inside_color=None,
   edge_lw=None,
@@ -21,7 +21,7 @@ def mkpy3_plot_add_compass_rose_v3(
   verbose=None
 ):
     """
-Function : mkpy3_plot_add_compass_rose_v3()
+Function : mkpy3_plot_add_compass_rose_v4()
 
 Purpose: Add a compass rose to a matplotlib axis.
     NOTE: Long arm points North (increasing declination)
@@ -37,7 +37,7 @@ cx : float (optional)
     pixel column number (X position) of the center of the compass rose
 cy : float (optional)
     pixel row number (Y position) of the center of the compass rose
-north_arrow_length_arcsec : float (optional) [default: 6 arcsec]
+north_arm_arcsec : float (optional) [default: 6 arcsec]
     length of the North arrow arm of the compass rose in arcsec
     [N.B. A Kepler photometer CCD pixel is 3.98 arcsec/pixel]
     [N.B. A TESS photometer CCD pixel is 21.00 arcsec/pixel]
@@ -68,7 +68,7 @@ tpf = lk.search_targetpixelfile(
 ax = tpf.plot(frame=1)
 #
 # add a compass rose using the WCS from the TargetPixelFile
-mkpy3_plot_add_compass_rose_v3(ax=ax, wcs=tpf.wcs, verbose=True)
+mkpy3_plot_add_compass_rose_v4(ax=ax, wcs=tpf.wcs, verbose=True)
 #
 plot_file = 'mkpy3_plot.png'
 plt.savefig(plot_file, bbox_inches="tight")
@@ -100,8 +100,8 @@ print(plot_file, ' <--- new PNG file written')
         ylim = ax.get_ylim()
         cy = (ylim[0] + ylim[1]) / 2.0  # center of the Y axis
     # pass:if
-    if (north_arrow_length_arcsec is None):
-        north_arrow_length_arcsec = 6  # default for Kepler/K2 observations
+    if (north_arm_arcsec is None):
+        north_arm_arcsec = 6  # default for Kepler/K2 observations
     # pass:if
     if (edge_color is None):
         edge_color = 'blue'
@@ -125,7 +125,7 @@ print(plot_file, ' <--- new PNG file written')
         print('^--- =wcs  (NOTE: ignore NAXIS values)')
         print(cx, '=cx')
         print(cy, '=cy')
-        print(north_arrow_length_arcsec, '=north_arrow_length_arcsec')
+        print(north_arm_arcsec, '=north_arm_arcsec')
         print(edge_color, '=edge_color')
         print(inside_color, '=inside_color')
         print(edge_lw, '=edge_lw')
@@ -137,15 +137,15 @@ print(plot_file, ' <--- new PNG file written')
 
     cx0 = cx  # zero-offset coordinates
     cy0 = cy  # zero-offset coordinates
-    north_arrow_length_deg = north_arrow_length_arcsec / 3600.0
+    north_arm_deg = north_arm_arcsec / 3600.0
     # east arm is half as long as north arm:
-    east_arrow_length_deg = north_arrow_length_deg / 2.0
-    east_arrow_length_arcsec = east_arrow_length_deg * 3600.0
+    east_arm_deg = north_arm_deg / 2.0
+    east_arm_arcsec = east_arm_deg * 3600.0
 
     if (verbose):
         print()
-        print(north_arrow_length_arcsec, '=north_arrow_length_arcsec')
-        print(east_arrow_length_arcsec, '=east_arrow_length_arcsec')
+        print(north_arm_arcsec, '=north_arm_arcsec')
+        print(east_arm_arcsec, '=east_arm_arcsec')
     # pass:if
 
     # north arm of compass rose
@@ -153,7 +153,7 @@ print(plot_file, ' <--- new PNG file written')
     # ^--- pixcrd0 must be a numpy 2-d array
     # pixels --> right ascension and declination:
     world = wcs.wcs_pix2world(pixcrd0, 0)
-    world[0][1] += north_arrow_length_deg
+    world[0][1] += north_arm_deg
     # right ascension and declination --> pixels:
     pixcrd1 = wcs.wcs_world2pix(world, 0)
     n_x0 = pixcrd0[0][0]
@@ -168,7 +168,7 @@ print(plot_file, ' <--- new PNG file written')
         sc0 = ac.SkyCoord(world0, unit=u.deg)
         sc1 = ac.SkyCoord(world1, unit=u.deg)
         sep_arcsec = sc0.separation(sc1).arcsec[0]
-        diff_mas = np.abs(sep_arcsec - north_arrow_length_arcsec) * 1000
+        diff_mas = np.abs(sep_arcsec - north_arm_arcsec) * 1000
         ok = (diff_mas < 1)  # difference less than one milliarcsec?
         assert(ok), '***ERROR*** diff_mas >= 1 mas [0]'
         print()
@@ -179,7 +179,7 @@ print(plot_file, ' <--- new PNG file written')
         print(sc0, '=sc0')
         print(sc1, '=sc1')
         print(sep_arcsec, '=sep_arcsec')
-        print(north_arrow_length_arcsec, '=north_arrow_length_arcsec')
+        print(north_arm_arcsec, '=north_arm_arcsec')
         print(diff_mas, '=diff_mas')
         print(ok, '=ok')
     # pass:if
@@ -190,7 +190,7 @@ print(plot_file, ' <--- new PNG file written')
     # pixels --> right ascension and declination:
     world = wcs.wcs_pix2world(pixcrd0, 0)
     declination = world[0][1]
-    world[0][0] += east_arrow_length_deg / np.cos(np.deg2rad(declination))
+    world[0][0] += east_arm_deg / np.cos(np.deg2rad(declination))
     # right ascension and declination --> pixels:
     pixcrd1 = wcs.wcs_world2pix(world, 0)
     e_x0 = pixcrd0[0][0]
@@ -205,7 +205,7 @@ print(plot_file, ' <--- new PNG file written')
         sc0 = ac.SkyCoord(world0, unit=u.deg)
         sc1 = ac.SkyCoord(world1, unit=u.deg)
         sep_arcsec = sc0.separation(sc1).arcsec[0]
-        diff_mas = np.abs(sep_arcsec - east_arrow_length_arcsec) * 1000
+        diff_mas = np.abs(sep_arcsec - east_arm_arcsec) * 1000
         ok = (diff_mas < 1)  # difference less than one milliarcsec?
         assert(ok), '***ERROR*** diff_mas >= 1 mas [1]'
         print()
@@ -216,7 +216,7 @@ print(plot_file, ' <--- new PNG file written')
         print(sc0, '=sc0')
         print(sc1, '=sc1')
         print(sep_arcsec, '=sep_arcsec')
-        print(east_arrow_length_arcsec, '=east_arrow_length_arcsec')
+        print(east_arm_arcsec, '=east_arm_arcsec')
         print(diff_mas, '=diff_mas')
         print(ok, '=ok')
     # pass:if
@@ -257,7 +257,7 @@ if (__name__ == '__main__'):
     ax = tpf.plot(frame=1)
     #
     # add a compass rose using the WCS from the TargetPixelFile
-    mkpy3_plot_add_compass_rose_v3(ax=ax, wcs=tpf.wcs, verbose=True)
+    mkpy3_plot_add_compass_rose_v4(ax=ax, wcs=tpf.wcs, verbose=True)
     #
     plot_file = 'mkpy3_plot.png'
     plt.savefig(plot_file, bbox_inches="tight")
