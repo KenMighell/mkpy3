@@ -2,7 +2,7 @@
 
 # file://mkpy3_tpf_overlay_v6.py
 
-__version__ = '2020SEP28T1614  0.38'
+__version__ = '2020SEP29T1138  v0.39'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -190,7 +190,7 @@ ax : (matplotlib axes object) or (None)
             target='kepler-138b', mission='kepler', quarter=10).download(
                 quality_bitmask=0)
         # ^--- exoplanet Kelper-138b is "KIC 7603200"
-        # pass:if
+    # pass:if
 
     title_ = title
     rotate_deg = ast.literal_eval(rotate_deg_str)
