@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 
-# file://mkpy3_tpf_overlay_v4.py
+# file://mkpy3_tpf_overlay_v6.py
 
-__version__ = '2020AUG22T0741 0.35'
+__version__ = '2020SEP28T1614  0.38'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
-
-# PEP8:OK
 
 ###############################################################################
 
@@ -35,11 +33,12 @@ Utility function.
 ###############################################################################
 
 
-def mkpy3_tpf_overlay_v4(
+def mkpy3_tpf_overlay_v6(
   tpf=None,
   frame=0,
   survey='2MASS-J',  # '2MASS-J' or 'DSS2 Red'
   width_height_arcmin=2.0,
+  rotate_deg_str='None',
   shrink=1.0,
   show_plot=True,
   plot_file='mkpy3_plot.png',
@@ -50,7 +49,7 @@ def mkpy3_tpf_overlay_v4(
   cmap='gray_r',
   colors_str="[None,'cornflowerblue','red']",
   lws_str='[0,3,4]',
-  zorders_str='[0,1,2]',
+  zorders_str='[0,2,4]',
   marker_kwargs_str="{'edgecolor':'yellow', 's':600, 'facecolor':'None',\
     'lw':3, 'zorder':10}",  # or 'None'
   print_gaia_dr2=True,
@@ -63,7 +62,7 @@ def mkpy3_tpf_overlay_v4(
   verbose=False
 ):
     """
-Function: mkpy3_tpf_overlay_v4()
+Function: mkpy3_tpf_overlay_v6()
 
 Purpose:
 
@@ -81,6 +80,10 @@ frame : (int) (optional)
 survey : (str) (optional)
     A sky survey name.
     [default: '2MASS-J'] [verified: '2MASS-J', 'DSS2 Red']
+rotate_deg_str : (str) (optional)
+    Angle in degrees to rotate the sky survey image.
+    [default: 'None']
+    [examples: 'None' or '12.345' (a float) or "'tpf'" (a str)]
 width_height_arcmin : (float) (optional)
     Width and height of the survey image [arcmin].
     [default: 2.0]
@@ -164,13 +167,17 @@ ax : (matplotlib axes object) or (None)
     """
     import matplotlib.pyplot as plt
     import numpy as np
+    import copy as cp
     from astropy.coordinates import SkyCoord
     import astropy.units as u
     import ast
-
+    import sys
+    #
+    import reproject as rp  # pip install reproject
+    #
     import lightkurve as lk
     lk.log.setLevel('INFO')
-
+    #
     import mkpy3_finder_chart_survey_fits_image_get_v1 as km1
     import mkpy3_finder_chart_image_show_v1 as km2
     import mkpy3_finder_chart_tpf_overlay_v6 as km3
@@ -186,6 +193,7 @@ ax : (matplotlib axes object) or (None)
         # pass:if
 
     title_ = title
+    rotate_deg = ast.literal_eval(rotate_deg_str)
     figsize = ast.literal_eval(figsize_str)
     colors = ast.literal_eval(colors_str)
     lws = ast.literal_eval(lws_str)
@@ -212,6 +220,8 @@ ax : (matplotlib axes object) or (None)
         print(tpf, 'tpf')
         print(frame, '=frame')
         print(survey, '=survey')
+        print(rotate_deg, '=rotate_deg')
+        print('^--- ', type(rotate_deg), '=type(rotate_deg)')
         print(width_height_arcmin, '=width_height_arcmin')
         print(shrink, '=shrink')
         print(show_plot, '=show_plot')
@@ -245,6 +255,92 @@ ax : (matplotlib axes object) or (None)
         km1.mkpy3_finder_chart_survey_fits_image_get_v1(
           ra_deg, dec_deg,
           radius_arcmin=width_height_arcmin, survey=survey, verbose=verbose)
+
+    skip = (rotate_deg is None) or (rotate_deg == 0.0)
+    if (not skip):
+        print('\n***** ROTATE IMAGE *****:')
+        if (verbose):
+            print(rotate_deg, '=rotate_deg')
+            print('^---', type(rotate_deg))
+        # pass:if
+        is_number = isinstance(rotate_deg, (float, int))
+        if (is_number):
+            if (verbose):
+                print('rotate_deg is a number!')
+            # pass:if
+        else:
+            is_str = isinstance(rotate_deg, str)
+            if (is_str):
+                if (verbose):
+                    print('rotate_deg is a string')
+                # pass:if
+            else:
+                print(type(rotate_deg), '=type(rotate_deg')
+                print('^--- can not process this type of object')
+                sys.exit(1)
+            # pass:if
+            if (rotate_deg == 'tpf'):
+                if (verbose):
+                    print(rotate_deg, ' is an acceptable string')
+                # pass:if
+            else:
+                print('^--- ***ERROR*** NOT AN ACCEPTABLE STRING!')
+                sys.exit(1)
+            # pass:if
+        # pass:if
+        if (rotate_deg == 'tpf'):
+            #
+            # determine if X axis needs to be flipped:
+            ny = tpf.flux.shape[1]
+            nx = tpf.flux.shape[2]
+            cx = nx / 2.0  # center X
+            cy = ny / 2.0  # center Y
+            # east arm of compass rose
+            pixcrd0 = np.array([[cx, cy]], dtype=np.float_)  # center of compass rose
+            # ^--- pixcrd0 must be a numpy 2-d array
+            world = tpf.wcs.wcs_pix2world(pixcrd0, 0)  # pixels --> right ascension and declination
+            world[0][0] += 1.0  # increase RA by 1.0 deg [unscaled by cos(DEC)]
+            pixcrd1 = tpf.wcs.wcs_world2pix(world, 0)  # right ascension and declination --> pixels:
+            e_x0 = pixcrd0[0][0]
+            e_x1 = pixcrd1[0][0]
+            flip_x = False
+            if (e_x1 > e_x0):
+                flip_x = True
+            # pass:if
+            #
+            # compute rotation angle
+            delta_y = tpf.wcs.wcs.pc[1, 0]
+            delta_x = tpf.wcs.wcs.pc[1, 1]
+            angle_rad = np.arctan2(delta_y, delta_x)
+            if (flip_x):
+                angle_rad *= -1.0
+            # pass:if
+            angle_deg = np.rad2deg(angle_rad)
+            rotate_deg = angle_deg
+            is_number = True
+        # pass:if
+        print('%.3f =rotate_deg [deg] : rotation angle' % rotate_deg)
+        if (is_number):
+            # modify survey World Coordinate System (WCS)
+            wcs = cp.deepcopy(survey_wcs)
+            theta = np.deg2rad(rotate_deg)
+            # create rotation matrix
+            rotation_matrix = np.matrix(
+              [[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
+            # adjust the survey WCS pc coefficients
+            rotated_pc = np.dot(rotation_matrix, wcs.wcs.pc)
+            # update the survey WCS pc coefficients
+            wcs.wcs.pc = rotated_pc
+            # rotate survey image data using updated WCS
+            reprojected_survey_data, reprojected_footprint = \
+              rp.reproject_interp(
+                survey_hdu, wcs, shape_out=survey_data.shape)
+            # aliases
+            survey_data = reprojected_survey_data
+            survey_wcs = wcs
+        # pass:if
+        print()
+    # pass:if
 
     # create a matplotlib figure object
     plt.figure(figsize=figsize)
@@ -293,7 +389,7 @@ ax : (matplotlib axes object) or (None)
     # option: mark the target
     if (isinstance(marker_kwargs, dict)):
         ax.scatter(
-          ra_deg*u.deg, dec_deg*u.deg,
+          ra_deg * u.deg, dec_deg * u.deg,
           transform=ax.get_transform(survey_cframe),
           **marker_kwargs)
 
@@ -302,7 +398,7 @@ ax : (matplotlib axes object) or (None)
     ra_deg = tpf.ra
     dec_deg = tpf.dec
 
-    fudge = np.sqrt(2)/2.0
+    fudge = np.sqrt(2) / 2.0
     radius_arcsec = width_height_arcmin * 60.0 * fudge * shrink
     print()
     print('%.6f =radius_arcsec  (%.6f =shrink)' % (radius_arcsec, shrink))
@@ -338,9 +434,9 @@ ax : (matplotlib axes object) or (None)
         print()
         print(print_gaia_dr2, '=print_gaia_dr2')
         if (print_gaia_dr2):
-            print('^--- set this argument to False to *not* print', end='')
+            print('^--- set this keyword argument to False to *not* print', end='')
         else:
-            print('^--- set this argument to True to print', end='')
+            print('^--- set this keyword argument to True to print', end='')
         # pass:if
         print(' the GAIA DR2 catalog results.')
         if (print_gaia_dr2):
@@ -422,9 +518,9 @@ ax : (matplotlib axes object) or (None)
         print()
         print(print_vsx, '=print_vsx')
         if (print_vsx):
-            print('^--- set this argument to False to *not* print', end='')
+            print('^--- set this keyword argument to False to *not* print', end='')
         else:
-            print('^--- set this argument to True to print', end='')
+            print('^--- set this keyword argument to True to print', end='')
         # pass:if
         print(' the VSX catalog results.')
         if (print_vsx):
@@ -516,7 +612,36 @@ ax : (matplotlib axes object) or (None)
 
 
 if (__name__ == '__main__'):
-    mkpy3_tpf_overlay_v4()
+    import matplotlib.pyplot as plt
+    import mkpy3_plot_add_compass_rose_v4 as km
+    #
+    rotate = False
+    show_compass = True
+    show_plot = False
+    interactive = True
+    #
+    if (not rotate):
+        ax = mkpy3_tpf_overlay_v6(shrink=0.6, rotate_deg_str='0.0',
+          show_plot=show_plot, plot_file='',
+          print_gaia_dr2=False, sexagesimal=True)
+    else:
+        ax = mkpy3_tpf_overlay_v6(shrink=0.6, rotate_deg_str="'tpf'",
+          show_plot=show_plot, plot_file='',
+          print_gaia_dr2=False, sexagesimal=True)
+    # pass:if
+    ax.grid(True, color='palegreen', lw=2, zorder=1)
+    if (show_compass):
+        km.mkpy3_plot_add_compass_rose_v4(
+          ax=ax, north_arm_arcsec=12)
+    # pass:if
+    plot_file = 'mkpy3_plot.png'
+    plt.savefig(plot_file, bbox_inches="tight")
+    print(plot_file, ' <--- new PNG file written')
+    if (interactive):  # NOTE: does not work in a Jupyter notebook
+        plt.ioff()
+        plt.show()
+    # pass:if
+    plt.close()
 # pass:if
 
 # EOF
