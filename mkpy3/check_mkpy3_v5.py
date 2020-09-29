@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-version_ = '2020SEP22T1414 V0.06'  # check_mkpy3_v4.py
+version_ = '2020SEP29T1026  v0.08'  # check_mkpy3_v5.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -21,24 +21,30 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
     import glob
     import subprocess
     #
+    # ASCII color codes
+    CEND = '\33[0m'
+    CRED = '\33[31m'
+    #
     cwd = os.getcwd()
     print(cwd, ' =$PWD')
     good = 0
     bad = 0
-    print()
     filel = sorted(glob.glob('./mkpy3*.py'))
     sz = len(filel)
-    for name in filel:
+    print()
+    print(sz, 'files to check')
+    print()
+    for k, name in enumerate(filel, start=1):
+        print('[%d] %s : ' % (k, name.strip()), end='')
         result = subprocess.run(['python3', name], capture_output=True)
         returncode = result.returncode
         if (returncode != 0):
             bad += 1
-            print('\r', name, ': ***** ERROR FOUND *****\n')
+            print(CRED + '***** ERROR FOUND *****' + CEND)
+            print()
         else:
             good += 1
-            print('\r', name, ': OK', end='')
-            print('                                                        \r',
-                  end='')
+            print('OK')
         # pass:if
     # pass:for
     print()
