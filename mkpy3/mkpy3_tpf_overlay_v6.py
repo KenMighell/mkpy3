@@ -290,16 +290,20 @@ ax : (matplotlib axes object) or (None)
         # pass:if
         if (rotate_deg == 'tpf'):
             #
-            # determine if X axis needs to be flipped:
+            # determine if X axis needs to be flipped =========================
             ny = tpf.flux.shape[1]
             nx = tpf.flux.shape[2]
             cx = nx / 2.0  # center X
             cy = ny / 2.0  # center Y
-            # east arm of compass rose
+            #
+            # HACK: BEGIN =====================================================
+            #
+            # determine if X axis needs to be flipped:
+            # does RA (EAST arm) increase to the right?
             pixcrd0 = np.array([[cx, cy]], dtype=np.float_)  # center of compass rose
             # ^--- pixcrd0 must be a numpy 2-d array
             world = tpf.wcs.wcs_pix2world(pixcrd0, 0)  # pixels --> right ascension and declination
-            world[0][0] += 1.0  # increase RA by 1.0 deg [unscaled by cos(DEC)]
+            world[0][0] += 1.0  # increase RA by 1.0 deg [*not* scaled by cos(DEC)]
             pixcrd1 = tpf.wcs.wcs_world2pix(world, 0)  # right ascension and declination --> pixels:
             e_x0 = pixcrd0[0][0]
             e_x1 = pixcrd1[0][0]
@@ -308,13 +312,36 @@ ax : (matplotlib axes object) or (None)
                 flip_x = True
             # pass:if
             #
+            # determine if Y axis needs to be flipped =========================
+            # does DEC (NORTH arm) increase to the top?
+            pixcrd0 = np.array([[cx, cy]], dtype=np.float_)  # center of compass rose
+            # ^--- pixcrd0 must be a numpy 2-d array
+            world = tpf.wcs.wcs_pix2world(pixcrd0, 0)  # pixels --> right ascension and declination
+            world[0][1] += 1.0  # increase DEC by 1.0 deg
+            pixcrd1 = tpf.wcs.wcs_world2pix(world, 0)  # right ascension and declination --> pixels:
+            n_y0 = pixcrd0[0][1]
+            n_y1 = pixcrd1[0][1]
+            flip_y = False
+            if (n_y1 < n_y0):
+                flip_y = True
+            # pass:if
+            #
+            flip = flip_x or flip_y  # HACK
+            print(flip_x, '=flip_x')
+            print(flip_y, '=flip_y')
+            print(flip, '=flip')
+            #
+            # HACK: END =======================================================
+            #
             # compute rotation angle
             delta_y = tpf.wcs.wcs.pc[1, 0]
             delta_x = tpf.wcs.wcs.pc[1, 1]
             angle_rad = np.arctan2(delta_y, delta_x)
-            if (flip_x):
+            # HACK: BEGIN =====================================================
+            if (flip):
                 angle_rad *= -1.0
             # pass:if
+            # HACK: END =======================================================
             angle_deg = np.rad2deg(angle_rad)
             rotate_deg = angle_deg
             is_number = True
