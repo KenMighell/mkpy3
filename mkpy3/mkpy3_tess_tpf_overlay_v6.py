@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# file://mkpy3_tess_tpf_overlay_v3.py
+# file://mkpy3_tess_tpf_overlay_v6.py
 
-__version__ = '2020SEP29T1034  v0.38'
+__version__ = '2020SEP29T1304  v0.39'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -34,10 +34,11 @@ del lk
 ###############################################################################
 
 
-def mkpy3_tess_tpf_overlay_v4(
+def mkpy3_tess_tpf_overlay_v6(
     tpf=None,
     frame=0,
     survey='2MASS-J',
+    rotate_deg_str=None,
     width_height_arcmin=6.0,
     shrink=1.0,
     show_plot=True,
@@ -62,7 +63,7 @@ def mkpy3_tess_tpf_overlay_v4(
     verbose=False
 ):
     """
-Function: mkpy3_tess_tpf_overlay_v4()
+Function: mkpy3_tess_tpf_overlay_v6()
 
 Purpose: Plot a TESS TargetPixelFile (TPF) overlay on a sky survey image.
 
@@ -78,6 +79,10 @@ frame : (int) (optional)
 survey : (str) (optional)
     A sky survey name.
     [default: '2MASS-J'] [verified: '2MASS-J', 'DSS2 Red']
+rotate_deg_str : (str) (optional)
+    Angle in degrees to rotate the sky survey image.
+    [default: 'None']
+    [examples: 'None' or '12.345' (a float) or "'tpf'" (a str)]
 width_height_arcmin : (float) (optional)
     Width and height of the survey image [arcmin].
     [default: 6.0]
@@ -166,6 +171,7 @@ ax : (matplotlib axes object) or (None)
         tpf=tpf,
         frame=frame,
         survey=survey,
+        rotate_deg_str=rotate_deg_str,
         width_height_arcmin=width_height_arcmin,
         shrink=shrink,
         show_plot=show_plot,
@@ -250,6 +256,10 @@ if (__name__ == '__main__'):
     parser.add_argument(
         '--survey', action="store", type=str, default='2MASS-J',
         help="Survey name (str) [default: '2MASS-J']")
+    parser.add_argument(
+        '--rotate_deg_str', action="store", type=str, default='None',
+        help="Rotation angle in degrees (string) [default: 'None'] "
+        "[examples: 'None' or '12.345' (a float) or "'tpf'" (a str)]")
     parser.add_argument(
         '--width_height_arcmin', action="store", type=float, default=6.0,
         help='Width and height size in arcmin (float) [default: 6.0]')
@@ -339,6 +349,7 @@ if (__name__ == '__main__'):
     tpf_filename = args.tpf_filename
     frame = args.frame
     survey = args.survey
+    rotate_deg_str = str(args.rotate_deg_str)
     width_height_arcmin = args.width_height_arcmin
     shrink = args.shrink
     show_plot = args.show_plot
@@ -391,10 +402,11 @@ if (__name__ == '__main__'):
         sys.exit(1)
     # pass:try
 
-    ax = mkpy3_tess_tpf_overlay_v4(
+    ax = mkpy3_tess_tpf_overlay_v6(
       tpf=tpf,
       frame=frame,
       survey=survey,
+      rotate_deg_str=rotate_deg_str,
       width_height_arcmin=width_height_arcmin,
       shrink=shrink,
       show_plot=show_plot,
