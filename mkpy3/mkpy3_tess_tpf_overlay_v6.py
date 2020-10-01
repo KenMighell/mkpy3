@@ -2,7 +2,7 @@
 
 # file://mkpy3_tess_tpf_overlay_v6.py
 
-__version__ = '2020SEP29T1304  v0.39'
+__version__ = '2020SEP30T1900 v0.40'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -38,7 +38,7 @@ def mkpy3_tess_tpf_overlay_v6(
     tpf=None,
     frame=0,
     survey='2MASS-J',
-    rotate_deg_str=None,
+    rotate_deg_str='None',  # or '123.346' (float string) or "'tpf'"
     width_height_arcmin=6.0,
     shrink=1.0,
     show_plot=True,
@@ -82,7 +82,7 @@ survey : (str) (optional)
 rotate_deg_str : (str) (optional)
     Angle in degrees to rotate the sky survey image.
     [default: 'None']
-    [examples: 'None' or '12.345' (a float) or "'tpf'" (a str)]
+    [examples: 'None' or a float string (e.g.,'12.345') or "'tpf'"]
 width_height_arcmin : (float) (optional)
     Width and height of the survey image [arcmin].
     [default: 6.0]
@@ -166,6 +166,38 @@ ax : (matplotlib axes object) or (None)
 # NASA Ames Research Center / SETI Institute
     """
     import mkpy3_tpf_overlay_v6 as km1
+    import ntpath
+    import os
+    import lightkurve as lk
+
+    if (tpf is None):
+        target = 'V1460 Her'
+        sector = 24
+        # alternative:
+        # target = 'XZ Cyg'
+        # sector = 14
+        title = target + ' : TESS : Sector ' + str(sector)
+        search_result = lk.search_tesscut(target=target, sector=sector)[0]
+        tpf = search_result.download(cutout_size=(11, 13), quality_bitmask=0)
+    # pass:if
+
+    assert(tpf is not None)
+    tpf_filename = ntpath.basename(tpf.path)
+    tpf_dirname = os.path.dirname(tpf.path)
+    try:
+        print()
+        print('TPF filename:', tpf_filename)
+        print('TPF dirname: ', tpf_dirname)
+        assert(tpf.mission == 'TESS')
+        print()
+    except Exception:
+        print(tpf_filename, '=tpf_filename')
+        print('^--- *** ERROR *** This file does not appear to be a TESS '
+          'TargetPixelFile')
+        print()
+        print('Bye...\n', flush=True)
+        sys.exit(1)
+    # pass:try
 
     ax = km1.mkpy3_tpf_overlay_v6(
         tpf=tpf,
@@ -237,7 +269,6 @@ Utility function.
 if (__name__ == '__main__'):
     import os
     import sys
-    import ntpath
     import argparse
     import ast
     import lightkurve as lk
@@ -259,7 +290,7 @@ if (__name__ == '__main__'):
     parser.add_argument(
         '--rotate_deg_str', action="store", type=str, default='None',
         help="Rotation angle in degrees (string) [default: 'None'] "
-        "[examples: 'None' or '12.345' (a float) or "'tpf'" (a str)]")
+        "[examples: 'None' or a float string (e.g.,'12.345') or "'tpf'"]")
     parser.add_argument(
         '--width_height_arcmin', action="store", type=float, default=6.0,
         help='Width and height size in arcmin (float) [default: 6.0]')
@@ -370,37 +401,14 @@ if (__name__ == '__main__'):
     sexagesimal = args.sexagesimal
     verbose = args.verbose
 
-    print()
     if (tpf_filename is not None):
         check_file_exists(tpf_filename, True)
-        tpf = lk.open(tpf_filename)
-    else:
-        print('No TargetPixelFile (TPF) filename given.\n')
-        search_result = lk.search_tesscut('XZ Cyg', sector=14)
-        # print(search_result,'\n^--- search_result')
-        tpf = search_result.download(cutout_size=10, quality_bitmask=0)
-        # ^--- RR Lryae variable star XZ Cyg
-        print()
-        print(
-            'Using default 10x10 TPF cutout of TESS Sector 14 '
-            'observations of XZ Cyg.')
-        print()
-        shrink *= 0.8
-        title = 'XZ Cyg : TESS : Sector 14'
+        tpf = lk.open(tpf_filename, quality_bitmask=0)
     # pass:if
-    try:
-        print('TPF filename:', ntpath.basename(tpf.path))
-        print('TPF dirname: ', os.path.dirname(tpf.path))
-        assert(tpf.mission == 'TESS')
-        print()
-    except Exception:
-        print(tpf_filename, '=tpf_filename')
-        print('^--- *** ERROR *** This file does not appear to be a TESS '
-              'TargetPixelFile')
-        print()
-        print('Bye...\n', flush=True)
-        sys.exit(1)
-    # pass:try
+    
+    if (tpf_filename is None):
+        tpf = None
+    # pass:if
 
     ax = mkpy3_tess_tpf_overlay_v6(
       tpf=tpf,

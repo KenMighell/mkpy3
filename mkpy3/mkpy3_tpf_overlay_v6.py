@@ -2,7 +2,7 @@
 
 # file://mkpy3_tpf_overlay_v6.py
 
-__version__ = '2020SEP29T1138  v0.39'
+__version__ = '2020SEP30T1046  v0.40'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -217,11 +217,12 @@ ax : (matplotlib axes object) or (None)
     assert(isinstance(vsx_kwargs, dict) or (vsx_kwargs is None))
 
     if (verbose):
+        print(__version__, '=__version__')
         print(tpf, 'tpf')
         print(frame, '=frame')
         print(survey, '=survey')
         print(rotate_deg, '=rotate_deg')
-        print('^--- ', type(rotate_deg), '=type(rotate_deg)')
+        print('^--- ', type(rotate_deg), '=type(rotate_deg)  ***INFO***')
         print(width_height_arcmin, '=width_height_arcmin')
         print(shrink, '=shrink')
         print(show_plot, '=show_plot')
@@ -235,7 +236,9 @@ ax : (matplotlib axes object) or (None)
         print(lws, '=lws')
         print(zorders, '=zorders')
         print(marker_kwargs, '=marker_kwargs')
+        print(print_gaia_dr2, '=print_gaia_dr2')
         print(gaia_dr2_kwargs, '=gaia_dr2_kwargs')
+        print(print_vsx, '=print_vsx')
         print(vsx_kwargs, '=vsx_kwargs')
         print(sexagesimal, '=sexagesimal')
         print(verbose, '=verbose')
@@ -650,7 +653,7 @@ if (__name__ == '__main__'):
     if (not rotate):
         ax = mkpy3_tpf_overlay_v6(shrink=0.6, rotate_deg_str='0.0',
           show_plot=show_plot, plot_file='',
-          print_gaia_dr2=False, sexagesimal=True)
+          print_gaia_dr2=False, sexagesimal=True, verbose=True)
     else:
         ax = mkpy3_tpf_overlay_v6(shrink=0.6, rotate_deg_str="'tpf'",
           show_plot=show_plot, plot_file='',
