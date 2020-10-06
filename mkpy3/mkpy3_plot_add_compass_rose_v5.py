@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
 # Kenneth John Mighell
-# Kepler Support Scientist
-# Kepler / K2 Science Office
+# Kepler/K2 Support Scientist
 # NASA Ames Research Center / SETI Institute
 
-__version__ = '2020SEP27T1821 v0.23'
+__version__ = '2020OCT06T1534 v0.27'
 
-
-def mkpy3_plot_add_compass_rose_v4(
+def mkpy3_plot_add_compass_rose_v5(
   ax=None,
   wcs=None,
   cx=None,
@@ -21,7 +19,7 @@ def mkpy3_plot_add_compass_rose_v4(
   verbose=None
 ):
     """
-Function : mkpy3_plot_add_compass_rose_v4()
+Function : mkpy3_plot_add_compass_rose_v5()
 
 Purpose: Add a compass rose to a matplotlib axis.
     NOTE: Long arm points North (increasing declination)
@@ -68,7 +66,7 @@ tpf = lk.search_targetpixelfile(
 ax = tpf.plot(frame=1)
 #
 # add a compass rose using the WCS from the TargetPixelFile
-mkpy3_plot_add_compass_rose_v4(ax=ax, wcs=tpf.wcs, verbose=True)
+mkpy3_plot_add_compass_rose_v5(ax=ax, wcs=tpf.wcs, verbose=True)
 #
 plot_file = 'mkpy3_plot.png'
 plt.savefig(plot_file, bbox_inches="tight")
@@ -92,14 +90,27 @@ print(plot_file, ' <--- new PNG file written')
           '***ERROR***: Requires that ax.wcs exists (is an attribute)'
         wcs = ax.wcs
     # pass:if
+    #
+    # parse the last line of the WCS summary to get NAXIS1 and NAXIS2:
+    naxis_list = repr(wcs).splitlines()[-1].split()
+    nxw = int(naxis_list[2])  # NAXIS1
+    nyw = int(naxis_list[3])  # NAXIS2
+    #
+    xmin, xmax = ax.get_xlim()  # X-axis min, X-axis max
+    ymin, ymax = ax.get_ylim()  # Y-axis min, Y-axis max
+    llx = np.int(np.rint(xmin + 0.5))  # should be equal to tpf.column
+    lly = np.int(np.rint(ymin + 0.5))  # should be equal to tpf.row
+    #
     if (cx is None):
         xlim = ax.get_xlim()
-        cx = (xlim[0] + xlim[1]) / 2.0  # center of the X axis
+        cx = ((xlim[0] + xlim[1]) / 2.0)  # center of the X axis
     # pass:if
+    cxw = cx - llx  # window X coordinate
     if (cy is None):
         ylim = ax.get_ylim()
-        cy = (ylim[0] + ylim[1]) / 2.0  # center of the Y axis
+        cy = ((ylim[0] + ylim[1]) / 2.0)  # center of the Y axis
     # pass:if
+    cyw = cy - lly  # window Y coordinate
     if (north_arm_arcsec is None):
         north_arm_arcsec = 6  # default for Kepler/K2 observations
     # pass:if
@@ -122,9 +133,20 @@ print(plot_file, ' <--- new PNG file written')
         print()
         print(ax, '=ax')
         print(wcs)
-        print('^--- =wcs  (NOTE: ignore NAXIS values)')
+        print('^--- =wcs')
         print(cx, '=cx')
         print(cy, '=cy')
+        print(xmin, '=xmin ***INFO***')
+        print(xmax, '=xmax ***INFO***')
+        print(ymin, '=ymin ***INFO***')
+        print(ymax, '=ymax ***INFO***')
+        print(llx, '=llx ***INFO***')
+        print(lly, '=lly ***INFO***')
+        print(cxw, '=cxw ***INFO***')
+        print(cyw, '=cyw ***INFO***')
+        print(nxw, '=nxw ***INFO***')
+        print(nyw, '=nyw ***INFO***')
+        print(xmin, xmax, '=xmin,xmax ***INFO***')
         print(north_arm_arcsec, '=north_arm_arcsec')
         print(edge_color, '=edge_color')
         print(inside_color, '=inside_color')
@@ -135,13 +157,12 @@ print(plot_file, ' <--- new PNG file written')
         print('==============================================================')
     # pass:if
 
-    cx0 = cx  # zero-offset coordinates
-    cy0 = cy  # zero-offset coordinates
-    north_arm_deg = north_arm_arcsec / 3600.0
-    # east arm is half as long as north arm:
-    east_arm_deg = north_arm_deg / 2.0
-    east_arm_arcsec = east_arm_deg * 3600.0
+    cx0 = cxw  # alias: zero-offset window coordinates
+    cy0 = cyw  # alias: zero-offset window coordinates
 
+    north_arm_deg = north_arm_arcsec / 3600.0  # long compass arm point North
+    east_arm_deg = north_arm_deg / 2.0  # short compass arm points East
+    east_arm_arcsec = east_arm_deg * 3600.0
     if (verbose):
         print()
         print(north_arm_arcsec, '=north_arm_arcsec')
@@ -156,10 +177,10 @@ print(plot_file, ' <--- new PNG file written')
     world[0][1] += north_arm_deg
     # right ascension and declination --> pixels:
     pixcrd1 = wcs.wcs_world2pix(world, 0)
-    n_x0 = pixcrd0[0][0]
-    n_y0 = pixcrd0[0][1]
-    n_x1 = pixcrd1[0][0]
-    n_y1 = pixcrd1[0][1]
+    n_x0 = pixcrd0[0][0] + llx  # window --> CCD
+    n_y0 = pixcrd0[0][1] + lly  # window --> CCD
+    n_x1 = pixcrd1[0][0] + llx  # window --> CCD
+    n_y1 = pixcrd1[0][1] + lly  # window --> CCD
 
     # sanity check
     if (verbose):
@@ -193,10 +214,10 @@ print(plot_file, ' <--- new PNG file written')
     world[0][0] += east_arm_deg / np.cos(np.deg2rad(declination))
     # right ascension and declination --> pixels:
     pixcrd1 = wcs.wcs_world2pix(world, 0)
-    e_x0 = pixcrd0[0][0]
-    e_y0 = pixcrd0[0][1]
-    e_x1 = pixcrd1[0][0]
-    e_y1 = pixcrd1[0][1]
+    e_x0 = pixcrd0[0][0] + llx  # window --> CCD
+    e_y0 = pixcrd0[0][1] + lly  # window --> CCD
+    e_x1 = pixcrd1[0][0] + llx  # window --> CCD
+    e_y1 = pixcrd1[0][1] + lly  # window --> CCD
 
     # sanity check
     if (verbose):
@@ -250,14 +271,15 @@ if (__name__ == '__main__'):
     import lightkurve as lk
     #
     tpf = lk.search_targetpixelfile(
-      target='Kepler-138b', mission='Kepler', quarter=10).download()
+      target='Kepler-138b', mission='Kepler', quarter=10)\
+      .download(quality_bitmask=0)
     #         ^--- Exoplanet Kelper-138b is "KIC 7603200"
     #
     # Plot the 2nd frame of the TPF
     ax = tpf.plot(frame=1)
     #
     # add a compass rose using the WCS from the TargetPixelFile
-    mkpy3_plot_add_compass_rose_v4(ax=ax, wcs=tpf.wcs, verbose=True)
+    mkpy3_plot_add_compass_rose_v5(ax=ax, wcs=tpf.wcs, verbose=True)
     #
     plot_file = 'mkpy3_plot.png'
     plt.savefig(plot_file, bbox_inches="tight")

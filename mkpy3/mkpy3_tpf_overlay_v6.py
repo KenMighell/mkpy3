@@ -643,7 +643,7 @@ ax : (matplotlib axes object) or (None)
 
 if (__name__ == '__main__'):
     import matplotlib.pyplot as plt
-    import mkpy3_plot_add_compass_rose_v4 as km
+    import mkpy3_plot_add_compass_rose_v5 as km
     #
     rotate = False
     show_compass = True
@@ -661,7 +661,7 @@ if (__name__ == '__main__'):
     # pass:if
     ax.grid(True, color='palegreen', lw=2, zorder=1)
     if (show_compass):
-        km.mkpy3_plot_add_compass_rose_v4(
+        km.mkpy3_plot_add_compass_rose_v5(
           ax=ax, north_arm_arcsec=12)
     # pass:if
     plot_file = 'mkpy3_plot.png'
