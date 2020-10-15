@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
 # Kenneth John Mighell
-# Kepler/K2 Support Scientist
-# NASA Ames Research Center / SETI Institute
+# Kepler Support Scientist
+# SETI Institute
 
-__version__ = '2020OCT06T1534 v0.27'
+__version__ = '2020OCT15T1207  v0.38'
+
 
 def mkpy3_plot_add_compass_rose_v5(
   ax=None,
   wcs=None,
+  draw=None,
   cx=None,
   cy=None,
   north_arm_arcsec=None,
@@ -31,14 +33,16 @@ ax : matplotlib Axes object
 wcs : astropy FITS World Coordinate System (WCS) object (optional)
     [default: None --> ax.wcs]
     [N.B. with lightkurve TPF plots use wcs=tpf.wcs]
-cx : float (optional)
+cx : (float) (optional)
     pixel column number (X position) of the center of the compass rose
-cy : float (optional)
+cy : (float) (optional)
     pixel row number (Y position) of the center of the compass rose
-north_arm_arcsec : float (optional) [default: 6 arcsec]
+draw : (bool) (optional)
+    draw the compass if True [default: True]
+north_arm_arcsec : (float) (optional) [default: 6 arcsec]
     length of the North arrow arm of the compass rose in arcsec
-    [N.B. A Kepler photometer CCD pixel is 3.98 arcsec/pixel]
-    [N.B. A TESS photometer CCD pixel is 21.00 arcsec/pixel]
+    [N.B. A Kepler photometer pixel is 3.98 arcsec/pixel]
+    [N.B. A TESS photometer pixel is 21.00 arcsec/pixel]
 edge_color : matplotlib color name (optional) [default: 'blue']
     color of the edge of the compass rose
 inside_color : matplotlib color name (optional) [default: 'yellow']
@@ -88,9 +92,8 @@ print(plot_file, ' <--- new PNG file written')
     if (wcs is None):
         assert(hasattr(ax, 'wcs')),\
           '***ERROR***: Requires that ax.wcs exists (is an attribute)'
-        wcs = ax.wcs
+        wcs = ax.wcs  # alias
     # pass:if
-    #
     # parse the last line of the WCS summary to get NAXIS1 and NAXIS2:
     naxis_list = repr(wcs).splitlines()[-1].split()
     nxw = int(naxis_list[2])  # NAXIS1
@@ -100,7 +103,9 @@ print(plot_file, ' <--- new PNG file written')
     ymin, ymax = ax.get_ylim()  # Y-axis min, Y-axis max
     llx = np.int(np.rint(xmin + 0.5))  # should be equal to tpf.column
     lly = np.int(np.rint(ymin + 0.5))  # should be equal to tpf.row
-    #
+    if (draw is None):
+        draw = True
+    # pass:if
     if (cx is None):
         xlim = ax.get_xlim()
         cx = ((xlim[0] + xlim[1]) / 2.0)  # center of the X axis
@@ -134,6 +139,7 @@ print(plot_file, ' <--- new PNG file written')
         print(ax, '=ax')
         print(wcs)
         print('^--- =wcs')
+        print(draw, '=draw')
         print(cx, '=cx')
         print(cy, '=cy')
         print(xmin, '=xmin ***INFO***')
@@ -181,6 +187,10 @@ print(plot_file, ' <--- new PNG file written')
     n_y0 = pixcrd0[0][1] + lly  # window --> CCD
     n_x1 = pixcrd1[0][0] + llx  # window --> CCD
     n_y1 = pixcrd1[0][1] + lly  # window --> CCD
+    negate = -1.0
+    n_dv = n_x1 - n_x0
+    n_dh = n_y1 - n_y0
+    n_pa_deg = negate * np.rad2deg(np.arctan2(n_dv, n_dh))
 
     # sanity check
     if (verbose):
@@ -193,8 +203,11 @@ print(plot_file, ' <--- new PNG file written')
         ok = (diff_mas < 1)  # difference less than one milliarcsec?
         assert(ok), '***ERROR*** diff_mas >= 1 mas [0]'
         print()
+        print('*****NORTH ARM*****')
         print(pixcrd0, '=pixcrd0')
         print(pixcrd1, '=pixcrd1')
+        print(n_dv, n_dh, '=n_dv, n_dh')
+        print(n_pa_deg, '=n_pa_deg')
         print(world0, '=world0 : center (RA,DEC) [deg]')
         print(world1, '=world1 : North arm tip (RA,DEC) [deg]')
         print(sc0, '=sc0')
@@ -230,6 +243,7 @@ print(plot_file, ' <--- new PNG file written')
         ok = (diff_mas < 1)  # difference less than one milliarcsec?
         assert(ok), '***ERROR*** diff_mas >= 1 mas [1]'
         print()
+        print('*****EAST ARM*****')
         print(pixcrd0, '=pixcrd0')
         print(pixcrd1, '=pixcrd1')
         print(world0, '=world0 : center (RA,DEC) [deg]')
@@ -242,20 +256,56 @@ print(plot_file, ' <--- new PNG file written')
         print(ok, '=ok')
     # pass:if
 
-    # draw edge of compass rose with thick lines
-    line = plt.Line2D((n_x0, n_x1), (n_y0, n_y1), lw=edge_lw, color=edge_color)
-    ax.add_line(line)
-    line = plt.Line2D((e_x0, e_x1), (e_y0, e_y1), lw=edge_lw, color=edge_color)
-    ax.add_line(line)
+    if (draw):
+        # draw edge of compass rose with thick lines
+        line = plt.Line2D((n_x0, n_x1), (n_y0, n_y1), lw=edge_lw, color=edge_color)
+        ax.add_line(line)
+        line = plt.Line2D((e_x0, e_x1), (e_y0, e_y1), lw=edge_lw, color=edge_color)
+        ax.add_line(line)
+        # draw middle of compass rose with thin lines
+        line = plt.Line2D(
+          (n_x0, n_x1), (n_y0, n_y1), lw=inside_lw, color=inside_color)
+        ax.add_line(line)
+        line = plt.Line2D(
+          (e_x0, e_x1), (e_y0, e_y1), lw=inside_lw, color=inside_color)
+        ax.add_line(line)
+    # pass:if
 
-    # draw middle of compass rose with thin lines
-    line = plt.Line2D(
-      (n_x0, n_x1), (n_y0, n_y1), lw=inside_lw, color=inside_color)
-    ax.add_line(line)
-    line = plt.Line2D(
-      (e_x0, e_x1), (e_y0, e_y1), lw=inside_lw, color=inside_color)
-    ax.add_line(line)
-
+    # sanity checks:
+    pc11 = wcs.wcs.pc[0][0]
+    pc12 = wcs.wcs.pc[0][1]
+    pc21 = wcs.wcs.pc[1][0]
+    pc22 = wcs.wcs.pc[1][1]
+    positionAngle_deg = np.rad2deg(np.arctan2(pc12, pc11))
+    mirrored = ((pc11 * pc22) - (pc12 * pc21)) < 0.0
+    north_top_half = (n_y1 > n_y0)  # NORTH ARM top is ABOVE of center?
+    east_left_half = (e_x1 < e_x0)  # EAST ARM tip LEFT is LEFT of center?
+    delta_deg = (positionAngle_deg - n_pa_deg)
+    # HACK: BEGIN : create *new* attributes for the axis ======================
+    ax.compass_positionAngle_deg = positionAngle_deg  # HACK: from PC matrix
+    ax.compass_n_pa_deg = n_pa_deg  # HACK: from north compass arm
+    ax.compass_mirrored = mirrored  # HACK" from PC matrix
+    ax.compass_north_top_half = north_top_half  # HACK: from north compass arm
+    ax.compass_east_left_half = east_left_half  # HACK: from east compass arm
+    # HACK: END ===============================================================
+    if (verbose):
+        print()
+        print('--->', ax.compass_positionAngle_deg, '=ax.compass_positionAngle_deg')
+        print('--->', ax.compass_n_pa_deg, '=ax.compass_n_pa_deg')
+        print('--->', ax.compass_mirrored, '=ax.compass_mirrored')
+        print('--->', ax.compass_north_top_half, '=ax.compass_north_top_half')
+        print('--->', ax.compass_east_left_half, '=ax.compass_east_left_half')
+    # pass:if
+    if (np.fabs(delta_deg) >= 0.1):
+        print('\n\nASSERTION ERROR INFO DUMP ===============================')
+        print('***INFO***:\n', wcs, '\n^-- wcs\n')
+        print('***INFO***', positionAngle_deg, '=positionAngle_deg')
+        print('***INFO***', n_pa_deg, '=n_pa_deg')
+        print('***INFO***', delta_deg,
+          '= delta_deg =(positionAngle_deg - n_pa_deg)')
+        print('\nASSERTION ERROR BELOW =====================================\n')
+        assert(np.fabs(delta_deg) < 0.1)
+    # pass:if
     if (verbose):
         print()
         print('==============================================================')
@@ -276,14 +326,18 @@ if (__name__ == '__main__'):
     #         ^--- Exoplanet Kelper-138b is "KIC 7603200"
     #
     # Plot the 2nd frame of the TPF
-    ax = tpf.plot(frame=1)
+    ax = tpf.plot(frame=1, cmap='gray_r')
     #
     # add a compass rose using the WCS from the TargetPixelFile
     mkpy3_plot_add_compass_rose_v5(ax=ax, wcs=tpf.wcs, verbose=True)
     #
-    plot_file = 'mkpy3_plot.png'
+    print(tpf.path, '\n^--- tpf.path\n')
+    print(tpf.ra, '=tpf.ra')
+    print(tpf.dec, '=tpf.dec')
+    #
+    plot_file = 'mkpy3_plot1.png'
     plt.savefig(plot_file, bbox_inches="tight")
     plt.close()
-    print(plot_file, ' <--- new PNG file written')
+    print('\n', plot_file, ' <--- new PNG file written')
 # pass:if
 # EOF
