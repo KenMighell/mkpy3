@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 
-__version__ = '2020AUG17T1726 0.22'  # mkpy3_tpf_get_coordinates_v1.py
+__version__ = '2020OCT16T0921 v1.23'  # mkpy3_tpf_get_coordinates_v1.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
-# NASA Ames Research Center / SETI Institute
-
-# PEP8:OK
+# SETI Institute
 
 
 def mkpy3_tpf_get_coordinates_v1(tpf=None, cadence='all', recreate_bug=False):
@@ -126,7 +123,7 @@ if (__name__ == '__main__'):
     print(lk.__version__, '=lk.__version__')
 
     def msg(ok, tag_):
-        print('***'+tag_+': ', end="")
+        print('***' + tag_ + ': ', end="")
         if (ok):
             print('PASS***')
         else:
