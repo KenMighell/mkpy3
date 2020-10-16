@@ -746,20 +746,23 @@ ax : (matplotlib axes object) or (None)
     # adjust the plot margins
     plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
 
-    # HACK: BEGIN : match orienttion of tpf.plot() graph
+    # HACK: BEGIN : match orienttion of tpf.plot() graph ======================
     ax.xaxis_inverted = False
     ax.yaxis_inverted = False
     if (rotate_deg_initial == 'tpf'):  # a 3-char str with a value of tpf
-        if (not ax.tpf_east_left_half):
+        if (ax.survey_east_left_half != ax.tpf_east_left_half):
             ax.invert_xaxis()
             ax.xaxis_inverted = True
         # pass:if
-        if (not ax.tpf_north_top_half):
+        if (ax.survey_north_top_half != ax.tpf_north_top_half):
             ax.invert_yaxis()
             ax.yaxis_inverted = True
         # pass:if
     # pass:if
-    # HACK: END
+    # algorithm not calibrated for mirrored data:
+    assert(not ax.tpf_mirrored)     # NUM ME VEXO?
+    assert(not ax.survey_mirrored)  # NUM ME VEXO?
+    # HACK: END ===============================================================
 
     if (plot_file == ''):
         plot_file = None
