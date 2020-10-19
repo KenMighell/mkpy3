@@ -2,7 +2,7 @@
 
 # file://mkpy3_tpf_overlay_v6.py
 
-__version__ = '2020OCT14T1220  v0.53'
+__version__ = '2020OCT19T1401  v0.55'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -140,7 +140,7 @@ def mkpy3_tpf_overlay_v6(
   frame=0,
   survey='2MASS-J',  # '2MASS-J' or 'DSS2 Red'
   width_height_arcmin=2.0,
-  rotate_deg_str='None',
+  rotationAngle_deg=None,
   shrink=1.0,
   show_plot=True,
   plot_file='mkpy3_plot.png',
@@ -182,10 +182,11 @@ frame : (int) (optional)
 survey : (str) (optional)
     A sky survey name.
     [default: '2MASS-J'] [verified: '2MASS-J', 'DSS2 Red']
-rotate_deg_str : (str) (optional)
-    Angle in degrees to rotate the sky survey image ***MUST BE A STRING***
-    [default: 'None']
-    [examples: 'None' or '12.345' (str of a float) or "\'tpf\'" or '\"tpf\"']
+rotationAngle_deg : (None) or (float) or ('tpf') (optional)
+    Angle in degrees to rotate the sky survey image
+    [default for Kepler & K2 missions: None]
+    [default for TESS mission: 'tpf']
+    [example values: None, 12.345, 'tpf']
 width_height_arcmin : (float) (optional)
     Width and height of the survey image [arcmin].
     [default: 2.0]
@@ -293,10 +294,11 @@ ax : (matplotlib axes object) or (None)
         # ^--- exoplanet Kelper-138b is "KIC 7603200"
     # pass:if
 
+    if ((rotationAngle_deg is None) and (tpf.mission.lower() == 'tess')):
+        rotationAngle_deg = 'tpf'
+    # pass:if
+
     title_ = title
-    rotate_deg_str_initial = np.copy(rotate_deg_str)
-    rotate_deg = ast.literal_eval(rotate_deg_str)
-    rotate_deg_initial = rotate_deg
     figsize = ast.literal_eval(figsize_str)
     colors = ast.literal_eval(colors_str)
     lws = ast.literal_eval(lws_str)
@@ -324,8 +326,8 @@ ax : (matplotlib axes object) or (None)
         print(tpf, '=tpf')
         print(frame, '=frame')
         print(survey, '=survey')
-        print(rotate_deg, '=rotate_deg')
-        print('^--- ', type(rotate_deg), '=type(rotate_deg)  ***INFO***')
+        print(rotationAngle_deg, '=rotationAngle_deg')
+        print('^---', type(rotationAngle_deg), '=type(rotationAngle_deg)  ***INFO***')
         print(width_height_arcmin, '=width_height_arcmin')
         print(shrink, '=shrink')
         print(show_plot, '=show_plot')
@@ -387,39 +389,37 @@ ax : (matplotlib axes object) or (None)
     # pass:if
 
     survey_rotate_deg = None
+    rotate_deg = cp.deepcopy(rotationAngle_deg)
     skip = (rotate_deg is None) or (rotate_deg == 0.0)
     if (not skip):
         print('\n***** ROTATE IMAGE *****:')
         if (verbose):
-            print(rotate_deg, '=rotate_deg')
-            print('^---', type(rotate_deg))
+            print(rotationAngle_deg, '=rotationAngle_deg')
+            print('^---', type(rotationAngle_deg), '=type(rotationAngle_deg)')
         # pass:if
-        is_number = isinstance(rotate_deg, (float, int))
+        is_number = isinstance(rotationAngle_deg, (float, int))
         if (is_number):
             if (verbose):
-                print('rotate_deg is a number!')
+                print('rotationAngle_deg is a number!')
             # pass:if
         else:
-            is_str = isinstance(rotate_deg, str)
+            is_str = isinstance(rotationAngle_deg, str)
             if (is_str):
                 if (verbose):
-                    print('rotate_deg is a string')
+                    print('rotationAngle_deg is a string')
                 # pass:if
             else:
-                print(type(rotate_deg), '=type(rotate_deg')
+                print(type(rotationAngle_deg), '=type(rotationAngle_deg')
                 print('^--- can not process this type of object')
                 sys.exit(1)
             # pass:if
-            if (rotate_deg == 'tpf'):  # a 3-char str with a value of tpf
-                if (verbose):
-                    print(rotate_deg, ' is an acceptable string')
-                # pass:if
-            else:
-                print('^--- ***ERROR*** NOT AN ACCEPTABLE STRING!')
+            if (rotationAngle_deg != 'tpf'):  # a 3-char str with a value of tpf
+                print(rotationAngle_deg, '=rotationAngle_deg')
+                print("^--- ***ERROR*** BAD STRING VALUE!  ONLY 'tpf' IS ALLOWED!")
                 sys.exit(1)
             # pass:if
         # pass:if
-        if (rotate_deg == 'tpf'):  # a 3-char str with a value of tpf
+        if (rotationAngle_deg == 'tpf'):  # a 3-char str with a value of tpf
             tpf_pa_deg = tpf_positionAngle_deg
             if (not tpf_east_left_half):
                 tpf_pa_deg *= (-1.0)
@@ -497,7 +497,7 @@ ax : (matplotlib axes object) or (None)
     ax.tpf_mirrored = tpf_mirrored
     ax.tpf_north_top_half = tpf_north_top_half
     ax.tpf_east_left_half = tpf_east_left_half
-    ax.survey_rotate_deg_str = rotate_deg_str_initial
+    ax.survey_rotationAngle_deg = rotationAngle_deg
     ax.survey_rotate_deg = survey_rotate_deg
     ax.survey_positionAngle_deg = survey_positionAngle_deg
     ax.survey_mirrored = survey_mirrored
@@ -749,7 +749,7 @@ ax : (matplotlib axes object) or (None)
     # HACK: BEGIN : match orienttion of tpf.plot() graph ======================
     ax.xaxis_inverted = False
     ax.yaxis_inverted = False
-    if (rotate_deg_initial == 'tpf'):  # a 3-char str with a value of tpf
+    if (rotationAngle_deg == 'tpf'):  # a 3-char str with a value of tpf
         if (ax.survey_east_left_half != ax.tpf_east_left_half):
             ax.invert_xaxis()
             ax.xaxis_inverted = True
@@ -970,8 +970,8 @@ if (__name__ == '__main__'):
     print_vsx = False
 
     print('\n\nPLOT#4 =======================================================')
-    rotate_deg_str = '0.0'  # no rotation
-    ax = mkpy3_tpf_overlay_v6(tpf=tpf, rotate_deg_str=rotate_deg_str,
+    rotationAngle_deg = 0.0  # no rotation
+    ax = mkpy3_tpf_overlay_v6(tpf=tpf, rotationAngle_deg=rotationAngle_deg,
       width_height_arcmin=width_height_arcmin, percentile=percentile,
       shrink=shrink, show_plot=False, plot_file='', title=title_,
       print_gaia_dr2=print_gaia_dr2, print_vsx=print_vsx, verbose=verbose)
@@ -991,9 +991,9 @@ if (__name__ == '__main__'):
     print('\n\nPLOT#3 =======================================================')
     #
     # compute rotation based on the WCS of the TPF:
-    rotate_deg_str = "\'tpf\'"  # '\"tpf\"' also works
+    rotationAngle_deg = 'tpf'  # HACK  :-)
     #
-    ax = mkpy3_tpf_overlay_v6(tpf=tpf, rotate_deg_str=rotate_deg_str,
+    ax = mkpy3_tpf_overlay_v6(tpf=tpf, rotationAngle_deg=rotationAngle_deg,
       width_height_arcmin=width_height_arcmin,
       shrink=shrink, show_plot=False, plot_file='', title=title_,
       percentile=percentile,
@@ -1019,7 +1019,7 @@ if (__name__ == '__main__'):
     print('[*]', ax.tpf_north_top_half, '=ax.tpf_north_top_half')
     print('[*]', ax.tpf_east_left_half, '=ax.tpf_east_left_half')
     print('[*]')
-    print('[*] <---', ax.survey_rotate_deg_str, '=ax.survey_rotate_deg_str')
+    print('[*] <---', ax.survey_rotationAngle_deg, '=ax.survey_rotationAngle_deg')
     print('[*] --->', ax.survey_rotate_deg, '=ax.survey_rotate_deg')
     print('[*]')
     print('[*]', ax.survey_positionAngle_deg, '=ax.survey_positionAngle_deg')

@@ -2,12 +2,11 @@
 
 # file://mkpy3_tess_tpf_overlay_v6.py
 
-__version__ = '2020SEP30T1900 v0.40'
+__version__ = '2020OCT19T1447  v0.43'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
-# NASA Ames Research Center / SETI Institute
+# SETI Institute
 
 
 # check local setup ===========================================================
@@ -38,7 +37,7 @@ def mkpy3_tess_tpf_overlay_v6(
     tpf=None,
     frame=0,
     survey='2MASS-J',
-    rotate_deg_str='None',  # or '123.346' (float string) or "'tpf'"
+    rotationAngle_deg=None,  # None or '123.456' (float) or 'tpf'
     width_height_arcmin=6.0,
     shrink=1.0,
     show_plot=True,
@@ -79,10 +78,10 @@ frame : (int) (optional)
 survey : (str) (optional)
     A sky survey name.
     [default: '2MASS-J'] [verified: '2MASS-J', 'DSS2 Red']
-rotate_deg_str : (str) (optional)
+rotationAngle_deg : None, (float), or 'tpf' (3-char str) (optional)
     Angle in degrees to rotate the sky survey image.
-    [default: 'None']
-    [examples: 'None' or a float string (e.g.,'12.345') or "'tpf'"]
+    [default: None ---> 'tpf']
+    [example values: 'None' or 12.345 (float) or 'tpf']
 width_height_arcmin : (float) (optional)
     Width and height of the survey image [arcmin].
     [default: 6.0]
@@ -203,7 +202,7 @@ ax : (matplotlib axes object) or (None)
         tpf=tpf,
         frame=frame,
         survey=survey,
-        rotate_deg_str=rotate_deg_str,
+        rotationAngle_deg=rotationAngle_deg,
         width_height_arcmin=width_height_arcmin,
         shrink=shrink,
         show_plot=show_plot,
@@ -288,9 +287,10 @@ if (__name__ == '__main__'):
         '--survey', action="store", type=str, default='2MASS-J',
         help="Survey name (str) [default: '2MASS-J']")
     parser.add_argument(
-        '--rotate_deg_str', action="store", type=str, default='None',
-        help="Rotation angle in degrees (string) [default: 'None'] "
-        "[examples: 'None' or a float string (e.g.,'12.345') or "'tpf'"]")
+        '--rotationAngle_deg', action="store",
+        type=ast.literal_eval, default=None,
+        help="Rotation angle in degrees (string) [default: None] "
+        "[examples: None or 12.345 (float) or 'tpf'")
     parser.add_argument(
         '--width_height_arcmin', action="store", type=float, default=6.0,
         help='Width and height size in arcmin (float) [default: 6.0]')
@@ -380,7 +380,7 @@ if (__name__ == '__main__'):
     tpf_filename = args.tpf_filename
     frame = args.frame
     survey = args.survey
-    rotate_deg_str = str(args.rotate_deg_str)
+    rotationAngle_deg = args.rotationAngle_deg
     width_height_arcmin = args.width_height_arcmin
     shrink = args.shrink
     show_plot = args.show_plot
@@ -405,16 +405,17 @@ if (__name__ == '__main__'):
         check_file_exists(tpf_filename, True)
         tpf = lk.open(tpf_filename, quality_bitmask=0)
     # pass:if
-    
+
     if (tpf_filename is None):
         tpf = None
     # pass:if
 
+    shrink = 0.4
     ax = mkpy3_tess_tpf_overlay_v6(
       tpf=tpf,
       frame=frame,
       survey=survey,
-      rotate_deg_str=rotate_deg_str,
+      rotationAngle_deg=rotationAngle_deg,
       width_height_arcmin=width_height_arcmin,
       shrink=shrink,
       show_plot=show_plot,
