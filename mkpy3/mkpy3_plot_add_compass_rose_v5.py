@@ -4,7 +4,7 @@
 # Kepler Support Scientist
 # SETI Institute
 
-__version__ = '2020OCT15T1207  v0.38'
+__version__ = '2020OCT22T1036  v0.43'
 
 
 def mkpy3_plot_add_compass_rose_v5(
@@ -32,7 +32,7 @@ Parameters
 ax : matplotlib Axes object
 wcs : astropy FITS World Coordinate System (WCS) object (optional)
     [default: None --> ax.wcs]
-    [N.B. with lightkurve TPF plots use wcs=tpf.wcs]
+    [NOTE: lightkurve TPF plots: use wcs=tpf.wcs]
 cx : (float) (optional)
     pixel column number (X position) of the center of the compass rose
 cy : (float) (optional)
@@ -87,6 +87,10 @@ print(plot_file, ' <--- new PNG file written')
     import numpy as np
     import astropy.coordinates as ac
     import astropy.units as u
+    import inspect
+
+    func_ = inspect.stack()[0][3]  # function name
+    ver_ = __version__             # function version
 
     assert(ax is not None), '***ERROR***: Requires a matplotlib axes object'
     if (wcs is None):
@@ -94,10 +98,10 @@ print(plot_file, ' <--- new PNG file written')
           '***ERROR***: Requires that ax.wcs exists (is an attribute)'
         wcs = ax.wcs  # alias
     # pass:if
-    # parse the last line of the WCS summary to get NAXIS1 and NAXIS2:
+    # parse the last line of the WCS summary to (maybe) get NAXIS1 and NAXIS2:
     naxis_list = repr(wcs).splitlines()[-1].split()
-    nxw = int(naxis_list[2])  # NAXIS1
-    nyw = int(naxis_list[3])  # NAXIS2
+    nxw = int(naxis_list[2])  # =? NAXIS1 [***WARNING***: sometimes False]
+    nyw = int(naxis_list[3])  # =? NAXIS2 [***WARNING***: sometimes False]
     #
     xmin, xmax = ax.get_xlim()  # X-axis min, X-axis max
     ymin, ymax = ax.get_ylim()  # Y-axis min, Y-axis max
@@ -118,6 +122,7 @@ print(plot_file, ' <--- new PNG file written')
     cyw = cy - lly  # window Y coordinate
     if (north_arm_arcsec is None):
         north_arm_arcsec = 6  # default for Kepler/K2 observations
+        # north_arm_arcsec = 63  # default for TESS observations
     # pass:if
     if (edge_color is None):
         edge_color = 'blue'
@@ -175,7 +180,7 @@ print(plot_file, ' <--- new PNG file written')
         print(east_arm_arcsec, '=east_arm_arcsec')
     # pass:if
 
-    # north arm of compass rose
+    # NORTH arm of compass rose
     pixcrd0 = np.array([[cx0, cy0]], dtype=np.float_)
     # ^--- pixcrd0 must be a numpy 2-d array
     # pixels --> right ascension and declination:
@@ -188,9 +193,9 @@ print(plot_file, ' <--- new PNG file written')
     n_x1 = pixcrd1[0][0] + llx  # window --> CCD
     n_y1 = pixcrd1[0][1] + lly  # window --> CCD
     negate = -1.0
-    n_dv = n_x1 - n_x0
-    n_dh = n_y1 - n_y0
-    n_pa_deg = negate * np.rad2deg(np.arctan2(n_dv, n_dh))
+    n_dt = n_x1 - n_x0  # top
+    n_db = n_y1 - n_y0  # bottom
+    n_pa_deg = negate * np.rad2deg(np.arctan2(n_dt, n_db))
 
     # sanity check
     if (verbose):
@@ -206,7 +211,8 @@ print(plot_file, ' <--- new PNG file written')
         print('*****NORTH ARM*****')
         print(pixcrd0, '=pixcrd0')
         print(pixcrd1, '=pixcrd1')
-        print(n_dv, n_dh, '=n_dv, n_dh')
+        print(n_dt, '=n_dt =(n_x1-n_x0)  [top]')
+        print(n_db, '=n_db =(n_y1-n_y0)  [bottom]')
         print(n_pa_deg, '=n_pa_deg')
         print(world0, '=world0 : center (RA,DEC) [deg]')
         print(world1, '=world1 : North arm tip (RA,DEC) [deg]')
@@ -218,7 +224,7 @@ print(plot_file, ' <--- new PNG file written')
         print(ok, '=ok')
     # pass:if
 
-    # east arm of compass rose
+    # EAST arm of compass rose
     pixcrd0 = np.array([[cx0, cy0]], dtype=np.float_)
     # ^--- pixcrd0 must be a numpy 2-d array
     # pixels --> right ascension and declination:
@@ -276,15 +282,28 @@ print(plot_file, ' <--- new PNG file written')
     pc12 = wcs.wcs.pc[0][1]
     pc21 = wcs.wcs.pc[1][0]
     pc22 = wcs.wcs.pc[1][1]
-    positionAngle_deg = np.rad2deg(np.arctan2(pc12, pc11))
-    mirrored = ((pc11 * pc22) - (pc12 * pc21)) < 0.0
+    cdelt1 = wcs.wcs.cdelt[0]
+    cdelt2 = wcs.wcs.cdelt[1]
+    cd11 = cdelt1 * pc11
+    cd12 = cdelt1 * pc12
+    cd21 = cdelt2 * pc21
+    cd22 = cdelt2 * pc22
+    mirrored = ((cd11 * cd22) - (cd12 * cd21)) < 0.0
+    positionAngle_deg = np.rad2deg(np.arctan2(cd12, cd11))
+    if (mirrored):
+        if (positionAngle_deg >= 0):
+            positionAngle_deg += (-180.0)
+        else:
+            positionAngle_deg += (+180.0)
+    # pass:if
     north_top_half = (n_y1 > n_y0)  # NORTH ARM top is ABOVE of center?
     east_left_half = (e_x1 < e_x0)  # EAST ARM tip LEFT is LEFT of center?
     delta_deg = (positionAngle_deg - n_pa_deg)
+
     # HACK: BEGIN : create *new* attributes for the axis ======================
-    ax.compass_positionAngle_deg = positionAngle_deg  # HACK: from PC matrix
+    ax.compass_positionAngle_deg = positionAngle_deg  # HACK: from CD matrix
     ax.compass_n_pa_deg = n_pa_deg  # HACK: from north compass arm
-    ax.compass_mirrored = mirrored  # HACK" from PC matrix
+    ax.compass_mirrored = mirrored  # HACK" from CD matrix
     ax.compass_north_top_half = north_top_half  # HACK: from north compass arm
     ax.compass_east_left_half = east_left_half  # HACK: from east compass arm
     # HACK: END ===============================================================
@@ -296,22 +315,29 @@ print(plot_file, ' <--- new PNG file written')
         print('--->', ax.compass_north_top_half, '=ax.compass_north_top_half')
         print('--->', ax.compass_east_left_half, '=ax.compass_east_left_half')
     # pass:if
+
+    # sanity check
     if (np.fabs(delta_deg) >= 0.1):
-        print('\n\nASSERTION ERROR INFO DUMP ===============================')
+        print('\n\n')
+        print('***WARNING*** BEGIN ==========================================')
+        print('***INFO***  %s() %s' % (func_, ver_))
         print('***INFO***:\n', wcs, '\n^-- wcs\n')
         print('***INFO***', positionAngle_deg, '=positionAngle_deg')
-        print('***INFO***', n_pa_deg, '=n_pa_deg')
+        print('***INFO***', n_pa_deg, '=n_pa_deg  <--------------------------')
         print('***INFO***', delta_deg,
           '= delta_deg =(positionAngle_deg - n_pa_deg)')
-        print('\nASSERTION ERROR BELOW =====================================\n')
-        assert(np.fabs(delta_deg) < 0.1)
-    # pass:if
-    if (verbose):
-        print()
-        print('==============================================================')
-        print()
+        print('***INFO***', (np.fabs(delta_deg) < 0.1),
+          '=(np.fabs(delta_deg) < 0.1)  [*** WARNING *** : should be True  8=X]')
+        print('***INFO***', n_dt, '=n_dt  [px]  (delta X axis)')
+        print('***INFO***', n_db, '=n_db  [px]  (delta Y axis)')
+        print('***WARNING*** END ============================================')
     # pass:if
 
+    # that's all folks!
+    if (verbose):
+        print('\n==============================================================')
+        print('END: %s() %s\n' % (func_, ver_))
+    # pass:if
     return
 # pass:def
 
@@ -320,20 +346,39 @@ if (__name__ == '__main__'):
     import matplotlib.pyplot as plt
     import lightkurve as lk
     #
-    tpf = lk.search_targetpixelfile(
-      target='Kepler-138b', mission='Kepler', quarter=10)\
-      .download(quality_bitmask=0)
-    #         ^--- Exoplanet Kelper-138b is "KIC 7603200"
+    obj = 3  # USER CUSTOMIZE
+    #
+    tpf = None
+    if (obj == 1):
+        north_arm_arcsec = 8
+        tpf = lk.search_targetpixelfile(
+          target='Kepler-138b', mission='Kepler', quarter=10)\
+          .download(quality_bitmask=0)
+        #         ^--- Exoplanet Kelper-138b is "KIC 7603200"
+    elif (obj == 2):
+        north_arm_arcsec = 42
+        search_results = lk.search_tesscut(target='CD Ind', sector=1)
+        tpf = search_results[0].download(cutout_size=(11, 11), quality_bitmask=0)
+    elif (obj == 3):
+        north_arm_arcsec = 42
+        tpf = lk.search_targetpixelfile(target='CD Ind', mission='TESS',
+          sector=1).download(quality_bitmask=0)
+    else:
+        print('***ERROR*** BAD OBJECT NUMBER:', obj)
+    # pass:if
+    assert(tpf is not None)
     #
     # Plot the 2nd frame of the TPF
     ax = tpf.plot(frame=1, cmap='gray_r')
     #
     # add a compass rose using the WCS from the TargetPixelFile
-    mkpy3_plot_add_compass_rose_v5(ax=ax, wcs=tpf.wcs, verbose=True)
+    mkpy3_plot_add_compass_rose_v5(ax=ax, wcs=tpf.wcs,
+        north_arm_arcsec=north_arm_arcsec, verbose=True)
     #
     print(tpf.path, '\n^--- tpf.path\n')
     print(tpf.ra, '=tpf.ra')
     print(tpf.dec, '=tpf.dec')
+    print(obj, '=obj')
     #
     plot_file = 'mkpy3_plot1.png'
     plt.savefig(plot_file, bbox_inches="tight")

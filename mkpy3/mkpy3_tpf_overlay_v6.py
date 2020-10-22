@@ -2,7 +2,7 @@
 
 # file://mkpy3_tpf_overlay_v6.py
 
-__version__ = '2020OCT19T1401  v0.55'
+__version__ = '2020OCT22T1614  v0.60'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -11,23 +11,40 @@ __version__ = '2020OCT19T1401  v0.55'
 ###############################################################################
 
 
-def wcs_compass_check(wcs, verbose=False):
+def wcs_compass_check_v2(wcs, verbose=False):
     """
 Utility function.
     """
     import numpy as np
     import copy as cp
+    import inspect
+
     assert (wcs is not None)
-    #
+
+    func_ = inspect.stack()[0][3]  # function name
+
     pc11 = wcs.wcs.pc[0][0]
     pc12 = wcs.wcs.pc[0][1]
     pc21 = wcs.wcs.pc[1][0]
     pc22 = wcs.wcs.pc[1][1]
-    positionAngle_deg = np.rad2deg(np.arctan2(pc12, pc11))
-    mirrored = ((pc11 * pc22) - (pc12 * pc21)) < 0.0
+    cdelt1 = wcs.wcs.cdelt[0]
+    cdelt2 = wcs.wcs.cdelt[1]
+    cd11 = cdelt1 * pc11
+    cd12 = cdelt1 * pc12
+    cd21 = cdelt2 * pc21
+    cd22 = cdelt2 * pc22
+    mirrored = ((cd11 * cd22) - (cd12 * cd21)) < 0.0
+    positionAngle_deg = np.rad2deg(np.arctan2(cd12, cd11))
+    if (mirrored):
+        if (positionAngle_deg >= 0):
+            positionAngle_deg += (-180.0)
+        else:
+            positionAngle_deg += (+180.0)
+    # pass:if
     if (verbose):
         print()
-        print('wcs_compass_check(): BEGIN =====================================')
+        print('%s(): BEGIN ==================================================' %
+          (func_))
         print()
         print(wcs)
         print('^--- wcs')
@@ -53,10 +70,11 @@ Utility function.
     n_x1 = pixcrd1[0][0]
     n_y1 = pixcrd1[0][1]
     negate = -1.0
-    n_dv = n_x1 - n_x0
-    n_dh = n_y1 - n_y0
-    n_pa_deg = negate * np.rad2deg(np.arctan2(n_dv, n_dh))  # new
-    north_top_half = (n_y1 > n_y0)
+    n_dt = n_x1 - n_x0  # top
+    n_db = n_y1 - n_y0  # bottom
+    n_pa_deg = negate * np.rad2deg(np.arctan2(n_dt, n_db))
+    #
+    north_top_half = (n_y1 > n_y0)  # NORTH ARM top is ABOVE of center?
     if (verbose):
         print()
         print('***NORTH***:')
@@ -64,9 +82,11 @@ Utility function.
         print(wcs.wcs.crpix, '=wcs.wcs.crpix')
         print(pixcrd0, '=pixcrd0')
         print(pixcrd1, '=pixcrd1')
+        print(n_dt, '=n_dt =(n_x1-n_x0)  [top]')
+        print(n_db, '=n_db =(n_y1-n_y0)  [bottom]')
         print(world0, '=world0 : center (RA,DEC) [deg]')
         print(world1, '=world1 : North arm tip (RA,DEC) [deg]')
-        print(n_dv, n_dh, '=n_dv, n_dh')  # new
+        # print(n_dv, n_dh, '=n_dv, n_dh')  # new
         print(n_pa_deg, '=n_pa_deg')  # new
         print(north_top_half, '=north_top_half')
     # pass:if
@@ -83,7 +103,7 @@ Utility function.
     pixcrd1 = wcs.wcs_world2pix(world, 0)  # RA and DEC --> pixels
     e_x0 = pixcrd0[0][0]
     e_x1 = pixcrd1[0][0]
-    east_left_half = (e_x0 > e_x1)
+    east_left_half = (e_x1 < e_x0)  # EAST ARM tip LEFT is LEFT of center?
     if (verbose):
         print('\n***EAST***:')
         print(cx, cy, '=cx,cy')
@@ -94,21 +114,45 @@ Utility function.
         print(world1, '=world1 : North arm tip (RA,DEC) [deg]')
         print(east_left_half, '=east_left_half')
         print()
-        print('wcs_compass_check(): END =======================================')
     # pass:if
+
+    # sanity check
     delta_deg = (positionAngle_deg - n_pa_deg)
     if (np.fabs(delta_deg) >= 0.1):
-        print('\n\nASSERTION ERROR INFO DUMP ===============================')
+        print('\n\n')
+        print('***WARNING*** BEGIN ==========================================')
+        print('***INFO***  %s()' % (func_))
         print('***INFO***:\n', wcs, '\n^-- wcs\n')
         print('***INFO***', positionAngle_deg, '=positionAngle_deg')
-        print('***INFO***', n_pa_deg, '=n_pa_deg')
+        print('***INFO***', n_pa_deg, '=n_pa_deg  <--------------------------')
         print('***INFO***', delta_deg,
           '= delta_deg =(positionAngle_deg - n_pa_deg)')
-        print('\nASSERTION ERROR BELOW =====================================\n')
+        print('***INFO***', (np.fabs(delta_deg) < 0.1),
+          '=(np.fabs(delta_deg) < 0.1)  [*** WARNING *** : should be True  8=X]')
+        print('***INFO***', n_dt, '=n_dt  [px]  (delta X axis)')
+        print('***INFO***', n_db, '=n_db  [px]  (delta Y axis)')
+        print('***WARNING*** END ============================================')
+        print()
     # pass:if
-    assert(np.fabs(delta_deg) < 0.1)
+
+    # that's all folks!
+    if (verbose):
+        print('%s(): END ====================================================' %
+          (func_))
+        print()
     # pass:if
-    return positionAngle_deg, mirrored, north_top_half, east_left_half
+
+    chatty = False
+    if (chatty):
+        print()
+        print(func_, positionAngle_deg, '=positionAngle_deg')
+        print(func_, n_pa_deg, '=n_pa_deg')
+        print(func_, mirrored, '=mirrored')
+        print(func_, north_top_half, '=north_top_half')
+        print(func_, east_left_half, '=east_left_half')
+    # pass:if
+
+    return positionAngle_deg, n_pa_deg, mirrored, north_top_half, east_left_half
 # pass:def
 
 
@@ -274,6 +318,7 @@ ax : (matplotlib axes object) or (None)
     import astropy.units as u
     import ast
     import sys
+    import inspect
     #
     import reproject as rp  # pip install reproject
     #
@@ -285,6 +330,8 @@ ax : (matplotlib axes object) or (None)
     import mkpy3_finder_chart_tpf_overlay_v6 as km3
     import mkpy3_vizier_gaia_dr2_cone_get_v2 as km4
     import mkpy3_vizier_vsx_cone_get_v2 as km5
+
+    func_ = inspect.stack()[0][3]  # function name
 
     # assert(tpf is not None)
     if (tpf is None):
@@ -322,6 +369,7 @@ ax : (matplotlib axes object) or (None)
     assert(isinstance(vsx_kwargs, dict) or (vsx_kwargs is None))
 
     if (verbose):
+        print(func_, '=func_')
         print(__version__, '=__version__')
         print(tpf, '=tpf')
         print(frame, '=frame')
@@ -358,12 +406,14 @@ ax : (matplotlib axes object) or (None)
     # pass:if
 
     tpf_positionAngle_deg,\
+      tpf_n_pa_deg,\
       tpf_mirrored,\
       tpf_north_top_half,\
       tpf_east_left_half \
-      = wcs_compass_check(wcs=tpf.wcs, verbose=verbose)
+      = wcs_compass_check_v2(wcs=tpf.wcs, verbose=verbose)
     if (verbose):
         print(tpf_positionAngle_deg, '=tpf_positionAngle_deg')
+        print(tpf_n_pa_deg, '=tpf_n_pa_deg')
         print(tpf_mirrored, '=tpf_mirrored')
         print(tpf_north_top_half, '=tpf_north_top_half')
         print(tpf_east_left_half, '=tpf_east_left_half')
@@ -377,12 +427,14 @@ ax : (matplotlib axes object) or (None)
           radius_arcmin=width_height_arcmin, survey=survey, verbose=verbose)
 
     survey_positionAngle_deg,\
+      survey_n_pa_deg,\
       survey_mirrored,\
       survey_north_top_half,\
       survey_east_left_half \
-      = wcs_compass_check(wcs=survey_wcs, verbose=verbose)
+      = wcs_compass_check_v2(wcs=survey_wcs, verbose=verbose)
     if (verbose):
         print(survey_positionAngle_deg, '=survey_positionAngle_deg')
+        print(survey_n_pa_deg, '=survey_n_pa_deg')
         print(survey_mirrored, '=survey_mirrored')
         print(survey_north_top_half, '=survey_north_top_half')
         print(survey_east_left_half, '=survey_east_left_half')
@@ -420,7 +472,7 @@ ax : (matplotlib axes object) or (None)
             # pass:if
         # pass:if
         if (rotationAngle_deg == 'tpf'):  # a 3-char str with a value of tpf
-            tpf_pa_deg = tpf_positionAngle_deg
+            tpf_pa_deg = tpf_n_pa_deg  # less reliable: tpf_positionAngle_deg
             if (not tpf_east_left_half):
                 tpf_pa_deg *= (-1.0)
             # pass:if
@@ -432,8 +484,6 @@ ax : (matplotlib axes object) or (None)
                 print('[!]', tpf_pa_sign, '=tpf_pa_sign')
             # pass:if
             reverse = (-1.0)
-            assert(not tpf_mirrored),\
-              '***ERROR*** NOT CALIBRATED FOR MIRRORED WORLD COORDINATE SYSTEMS'
             if (tpf_pa_fabs_deg <= 90.0):
                 rotate_deg = reverse * tpf_pa_deg
                 if (verbose):
@@ -472,13 +522,15 @@ ax : (matplotlib axes object) or (None)
             survey_wcs = wcs
             #
             survey_positionAngle_deg,\
+              survey_n_pa_deg,\
               survey_mirrored,\
               survey_north_top_half,\
               survey_east_left_half \
-              = wcs_compass_check(wcs=survey_wcs, verbose=verbose)
+              = wcs_compass_check_v2(wcs=survey_wcs, verbose=verbose)
             print(survey_rotate_deg, '=survey_rotate_deg')
             if (verbose):
                 print(survey_positionAngle_deg, '=survey_positionAngle_deg [revised]')
+                print(survey_n_pa_deg, '=survey_n_pa_deg [revised]')
                 print(survey_mirrored, '=survey_mirrored [revised]')
                 print(survey_north_top_half, '=survey_north_top_half [revised]')
                 print(survey_east_left_half, '=survey_east_left_half [revised]')
@@ -494,12 +546,14 @@ ax : (matplotlib axes object) or (None)
 
     # HACK: BEGIN : *NEW* attributes of the axis
     ax.tpf_positionAngle_deg = tpf_positionAngle_deg
+    ax.tpf_n_pa_deg = tpf_n_pa_deg
     ax.tpf_mirrored = tpf_mirrored
     ax.tpf_north_top_half = tpf_north_top_half
     ax.tpf_east_left_half = tpf_east_left_half
     ax.survey_rotationAngle_deg = rotationAngle_deg
     ax.survey_rotate_deg = survey_rotate_deg
     ax.survey_positionAngle_deg = survey_positionAngle_deg
+    ax.survey_n_pa_deg = survey_n_pa_deg
     ax.survey_mirrored = survey_mirrored
     ax.survey_north_top_half = survey_north_top_half
     ax.survey_east_left_half = survey_east_left_half
@@ -746,7 +800,7 @@ ax : (matplotlib axes object) or (None)
     # adjust the plot margins
     plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
 
-    # HACK: BEGIN : match orienttion of tpf.plot() graph ======================
+    # match orienttion of tpf.plot() graph ====================================
     ax.xaxis_inverted = False
     ax.yaxis_inverted = False
     if (rotationAngle_deg == 'tpf'):  # a 3-char str with a value of tpf
@@ -759,10 +813,7 @@ ax : (matplotlib axes object) or (None)
             ax.yaxis_inverted = True
         # pass:if
     # pass:if
-    # algorithm not calibrated for mirrored data:
-    assert(not ax.tpf_mirrored)     # NUM ME VEXO?
-    assert(not ax.survey_mirrored)  # NUM ME VEXO?
-    # HACK: END ===============================================================
+    # =========================================================================
 
     if (plot_file == ''):
         plot_file = None
@@ -778,6 +829,10 @@ ax : (matplotlib axes object) or (None)
         plt.show()
         ax = None
     # pass:if
+
+    print()
+    print('DONE:', func_, __version__)
+    print()
 
     return ax
 # pass:def
@@ -806,9 +861,9 @@ if (__name__ == '__main__'):
 
     print('\n\nDATA ==========================================================')
 
-    object = 1  # <--- USER CUSTOMIZE
+    obj = 6  # <--- USER CUSTOMIZE
 
-    if (object == 1):
+    if (obj == 1):
         target = 'CD Ind'
         mission = 'TESS'
         sector = 1
@@ -824,7 +879,7 @@ if (__name__ == '__main__'):
         print('DOWNLOAD  STOP:', str(datetime.datetime.now()))
     # pass:if
 
-    if (object == 2):
+    if (obj == 2):
         target = 'XZ Cyg'
         mission = 'TESS'
         sector = 14
@@ -840,7 +895,7 @@ if (__name__ == '__main__'):
         print('DOWNLOAD  STOP:', str(datetime.datetime.now()))
     # pass:if
 
-    if (object == 3):
+    if (obj == 3):
         target = 'V1460 Her'
         mission = 'TESS'
         sector = 24
@@ -856,7 +911,7 @@ if (__name__ == '__main__'):
         print('DOWNLOAD  STOP:', str(datetime.datetime.now()))
     # pass:if
 
-    if (object == 4):
+    if (obj == 4):
         target = 'Kepler-138b'
         mission = 'Kepler'
         quarter = 10
@@ -874,7 +929,7 @@ if (__name__ == '__main__'):
         print('DOWNLOAD  STOP:', str(datetime.datetime.now()))
     # pass:if
 
-    if (object == 5):
+    if (obj == 5):
         target = 'K2-34b'
         mission = 'k2'
         campaign = 18
@@ -890,6 +945,29 @@ if (__name__ == '__main__'):
           quality_bitmask=0)
         # ^--- exoplanet K2-34b is "EPIC 212110888"
         print('DOWNLOAD  STOP:', str(datetime.datetime.now()))
+    # pass:if
+
+    if (obj == 6):
+        target = 'CD Ind'
+        sector = 1
+        mission = 'TESS'
+        frame = 1
+        width_height_arcmin = 6  # USER CUSTOMIZE
+        north_arm_arcsec = 42    # USER CUSTOMIZE
+        percentile = 99.9        # USER CUSTOMIZE
+        title_ = target + ' : TESS : Sector ' + str(sector)  # USER CUSTOMIZE
+        title2_ = title_ + " : Frame " + str(frame)          # USER CUSTOMIZE
+        #
+        radius = 120  # arcsec
+        print('DOWNLOAD START:', str(datetime.datetime.now()))
+        search_results = lk.search_targetpixelfile(target,
+          radius=radius, mission=mission, sector=sector)
+        tpf = search_results[0].download(quality_bitmask=0)
+        print('DOWNLOAD  STOP:', str(datetime.datetime.now()))
+        print(search_results)
+        print(tpf)
+        print(tpf.wcs)
+        print(':-)')
     # pass:if
 
     print()
@@ -970,6 +1048,7 @@ if (__name__ == '__main__'):
     print_vsx = False
 
     print('\n\nPLOT#4 =======================================================')
+    shrink = 0.0  # HACK  <--------------------------------------------------------
     rotationAngle_deg = 0.0  # no rotation
     ax = mkpy3_tpf_overlay_v6(tpf=tpf, rotationAngle_deg=rotationAngle_deg,
       width_height_arcmin=width_height_arcmin, percentile=percentile,
@@ -989,6 +1068,7 @@ if (__name__ == '__main__'):
     plt.close()
 
     print('\n\nPLOT#3 =======================================================')
+    shrink = 0.0  # HACK
     #
     # compute rotation based on the WCS of the TPF:
     rotationAngle_deg = 'tpf'  # HACK  :-)
@@ -997,7 +1077,7 @@ if (__name__ == '__main__'):
       width_height_arcmin=width_height_arcmin,
       shrink=shrink, show_plot=False, plot_file='', title=title_,
       percentile=percentile,
-      print_gaia_dr2=print_gaia_dr2, print_vsx=print_vsx)
+      print_gaia_dr2=print_gaia_dr2, print_vsx=print_vsx, verbose=verbose)
     ax.coords[0].set_major_formatter('d.dd')
     ax.coords[1].set_major_formatter('d.dd')
     ax.tick_params(axis='x', labelsize=16, length=5, width=2, labeltop=True,
@@ -1012,9 +1092,11 @@ if (__name__ == '__main__'):
     print('\n', oplot3, ' <--- new PNG file written')
     plt.close()
 
-    print('\n================================================================')
-
-    print('\n[*]', ax.tpf_positionAngle_deg, '=ax.tpf_positionAngle_deg')
+    print()
+    print('==================================================================')
+    print()
+    print('[*]', ax.tpf_positionAngle_deg, '=ax.tpf_positionAngle_deg')
+    print('[*]', ax.tpf_n_pa_deg, '=ax.tpf_n_pa_deg')
     print('[*]', ax.tpf_mirrored, '=ax.tpf_mirrored')
     print('[*]', ax.tpf_north_top_half, '=ax.tpf_north_top_half')
     print('[*]', ax.tpf_east_left_half, '=ax.tpf_east_left_half')
@@ -1023,6 +1105,7 @@ if (__name__ == '__main__'):
     print('[*] --->', ax.survey_rotate_deg, '=ax.survey_rotate_deg')
     print('[*]')
     print('[*]', ax.survey_positionAngle_deg, '=ax.survey_positionAngle_deg')
+    print('[*]', ax.survey_n_pa_deg, '=ax.survey_n_pa_deg')
     print('[*]', ax.survey_mirrored, '=ax.survey_mirrored')
     print('[*]', ax.survey_north_top_half, '=ax.survey_north_top_half')
     print('[*]', ax.survey_east_left_half, '=ax.survey_east_left_half')
@@ -1042,6 +1125,7 @@ if (__name__ == '__main__'):
     # pass:if
     print('[-]', tpf.ra, '=tpf.ra [deg]')
     print('[-]', tpf.dec, '=tpf.dec [deg]')
+    print('[-]', obj, '=obj')
 
     print()
     print()
@@ -1049,6 +1133,11 @@ if (__name__ == '__main__'):
     print()
     print('plot files written:\n')
     print(' ', oplot1, oplot2, oplot3, oplot4)
+
+    print()
+    print('FILE:', __file__)
+    print('TIME:', str(datetime.datetime.now()))
+    print('DONE:', __name__, __version__)
 
 # pass:if
 
