@@ -2,7 +2,7 @@
 
 # file://mkpy3_tpf_overlay_v6.py
 
-__version__ = '2020OCT22T1614  v0.60'
+__version__ = '2020OCT27T1231  v0.61'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -954,7 +954,7 @@ if (__name__ == '__main__'):
         frame = 1
         width_height_arcmin = 6  # USER CUSTOMIZE
         north_arm_arcsec = 42    # USER CUSTOMIZE
-        percentile = 99.9        # USER CUSTOMIZE
+        percentile = 99.5        # USER CUSTOMIZE
         title_ = target + ' : TESS : Sector ' + str(sector)  # USER CUSTOMIZE
         title2_ = title_ + " : Frame " + str(frame)          # USER CUSTOMIZE
         #
@@ -1029,7 +1029,7 @@ if (__name__ == '__main__'):
     ax.coords[1].set_major_formatter('d.dd')
     ax.set_xlabel('Right Ascension (J2000)', size=24)
     ax.set_ylabel('Declination (J2000)', size=24)
-    fig.suptitle(title2_, size=24)
+    fig.suptitle(title_, size=24)
     ax.grid(True, color='palegreen', lw=2, zorder=1)
     km1.mkpy3_plot_add_compass_rose_v5(ax=ax, north_arm_arcsec=north_arm_arcsec,
       wcs=tpf.wcs, verbose=verbose)
@@ -1048,7 +1048,6 @@ if (__name__ == '__main__'):
     print_vsx = False
 
     print('\n\nPLOT#4 =======================================================')
-    shrink = 0.0  # HACK  <--------------------------------------------------------
     rotationAngle_deg = 0.0  # no rotation
     ax = mkpy3_tpf_overlay_v6(tpf=tpf, rotationAngle_deg=rotationAngle_deg,
       width_height_arcmin=width_height_arcmin, percentile=percentile,
@@ -1068,7 +1067,6 @@ if (__name__ == '__main__'):
     plt.close()
 
     print('\n\nPLOT#3 =======================================================')
-    shrink = 0.0  # HACK
     #
     # compute rotation based on the WCS of the TPF:
     rotationAngle_deg = 'tpf'  # HACK  :-)
