@@ -2,7 +2,7 @@
 
 # file://mkpy3_tpf_overlay_v6.py
 
-__version__ = '2020OCT27T1231  v0.61'
+__version__ = '2020OCT28T1210  v0.63'
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -617,6 +617,7 @@ ax : (matplotlib axes object) or (None)
     # ===== GAIA DR2 CATALOG ==================================================
 
     proceed = isinstance(gaia_dr2_kwargs, dict) and (shrink > 0.0)
+    print(proceed, '=proceed [GAIA2 catalog]')
     while (proceed):
 
         raj2000, dej2000, sep_arcsec, gaia_dr2_result = \
@@ -624,12 +625,15 @@ ax : (matplotlib axes object) or (None)
               ra_deg=ra_deg, dec_deg=dec_deg,
               radius_arcsec=radius_arcsec, verbose=verbose)
         if (gaia_dr2_result is None):  # nothing found
+            print(gaia_dr2_result,
+              '=gaia_dr2_result [***WARNING*** NOTHING FOUND]')
             break
-
+        # pass:if
         if (type(gaia_dr2_kwargs) is dict):
             ax.scatter(
                 raj2000, dej2000,
                 transform=ax.get_transform(survey_cframe), **gaia_dr2_kwargs)
+        # pass:if
 
         # numpy vectors of useful columns
         xra = raj2000  # alias
@@ -712,12 +716,14 @@ ax : (matplotlib axes object) or (None)
             ra_deg=ra_deg, dec_deg=dec_deg,
             radius_arcsec=radius_arcsec, verbose=verbose)
         if (vsx_result is None):  # nothing found
+            print(vsx_result, '=vsx_result [***WARNING*** NOTHING FOUND]')
             break
-
+        # pass:if
         if (type(vsx_kwargs) is dict):
             ax.scatter(
               raj2000, dej2000,
               transform=ax.get_transform(survey_cframe), **vsx_kwargs)
+        # pass:if
 
         # numpy vectors of useful columns
         name = np.array(vsx_result['Name'], dtype=np.str)
@@ -1069,7 +1075,7 @@ if (__name__ == '__main__'):
     print('\n\nPLOT#3 =======================================================')
     #
     # compute rotation based on the WCS of the TPF:
-    rotationAngle_deg = 'tpf'  # HACK  :-)
+    rotationAngle_deg = 'tpf'
     #
     ax = mkpy3_tpf_overlay_v6(tpf=tpf, rotationAngle_deg=rotationAngle_deg,
       width_height_arcmin=width_height_arcmin,
