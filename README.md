@@ -7,88 +7,108 @@ SETI Institute
 
 ---
 
-### Example: Kepler mission observations of the exoplanet Kepler-138b
+#### Making a finder chart for 2-min TESS observations of CD Ind using mkpy3
 
-The command
-<pre>
-python mkpy3_kepler_tpf_overlay_v1.py
-</pre>
-should produce this plot:
+<p float="left">
+  <img src="mkpy3_plot_figa.png" width="320" />
+  <img src="mkpy3_plot_figb.png" width="240" /> 
+</p>
 
-![](mkpy3_plot_figa.png)
 
-* The finder chart is a 2 arcmin x 2 arcmin field from the 2MASS-J near-infared survey; bright stars are black and the faint background is light-grey/white.
+* BLUE SQUARES show the TESS target pixel file overlay.
+* RED SQUARES show the TESS target piexl file aperture overlay.
 
-* The red squares show the target aperture pixels of this Kepler mission observation of the exoplanet Kepler-138b (KIC 7603200);
-the remaining blue squares show the sky background pixels.
+* YELLOW CIRCLE marks the target (CD Ind).
 
-* The yellow circle shows the target of the observation (Kepler 138-b).
+* CYAN CIRCLES show some of the GAIA DR2 catalog stars in the field.
+* GREEN X shows the only VSX catalog star in the field (the target).
 
-* The green X shows the only VSX (International Variable Star Index) variable object in this field (the target object).
+* Compass rose:
+    * LONG ARM of the compass rose points NORTH.
+    * SHORT ARM of the compass rose points EAST.
+  
+* GREEN LINES show the Right Ascension / Declination grid.
 
-* The cyan circles mark nearby GAIA DR2 stars in this field.
+**Click the following link to see a Jupyter notebook that creates the above two plots:**
 
-The command
-<pre>
-python mkpy3_kepler_tpf_overlay_v1.py --shrink=0.0
-</pre>
-turns off the display of the GAIA DR2 and VSX objects.
+[https://github.com/KenMighell/mkpy3/blob/master/mkpy3/docs/source/tutorials/nb_tess_finder_chart_cd_ind.ipynb]
+(https://github.com/KenMighell/mkpy3/blob/master/mkpy3/docs/source/tutorials/nb_tess_finder_chart_cd_ind.ipynb)
 
-The command
-<pre>
-python mkpy3_kepler_tpf_overlay_v1.py --help
-</pre>
-describes the argument options of this application.
+Alternatively, you can create these plots using the following Python 3 code snippets.
 
----
-### Example: A Jupyter notebook of TESS Mission observations of XZ Cyg
+**The following code snippet creates the finder chart (above left) using mkpy3:**
 
-The RR Lyrae variable star XZ Cyg has been observed by the TESS mission in Sectors 14, 15, 16, 20, and 23.  This notebook shows how to get 10x10 TESScut observations from the Mikulski Archive for Space Telescopes (MAST) at the Space Telescope Science Institute (STScI) using Python3 packages and functions.  Finder charts are created using the  **mkpy3** package.  The period of this RR Lyrae variable star is determined from the raw TESS 30-minute light curve using the **lightkurve** package.  Based on the analyss presented in this Jupyter notebook of the raw TESS light curve, **XZ Cyg has a period of 0.470399 days**. In comparison, the (AAVSO International) Variable Star indeX (VSX) catalog gives the period as 0.466600 days.
+```
+# download TESS 2-min observation of CD Ind from STScI
+import lightkurve as lk
+search_results = lk.search_targetpixelfile('CD Ind', radius=60, 
+  mission='TESS', sector=1)    
+tpf = search_results[0].download(quality_bitmask=0)
+#
+# show the TPF overlay on rotated "DSS2 Red" survey image
+import mkpy3_tpf_overlay_v6 as km1
+import mkpy3_plot_add_compass_rose_v5 as km2
+ax = km1.mkpy3_tpf_overlay_v6(tpf=tpf, survey='DSS2 Red', 
+  rotationAngle_deg='tpf', width_height_arcmin=6, percentile=99.5,
+  shrink=0.4, show_plot=False, plot_file='',
+  title='CD Ind : TESS : Sector 1', print_gaia_dr2=False)
+ax.coords[0].set_major_formatter('d.dd')
+ax.coords[1].set_major_formatter('d.dd')
+ax.tick_params(axis='x', labelsize=16, length=5, width=2,
+  labeltop=True, labelbottom=True)
+ax.tick_params(axis='y', labelsize=16, length=5, width=2,
+  labelright=True, labelleft=True)
+ax.grid(True, color='palegreen', lw=2, zorder=1)  # show RA/DEC grid
+km2.mkpy3_plot_add_compass_rose_v5(ax=ax, north_arm_arcsec=50)
+#
+# save, show, and close the plot
+import matplotlib.pyplot as plt
+plt.savefig('mkpy3_plot1.png', bbox_inches="tight");
+plt.show(); plt.close()
+```
 
-Click this link to see the Jupyter notebook:
+**The following code snippet creates the annotated TPF image plot (above right) using mkpy3:**
 
-[https://github.com/KenMighell/mkpy3/blob/master/mkpy3/docs/source/tutorials/nb_xz_cyg_tess_v3.ipynb](https://github.com/KenMighell/mkpy3/blob/master/mkpy3/docs/source/tutorials/nb_xz_cyg_tess_v3.ipynb)
+```
+# download TESS 2-min observation of CD Ind from STScI
+import lightkurve as lk
+search_results = lk.search_targetpixelfile('CD Ind', radius=60,  
+  mission='TESS', sector=1)    
+tpf = search_results[0].download(quality_bitmask=0)
+#
+# show the first frame of the TPF with RA/DEC axis and grid
+import matplotlib.pyplot as plt
+import astropy.visualization as av
+import mkpy3_plot_add_compass_rose_v5 as km1
+fig = plt.figure(figsize=(7, 7))
+ax = plt.subplot(projection=tpf.wcs)
+interval = av.PercentileInterval(99.9)
+stretch = av.SqrtStretch()
+frame = 0
+image_data = tpf.flux[frame]
+norm = av.ImageNormalize(image_data, interval=interval,  
+  stretch=stretch)
+ax.imshow(image_data, norm=norm, cmap='gray_r')
+ax.set_xlabel('Right Ascension (J2000)', size=24)
+ax.set_ylabel('Declination (J2000)', size=24)
+ax.tick_params(axis='x', labelsize=16, length=5, width=2,
+  labeltop=True, labelbottom=True)
+ax.tick_params(axis='y', labelsize=16, length=5, width=2,
+  labelright=True, labelleft=True)
+ax.coords[0].set_major_formatter('d.dd')
+ax.coords[1].set_major_formatter('d.dd')
+ax.grid(True, color='palegreen', lw=2, zorder=1)
+km1.mkpy3_plot_add_compass_rose_v5(ax=ax,  # add a compass rose
+  north_arm_arcsec=50, wcs=tpf.wcs)
+marker_kwargs = {'edgecolor': 'yellow',  
+  's': 600, 'facecolor': 'None', 'lw': 3, 'zorder': 10}
+ax.scatter(tpf.ra, tpf.dec, transform=ax.get_transform('icrs'),  
+  **marker_kwargs)
+fig.suptitle('CD Ind : TESS : Sector 1 : Frame 0', size=24)
+#
+# Save, show, and close the plot
+plt.savefig('mkpy3_plot2.png', bbox_inches="tight");  
+plt.show(); plt.close()
+```
 
-![](mkpy3_plot_figc.png)
-
-![](mkpy3_plot_figd.png)
-
----
-
-### Example: Finding charts of a TESS mission observation of XZ Cyg
-
-The command
-<pre>
-python mkpy3_tess_tpf_overlay_v3.py
-</pre>
-should produce this plot:
-
-![](mkpy3_plot_figb.png)
-
-* The finder chart is a 6 arcmin x 6 arcmin field from the 2MASS-J near-infared survey; bright stars are black and the faint background is light-grey/white.
-
-* The coral squares show the target aperture pixels of this TESS mission observation (10x10 TESS FFI cutout) of the RR Lyrae type variable star XZ Cyg.
-
-* The yellow circle shows the target of the observation (XZ Cyg).
-
-* The green X shows the only VSX (International Variable Star Index) variable object in this field (the target object).
-
-* The cyan circles mark nearby GAIA DR2 stars in this field.
-
-The above command retrieved the TESScut file
-<pre>
-tess-s0014-2-1_293.122090_56.388190_10x10_astrocut.fits
-</pre>
-from  the Mikulski Archive for Space Telescopes (MAST) of the Space Telescope Science Institute (STScI)
-and placed it in a local cache folder for faster retrieval in the future.
-
-One can work with TargetPixelFiles that are stored locally.
-For example, suppose that the above TESScut file is stored in the current working directory, then the command
-<pre>
-python mkpy3_tess_tpf_overlay_v3.py --tpf=tess-s0014-2-1_293.122090_56.388190_10x10_astrocut.fits
-</pre>
-will produce the same results (plot and text) as the command
-<pre>
-python mkpy3_tess_tpf_overlay_v3.py
-</pre>
-which uses that particular observation as the default TargetPixelFile.
+[//]: # (EOF)
