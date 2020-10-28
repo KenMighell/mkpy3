@@ -2,7 +2,7 @@
 
 # file://mkpy3_vizier_catalog_cone_get_v4.py
 
-__version__ = '2020SEP22T1401  0.15'  # mkpy3_vizier_catalog_cone_get_v4.py
+__version__ = '2020OCT28T1158  v0.17'  # mkpy3_vizier_catalog_cone_get_v4.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -74,6 +74,13 @@ vizier_catalog_result :
     assert(vizier_catalog is not None)
     if (verbose is None):
         verbose = False
+    #
+    # HACK: BEGIN =============================================================
+    # fixes a nasty bug found in astroquery.vizier.Vizier:
+    chunk = 10000.0
+    radius_arcsec = np.rint(radius_arcsec * chunk) / chunk  # HACK A FURBALL!
+    # search radius now rounded to 4 decimal places (~100 microdegrees)
+    # HACK: END ===============================================================
     #
     if (verbose):
         print()
