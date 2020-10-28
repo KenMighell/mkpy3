@@ -31,8 +31,7 @@ SETI Institute
 
 **Click the following link to see a Jupyter notebook that creates the above two plots:**
 
-[https://github.com/KenMighell/mkpy3/blob/master/mkpy3/docs/source/tutorials/nb_tess_finder_chart_cd_ind.ipynb]
-(https://github.com/KenMighell/mkpy3/blob/master/mkpy3/docs/source/tutorials/nb_tess_finder_chart_cd_ind.ipynb)
+[https://github.com/KenMighell/mkpy3/blob/master/mkpy3/docs/source/tutorials/nb_tess_finder_chart_cd_ind.ipynb](https://github.com/KenMighell/mkpy3/blob/master/mkpy3/docs/source/tutorials/nb_tess_finder_chart_cd_ind.ipynb)
 
 Alternatively, you can create these plots using the following Python 3 code snippets.
 
