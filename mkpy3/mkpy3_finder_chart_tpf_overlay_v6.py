@@ -2,24 +2,19 @@
 
 # file://mkpy3_finder_chart_tpf_overlay_v6
 
-__version__ = '2020AUG18T1304 0.10g'  # mkpy3_finder_chart_tpf_overlay_v6.py
-
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-# PEP8:OK
-
-
+"""
 import sys
-
+#
 pyver = (sys.version_info.major*10) + (sys.version_info.minor)
 if (pyver < 27):
     print('*** ERROR *** This application needs Python 2.7 or higher.')
     sys.exit(1)
 # pass:if
-
+#
 try:
     import lightkurve as lk
 except Exception:
@@ -31,6 +26,7 @@ except Exception:
     print('http://lightkurve.keplerscience.org/install.html\n')
     sys.exit(1)
 # pass:try
+"""
 
 
 def mkpy3_finder_chart_tpf_overlay_v6(
@@ -73,12 +69,11 @@ Returns: nothing
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
     func_ = 'mkpy3_finder_chart_tpf_overlay_v6'
-    date_ = '2020AUG18'
-    version_ = 'xg'
+    date_ = '2020NOV23'
+    version_ = 'xh'
     #
     import numpy as np
     import astropy.units as u
@@ -157,7 +152,7 @@ Returns: nothing
     #
     # convert RA,DEC to pixel coordinates of the *survey* image
     origin0 = 0
-    pixels = survey_wcs.wcs_world2pix(pxrav*u.degree, pxdecv*u.degree, origin0)
+    pixels = survey_wcs.wcs_world2pix(pxrav * u.degree, pxdecv * u.degree, origin0)
     # wcs_world2pix documentation: origin=0 (ZERO) when using Numpy ---------^
     #
     xpx = pixels[0]  # useful alias
@@ -175,7 +170,7 @@ Returns: nothing
     corners = np.array([[1., 1.], [1., -1.], [-1., -1.], [-1., 1], [1., 1.]])
     #
     # offsetmatrix is a rotation/scaling matrix:
-    offsetmatrix = np.array(((dx, -dy), (dy, dx)))/2.
+    offsetmatrix = np.array(((dx, -dy), (dy, dx))) / 2.
     #      dx=cosine(theta) ---^         ^--- dy=sine(theta)
     # where theta is the rotation angle of offsetmatrix
     for i in range(len(corners)):
@@ -183,7 +178,7 @@ Returns: nothing
     #
     # plot boundaries of each pixel
     for i in range(npixels):
-        ccoords = xy[i]+corners
+        ccoords = xy[i] + corners
         k = d[i]
         c = colors[k]
         lw = lws[k]
@@ -202,56 +197,10 @@ Returns: nothing
 # pass:def
 
 
-def str2bool(v):
-    import argparse
-    """
-Utility function for argparse.
-    """
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
-    # pass:if
-# pass:def
-
-
-def accept_str_or_int(v):
-    import argparse
-    """
-Utility function for argparse.
-    """
-    if isinstance(v, int):
-        return str(v)
-    elif isinstance(v, str):
-        return v
-    else:
-        raise argparse.ArgumentTypeError('str or int value expected.')
-    # pass:if
-# pass:def
-
-
-def check_file_exists(filename, overwrite):
-    """
-Utility function.
-    """
-    assert(isinstance(filename, str))
-    assert(isinstance(overwrite, bool))
-    msg = 'Requested output file already exists (overwrite=False):\n'
-    if (not overwrite):
-        if (os.path.isfile(filename)):
-            print('\n***** ERROR *****\n\n%s' % (msg))
-            print("new_filename='%s'\n" % filename)
-            sys.exit(1)
-        # pass:if
-    # pass:if
-# pass:def
-
-
 if (__name__ == '__main__'):
     import matplotlib.pyplot as plt
     import astropy.units as u
+    import sys
     import os
     import ntpath
     import argparse
@@ -262,6 +211,7 @@ if (__name__ == '__main__'):
 
     import mkpy3_finder_chart_survey_fits_image_get_v1 as km1
     import mkpy3_finder_chart_image_show_v1 as km2
+    import mkpy3_util as km3
 
     #
     # argparse: BEGIN =========================================================
@@ -281,13 +231,13 @@ if (__name__ == '__main__'):
         '--width_height_arcmin', action="store", type=float, default=2.0,
         help='Width and height size in arcmin (float) [default: 2.0]')
     parser.add_argument(
-        '--show_plot', type=str2bool, default=True,
+        '--show_plot', type=km3.mkpy3_util_str2bool, default=True,
         help='If True, show the plot [default=True]')
     parser.add_argument(
         '--plotfile', action="store", type=str, default='mkpy3_plot.png',
         help="Filename of the output plotfile [default: 'mkpy3_plot.png']")
     parser.add_argument(
-        '--overwrite', type=str2bool, default=False,
+        '--overwrite', type=km3.mkpy3_util_str2bool, default=False,
         help='If True, overwrite ("clobber") an existing output file '
         '[default: False.')
     parser.add_argument(
@@ -325,7 +275,7 @@ if (__name__ == '__main__'):
         "(str) [default: \"{'edgecolor':'yellow', 's':600, 'facecolor':'None',"
         " 'lw':3, 'zorder':10}\"")
     parser.add_argument(
-        '--verbose', type=str2bool, default=False,
+        '--verbose', type=km3.mkpy3_util_str2bool, default=False,
         help='Print extra information if True (bool) [default=False]')
     #
     args = parser.parse_args()
@@ -382,11 +332,11 @@ if (__name__ == '__main__'):
     # pass:if
 
     if (tpf_filename is not None):
-        check_file_exists(tpf_filename, True)
+        km3.mkpy3_util_check_file_exists(tpf_filename, True)
         tpf = lk.read(tpf_filename)
     else:
         tpf = lk.search_targetpixelfile(
-            target='kepler-138b', mission='kepler',
+            target='kepler-138b', mission='kepler', cadence='long',
             quarter=10).download(quality_bitmask=0)
         #   6--- exoplanet Kelper-138b is "KIC 7603200"
         print()
@@ -442,18 +392,16 @@ if (__name__ == '__main__'):
     # put a yellow circle at the target position
     if (type(marker_dict) is dict):
         ax.scatter(
-            ra_deg*u.deg, dec_deg*u.deg,
+            ra_deg * u.deg, dec_deg * u.deg,
             transform=ax.get_transform(survey_cframe),
             **marker_dict)
-    # last line *before* using dictionary:
-    #     s=600, edgecolor='yellow', facecolor='None', lw=3, zorder=10);
 
     # adjust the plot margins
     plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
 
     if (plotfile != ''):
         if (plotfile != 'mkpy3_plot.png'):
-            check_file_exists(plotfile, overwrite)
+            km3.mkpy3_util_check_file_exists(plotfile, overwrite)
         plt.savefig(plotfile, dpi=300)  # , bbox_inches = "tight")
         print('\n%s <--- plotfile written  :-)\n' % (plotfile))
     # pass:if
@@ -466,4 +414,5 @@ if (__name__ == '__main__'):
     plt.close()
 
 # pass#if
+
 # EOF

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
-version_ = '2020SEP29T1026  v0.08'  # check_mkpy3_v5.py
+# file://check_mkpy3
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
 
@@ -14,7 +13,6 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
     import os
@@ -23,13 +21,16 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
     #
     # ASCII color codes
     CEND = '\33[0m'
-    CRED = '\33[31m'
+    # CRED = '\33[31m'  # red
+    CRED = '\33[1;31m'  # bold red
+    # CGREEN = '\33[32m'  # green
+    CGREEN = '\33[1;32m'  # bold green
     #
     cwd = os.getcwd()
     print(cwd, ' =$PWD')
     good = 0
     bad = 0
-    filel = sorted(glob.glob('./mkpy3*.py'))
+    filel = sorted(glob.glob('./mkpy3_*.py'))
     sz = len(filel)
     print()
     print(sz, 'files to check')
@@ -44,7 +45,7 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
             print()
         else:
             good += 1
-            print('OK')
+            print(CGREEN + 'OK' + CEND)
         # pass:if
     # pass:for
     print()
