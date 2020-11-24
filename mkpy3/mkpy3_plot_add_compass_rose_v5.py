@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
+# file://mkpy3_plot_add_compass_rose_v5.py
+
 # Kenneth John Mighell
 # Kepler Support Scientist
-# SETI Institute
+# NASA Ames Research Center / SETI Institute
 
-__version__ = '2020OCT22T1036  v0.43'
+# =============================================================================
 
 
 def mkpy3_plot_add_compass_rose_v5(
@@ -80,7 +82,6 @@ print(plot_file, ' <--- new PNG file written')
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
     import matplotlib.pyplot as plt
@@ -90,7 +91,6 @@ print(plot_file, ' <--- new PNG file written')
     import inspect
 
     func_ = inspect.stack()[0][3]  # function name
-    ver_ = __version__             # function version
 
     assert(ax is not None), '***ERROR***: Requires a matplotlib axes object'
     if (wcs is None):
@@ -320,7 +320,7 @@ print(plot_file, ' <--- new PNG file written')
     if (np.fabs(delta_deg) >= 0.1):
         print('\n\n')
         print('***WARNING*** BEGIN ==========================================')
-        print('***INFO***  %s() %s' % (func_, ver_))
+        print('***INFO***  %s()' % (func_))
         print('***INFO***:\n', wcs, '\n^-- wcs\n')
         print('***INFO***', positionAngle_deg, '=positionAngle_deg')
         print('***INFO***', n_pa_deg, '=n_pa_deg  <--------------------------')
@@ -336,13 +336,16 @@ print(plot_file, ' <--- new PNG file written')
     # that's all folks!
     if (verbose):
         print('\n==============================================================')
-        print('END: %s() %s\n' % (func_, ver_))
+        print('END: %s()\n' % (func_))
     # pass:if
     return
 # pass:def
 
 
-if (__name__ == '__main__'):
+# =============================================================================
+
+
+def xmkpy3_plot_add_compass_rose_v5():
     import matplotlib.pyplot as plt
     import lightkurve as lk
     #
@@ -384,5 +387,14 @@ if (__name__ == '__main__'):
     plt.savefig(plot_file, bbox_inches="tight")
     plt.close()
     print('\n', plot_file, ' <--- new PNG file written')
+# pass:def
+
+
+# =============================================================================
+
+
+if (__name__ == '__main__'):
+    xmkpy3_plot_add_compass_rose_v5()
 # pass:if
+
 # EOF

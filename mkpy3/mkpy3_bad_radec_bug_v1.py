@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
+# file://mkpy3_bad_radec_bug_v1.py
+
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler/K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-__version__ = '2020AUG17T1343 0.07'  # mkpy3_bad_radec_bug_v1.py
-
-# PEP8:OK
+# =============================================================================
 
 
 def mkpy3_bad_radec_bug_v1(tpf=None, verbose=None):
@@ -30,7 +29,6 @@ bad_radec : bool
 
 # Kenneth John Mighell
 # Kepler/K2 Support Scientist
-# Kepler/K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
     import numpy as np
@@ -41,7 +39,7 @@ bad_radec : bool
         verbose = False
     if (tpf is None):
         tpf = lk.search_targetpixelfile(
-            target='kepler-138b', mission='kepler',
+            target='kepler-138b', mission='kepler', cadence='long',
             quarter=10).download(quality_bitmask=0)
         #   ^--- exoplanet Kelper-138b is "KIC 7603200"
     # pass:if
@@ -72,11 +70,11 @@ bad_radec : bool
     if (verbose):
         print(x2, y2, '=x2, y2')
     # pass:if
-    bad_ra = (np.abs(rax2-rax1) > 0.00001)
+    bad_ra = (np.abs(rax2 - rax1) > 0.00001)
     if (verbose):
         print(bad_ra, '=bad_ra')
     # pass:if
-    bad_dec = (np.abs(decx2-decx1) > 0.00001)
+    bad_dec = (np.abs(decx2 - decx1) > 0.00001)
     if (verbose):
         print(bad_dec, '=bad_dec')
     # pass:if
@@ -90,7 +88,10 @@ bad_radec : bool
 # pass:def
 
 
-if (__name__ == '__main__'):
+# =============================================================================
+
+
+def xmkpy3_bad_radec_bug_v1():
     import lightkurve as lk
     bug_found = mkpy3_bad_radec_bug_v1(verbose=True)
     print(flush=True)
@@ -102,5 +103,14 @@ if (__name__ == '__main__'):
     else:
         print('OK')
     # pass:if
+# pass:def
+
+
+# =============================================================================
+
+
+if (__name__ == '__main__'):
+    xmkpy3_bad_radec_bug_v1()
 # pass:if
+
 # EOF

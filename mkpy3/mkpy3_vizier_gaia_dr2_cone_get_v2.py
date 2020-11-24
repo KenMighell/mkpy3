@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+# file:// mkpy3_vizier_gaia_dr2_cone_get_v2.py
+
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-_version_ = '2020SEP22T1434 V0.15'
+# =============================================================================
 
 
 def mkpy3_vizier_gaia_dr2_cone_get_v2(
@@ -15,7 +16,7 @@ def mkpy3_vizier_gaia_dr2_cone_get_v2(
   verbose=None
 ):
     """
-Function : mkpy3_vizier_gaia_dr2_cone_get_v1()
+Function : mkpy3_vizier_gaia_dr2_cone_get_v2()
 
 Purpose: Perform a cone search of the GAIA DR2 catalog using Vizier.
 
@@ -43,7 +44,6 @@ vizier_gaia_dr2_result :
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
     import mkpy3_vizier_catalog_cone_get_v4 as km1
@@ -74,10 +74,13 @@ vizier_gaia_dr2_result :
     # pass:try
     #
     return (raj2000, dej2000, sep_arcsec, vizier_gaia_dr2_result)
-# pass:if
+# pass:def
 
 
-if (__name__ == '__main__'):
+# =============================================================================
+
+
+def xmkpy3_vizier_gaia_dr2_cone_get_v2():
     import numpy as np
     from astropy.coordinates import SkyCoord
     import astropy.units as u
@@ -95,7 +98,7 @@ if (__name__ == '__main__'):
     print('\n#GAIA2_DR2:')
     print('#index raj2000 dej2000 sep_arcsec')
     for j in range(raj2000.size):
-        print(j, raj2000[j], dej2000[j], sep_arcsec[j], "'"+name[j]+"'")
+        print(j, raj2000[j], dej2000[j], sep_arcsec[j], "'" + name[j] + "'")
     # pass:for
 
     # numpy vectors of useful columns
@@ -160,6 +163,14 @@ if (__name__ == '__main__'):
           verbose=True)
     assert(gaia_dr2_result is None)
     print('\n:-)')
-
 # pass:if
+
+
+# =============================================================================
+
+
+if (__name__ == '__main__'):
+    xmkpy3_vizier_gaia_dr2_cone_get_v2()
+# pass:if
+
 # EOF

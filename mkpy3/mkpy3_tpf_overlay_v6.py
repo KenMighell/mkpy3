@@ -9,7 +9,7 @@
 # =============================================================================
 
 
-def mkpy3_tpf_overlay_wcs_compass_check_v2(wcs, verbose=False):
+def mkpy3__wcs_compass_check_v2(wcs, verbose=False):
     """
 Utility function.
     """
@@ -387,7 +387,7 @@ ax : (matplotlib axes object) or (None)
       tpf_mirrored,\
       tpf_north_top_half,\
       tpf_east_left_half \
-      = mkpy3_tpf_overlay_wcs_compass_check_v2(wcs=tpf.wcs, verbose=verbose)
+      = mkpy3__wcs_compass_check_v2(wcs=tpf.wcs, verbose=verbose)
     if (verbose):
         print(tpf_positionAngle_deg, '=tpf_positionAngle_deg')
         print(tpf_n_pa_deg, '=tpf_n_pa_deg')
@@ -408,7 +408,7 @@ ax : (matplotlib axes object) or (None)
       survey_mirrored,\
       survey_north_top_half,\
       survey_east_left_half \
-      = mkpy3_tpf_overlay_wcs_compass_check_v2(wcs=survey_wcs, verbose=verbose)
+      = mkpy3__wcs_compass_check_v2(wcs=survey_wcs, verbose=verbose)
     if (verbose):
         print(survey_positionAngle_deg, '=survey_positionAngle_deg')
         print(survey_n_pa_deg, '=survey_n_pa_deg')
@@ -503,7 +503,7 @@ ax : (matplotlib axes object) or (None)
               survey_mirrored,\
               survey_north_top_half,\
               survey_east_left_half \
-              = mkpy3_tpf_overlay_wcs_compass_check_v2(wcs=survey_wcs, verbose=verbose)
+              = mkpy3__wcs_compass_check_v2(wcs=survey_wcs, verbose=verbose)
             print(survey_rotate_deg, '=survey_rotate_deg')
             if (verbose):
                 print(survey_positionAngle_deg, '=survey_positionAngle_deg [revised]')
@@ -820,10 +820,13 @@ ax : (matplotlib axes object) or (None)
     return ax
 # pass:def
 
-###############################################################################
+# =============================================================================
 
 
-def mkpy3_tpf_overlay_v6_test():
+def xmkpy3_tpf_overlay_v6():
+    """
+Unit test
+    """
     import matplotlib.pyplot as plt
     import os
     import ntpath
@@ -1119,7 +1122,7 @@ def mkpy3_tpf_overlay_v6_test():
 
 
 if (__name__ == '__main__'):
-    mkpy3_tpf_overlay_v6_test()
+    xmkpy3_tpf_overlay_v6()
 # pass:if
 
 # EOF

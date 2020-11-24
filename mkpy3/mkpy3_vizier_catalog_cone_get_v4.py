@@ -2,12 +2,11 @@
 
 # file://mkpy3_vizier_catalog_cone_get_v4.py
 
-__version__ = '2020OCT28T1158  v0.17'  # mkpy3_vizier_catalog_cone_get_v4.py
-
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
+
+# =============================================================================
 
 
 def mkpy3_vizier_catalog_cone_get_v4(
@@ -18,7 +17,7 @@ def mkpy3_vizier_catalog_cone_get_v4(
   verbose=None
 ):
     """
-Function : mkpy3_vizier_catalog_cone_get_v3()
+Function : mkpy3_vizier_catalog_cone_get_v4()
 
 Purpose: Perform a cone search of a Vizier catalog using astroquery.
 
@@ -50,7 +49,6 @@ vizier_catalog_result :
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
     import numpy as np
@@ -144,7 +142,10 @@ vizier_catalog_result :
 # pass:def
 
 
-if (__name__ == '__main__'):
+# =============================================================================
+
+
+def xmkpy3_vizier_catalog_cone_get_v4():
     print()
     print('#')
     print('# RR Lyrae test ==================================================')
@@ -203,4 +204,13 @@ if (__name__ == '__main__'):
         print('\nSearch catalog is empty!  (as expected)\n')
     # pass:if
 # pass:def
+
+
+# =============================================================================
+
+
+if (__name__ == '__main__'):
+    xmkpy3_vizier_catalog_cone_get_v4()
+# pass:if
+
 # EOF

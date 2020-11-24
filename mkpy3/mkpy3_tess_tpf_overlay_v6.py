@@ -2,36 +2,11 @@
 
 # file://mkpy3_tess_tpf_overlay_v6.py
 
-__version__ = '2020OCT19T1447  v0.43'
-
 # Kenneth John Mighell
 # Kepler Support Scientist
-# SETI Institute
+# NASA Ames Research Center / SETI Institute
 
-
-# check local setup ===========================================================
-import sys
-pyver = (sys.version_info.major * 10) + (sys.version_info.minor)
-if (pyver < 27):
-    print('*** ERROR *** Needs Python 2.7 or higher.')
-    sys.exit(1)
-# pass:if
-try:
-    import lightkurve as lk
-except Exception:
-    print('\n***** ERROR *****\n')
-    print('The Python package lightkurve needs to be installed.\n')
-    print('This is the installation command for lightkurve using pip:\n')
-    print('pip install lightkurve --upgrade\n')
-    print('For further installation details see the lightkurve homepage:\n')
-    print('https://docs.lightkurve.org/about/install.html\n')
-    sys.exit(1)
-# pass:try
-del sys
-del lk
-
-###############################################################################
-
+# =============================================================================
 
 def mkpy3_tess_tpf_overlay_v6(
     tpf=None,
@@ -164,10 +139,12 @@ ax : (matplotlib axes object) or (None)
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
-    import mkpy3_tpf_overlay_v6 as km1
     import ntpath
     import os
+    import sys
     import lightkurve as lk
+
+    import mkpy3_tpf_overlay_v6 as km1
 
     if (tpf is None):
         target = 'V1460 Her'
@@ -226,51 +203,18 @@ ax : (matplotlib axes object) or (None)
     return ax
 # pass:def
 
-###############################################################################
+
+# =============================================================================
 
 
-def str2bool(v):
-    import argparse
+def xmkpy3_tess_tpf_overlay_v6():
     """
-Utility function for argparse.
+Unit test
     """
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
-    # pass:if
-# pass:def
-
-###############################################################################
-
-
-def check_file_exists(filename, overwrite):
-    """
-Utility function.
-    """
-    assert(isinstance(filename, str))
-    assert(isinstance(overwrite, bool))
-    msg = 'Requested output file already exists (overwrite=False):\n'
-    if (not overwrite):
-        if (os.path.isfile(filename)):
-            print('\n***** ERROR *****\n\n%s' % (msg))
-            print("new_filename='%s'\n" % filename)
-            sys.exit(1)
-        # pass:if
-    # pass:if
-# pass:def
-
-###############################################################################
-
-
-if (__name__ == '__main__'):
-    import os
-    import sys
     import argparse
     import ast
     import lightkurve as lk
+    import mkpy3_util as km1
     #
     #
     # ===== argparse:BEGIN ====================================================
@@ -298,13 +242,13 @@ if (__name__ == '__main__'):
         '--shrink', type=float, default=1.0,
         help='Survey search radius shrink factor (float) [default: 1.0]')
     parser.add_argument(
-        '--show_plot', type=str2bool, default=True,
+        '--show_plot', type=km1.mkpy3_util_str2bool, default=True,
         help='If True, show the plot [default=True]')
     parser.add_argument(
         '--plot_file', action="store", type=str, default='mkpy3_plot.png',
         help='Filename of the output plot [default: "mkpy3_plot.png"]')
     parser.add_argument(
-        '--overwrite', type=str2bool, default=False,
+        '--overwrite', type=km1.mkpy3_util_str2bool, default=False,
         help='If True, overwrite ("clobber") an existing output file '
         '[default: False]')
     parser.add_argument(
@@ -347,7 +291,7 @@ if (__name__ == '__main__'):
     kwargs_ = "{'edgecolor':'cyan', 's':150, 'facecolor':'None', 'lw':3, "\
         "'zorder':20}"
     parser.add_argument(
-        '--print_gaia_dr2', type=str2bool, default=True,
+        '--print_gaia_dr2', type=km1.mkpy3_util_str2bool, default=True,
         help='If True, print the GAIA DR2 catalog results [default=True]')
     parser.add_argument(
         '--gaia_dr2_kwargs_str', action="store",
@@ -357,7 +301,7 @@ if (__name__ == '__main__'):
     kwargs_ = "{'s':900, 'color':'lawngreen', 'marker':'x', 'lw':5, "\
         "'zorder':30}"
     parser.add_argument(
-        '--print_vsx', type=str2bool, default=True,
+        '--print_vsx', type=km1.mkpy3_util_str2bool, default=True,
         help='If True, print the VSX catalog results [default=True]')
     parser.add_argument(
         '--vsx_kwargs_str', action="store",
@@ -365,11 +309,11 @@ if (__name__ == '__main__'):
         help="VSX marker kwargs (string of a dictonary) for ax.scatter() "
         "[Matplotlib] (str) [default: '" + kwargs_ + "'")
     parser.add_argument(
-        '--sexagesimal', type=str2bool, default=False,
+        '--sexagesimal', type=km1.mkpy3_util_str2bool, default=False,
         help='Print catalog positions as sexagesimal [hms dms] if True (bool) '
         '[default=False]')
     parser.add_argument(
-        '--verbose', type=str2bool, default=False,
+        '--verbose', type=km1.mkpy3_util_str2bool, default=False,
         help='Print extra information if True (bool) [default=False]')
     #
     args = parser.parse_args()
@@ -402,7 +346,7 @@ if (__name__ == '__main__'):
     verbose = args.verbose
 
     if (tpf_filename is not None):
-        check_file_exists(tpf_filename, True)
+        km1.mkpy3_util_check_file_exists(tpf_filename, True)
         tpf = lk.open(tpf_filename, quality_bitmask=0)
     # pass:if
 
@@ -436,6 +380,11 @@ if (__name__ == '__main__'):
       sexagesimal=sexagesimal,
       verbose=verbose
     )
+# pass:def
 
-# pass:if (__name__ == '__main__'):
+
+if (__name__ == '__main__'):
+    xmkpy3_tess_tpf_overlay_v6()
+# pass:if
+
 # EOF

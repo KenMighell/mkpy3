@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
+# file:// mkpy3_finder_chart_image_show_v1.py
+
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-__version__ = '2020AUG17T1424 0.10'  # mkpy3_finder_chart_image_show_v1.py
-
-# PEP8:OK
+# =============================================================================
 
 
 def mkpy3_finder_chart_image_show_v1(
@@ -43,7 +42,6 @@ verbose : bool (optional)
 Returns: nothing
 
 # Kenneth John Mighell
-# Kepler Support Scientist
 # Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
@@ -92,7 +90,10 @@ Returns: nothing
 # pass:def
 
 
-if (__name__ == '__main__'):
+# =============================================================================
+
+
+def xmkpy3_finder_chart_image_show_v1():
     import lightkurve as lk
     lk.log.setLevel('INFO')
     import matplotlib.pyplot as plt
@@ -104,14 +105,14 @@ if (__name__ == '__main__'):
 
     # Exoplanet Kelper-138b is "KIC 7603200":
     tpf = lk.search_targetpixelfile(
-        target='kepler-138b', mission='kepler',
+        target='kepler-138b', mission='kepler', cadence='long',
         quarter=10).download(quality_bitmask=0)
     print('TPF filename:', ntpath.basename(tpf.path))
     print('TPF dirname: ', os.path.dirname(tpf.path))
 
     target = 'Kepler-138b'
     title_ = tpf.hdu[0].header['object']
-    title_ += ' : Exoplanet '+target
+    title_ += ' : Exoplanet ' + target
 
     ra_deg = tpf.ra
     dec_deg = tpf.dec
@@ -140,7 +141,7 @@ if (__name__ == '__main__'):
 
     # put a yellow circle at the target position
     ax.scatter(
-        ra_deg*u.deg, dec_deg*u.deg, transform=ax.get_transform(survey_cframe),
+        ra_deg * u.deg, dec_deg * u.deg, transform=ax.get_transform(survey_cframe),
         s=600, edgecolor='yellow', facecolor='None', lw=3, zorder=10)
 
     pname = 'mkpy3_plot.png'
@@ -148,5 +149,14 @@ if (__name__ == '__main__'):
         plt.savefig(pname, bbox_inches="tight")
         print(pname, ' <--- plot filename has been written!  :-)\n')
     # pass:if
+# pass:def
+
+
+# =============================================================================
+
+
+if (__name__ == '__main__'):
+    xmkpy3_finder_chart_image_show_v1()
 # pass:if
+
 # EOF
