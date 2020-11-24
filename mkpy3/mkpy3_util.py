@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# file://mkpy3_util
+# file://mkpy3_util.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist

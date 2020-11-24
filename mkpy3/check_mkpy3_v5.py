@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
-# file://check_mkpy3
+# file://check_mkpy3.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
+# =============================================================================
 
-if (__name__ == '__main__'):
+
+def check_mkpy3():
     """
 Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
 
@@ -31,6 +33,7 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
     good = 0
     bad = 0
     filel = sorted(glob.glob('./mkpy3_*.py'))
+    filel += sorted(glob.glob('./xmkpy3_*.py'))
     sz = len(filel)
     print()
     print(sz, 'files to check')
@@ -55,5 +58,14 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
         print('%d of %d files FAIL  8=X' % (bad, sz))
     # pass:if
     print()
+# pass:def
+
+
+# =============================================================================
+
+
+if (__name__ == '__main__'):
+    check_mkpy3()
 # pass:if
+
 # EOF

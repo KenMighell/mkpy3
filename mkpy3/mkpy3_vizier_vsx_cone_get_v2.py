@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+# file://mkpy3_vizier_vsx_cone_get_v2.py
+
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-__version__ = '2020SEP22T1418 V0.16'
+# =============================================================================
 
 
 def mkpy3_vizier_vsx_cone_get_v2(
@@ -74,10 +75,13 @@ vizier_vsx_result :
     # pass:try
     #
     return (raj2000, dej2000, sep_arcsec, vizier_vsx_result)
-# pass:if
+# pass:def
 
 
-if (__name__ == '__main__'):
+# =============================================================================
+
+
+def xmkpy3_vizier_vsx_cone_get_v2():
     import numpy as np
     #
     ra_deg = 291.3663013467642  # RR Lyr
@@ -104,6 +108,14 @@ if (__name__ == '__main__'):
         verbose=True)
     assert(vsx_result is None)
     print(':-)')
+# pass:def
 
+
+# =================================================
+
+
+if (__name__ == '__main__'):
+    xmkpy3_vizier_vsx_cone_get_v2()
 # pass:if
+
 # EOF

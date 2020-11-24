@@ -1,79 +1,18 @@
 #!/usr/bin/env python3
 
-# file://mkpy3_k2_tpf_overlay_v2.py
-
-__version__ = '2020SEP29T1101  v0.35'
+# file://xmkpy3_kepler_tpf_overlay_v2.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
-
-# PEP8:OK
-
-
-# check local setup ===========================================================
-import sys
-pyver = (sys.version_info.major * 10) + (sys.version_info.minor)
-if (pyver < 27):
-    print('*** ERROR *** Needs Python 2.7 or higher.')
-    sys.exit(1)
-# pass:if
-try:
-    import lightkurve as lk
-except Exception:
-    print('\n***** ERROR *****\n')
-    print('The Python package lightkurve needs to be installed.\n')
-    print('This is the installation command for lightkurve using pip:\n')
-    print('pip install lightkurve --upgrade\n')
-    print('For further installation details see the lightkurve homepage:\n')
-    print('https://docs.lightkurve.org/about/install.html\n')
-    sys.exit(1)
-# pass:try
-del sys
-del lk
-
-###############################################################################
+# =============================================================================
 
 
-def str2bool(v):
-    import argparse
+def xmkpy3_kepler_tpf_overlay_v2():
     """
-Utility function for argparse.
+Unit test
     """
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
-    # pass:if
-# pass:def
-
-###############################################################################
-
-
-def check_file_exists(filename, overwrite):
-    """
-Utility function.
-    """
-    assert(isinstance(filename, str))
-    assert(isinstance(overwrite, bool))
-    msg = 'Requested output file already exists (overwrite=False):\n'
-    if (not overwrite):
-        if (os.path.isfile(filename)):
-            print('\n***** ERROR *****\n\n%s' % (msg))
-            print("new_filename='%s'\n" % filename)
-            sys.exit(1)
-        # pass:if
-    # pass:if
-# pass:def
-
-###############################################################################
-
-
-if (__name__ == '__main__'):
     import os
     import sys
     import ntpath
@@ -82,6 +21,7 @@ if (__name__ == '__main__'):
     import lightkurve as lk
     #
     import mkpy3_tpf_overlay_v6 as km1
+    import mkpy3_util as km2
     #
     # ===== argparse:BEGIN ====================================================
     #
@@ -103,13 +43,13 @@ if (__name__ == '__main__'):
         '--shrink', type=float, default=1.0,
         help='Survey search radius shrink factor (float) [default: 1.0]')
     parser.add_argument(
-        '--show_plot', type=str2bool, default=True,
+        '--show_plot', type=km2.mkpy3_util_str2bool, default=True,
         help='If True, show the plot [default=True]')
     parser.add_argument(
         '--plot_file', action="store", type=str, default='mkpy3_plot.png',
         help='Filename of the output plot [default: "mkpy3_plot.png"]')
     parser.add_argument(
-        '--overwrite', type=str2bool, default=False,
+        '--overwrite', type=km2.mkpy3_util_str2bool, default=False,
         help='If True, overwrite ("clobber") an existing output file '
         '[default: False]')
     parser.add_argument(
@@ -164,11 +104,11 @@ if (__name__ == '__main__'):
         help="VSX marker kwargs (string of a dictonary) for ax.scatter() "
         "[Matplotlib] (str) [default: '" + kwargs_ + "'")
     parser.add_argument(
-        '--sexagesimal', type=str2bool, default=False,
+        '--sexagesimal', type=km2.mkpy3_util_str2bool, default=False,
         help='Print catalog positions as sexagesimal [hms dms] if True (bool) '
         '[default=False]')
     parser.add_argument(
-        '--verbose', type=str2bool, default=False,
+        '--verbose', type=km2.mkpy3_util_str2bool, default=False,
         help='Print extra information if True (bool) [default=False]')
     #
     args = parser.parse_args()
@@ -199,29 +139,29 @@ if (__name__ == '__main__'):
 
     print()
     if (tpf_filename is not None):
-        check_file_exists(tpf_filename, True)
+        km2.mkpy3_util_check_file_exists(tpf_filename, True)
         tpf = lk.open(tpf_filename)
     else:
         print('No TargetPixelFile (TPF) filename given.\n')
         tpf = lk.search_targetpixelfile(
-            target='k2-34b', mission='k2',
-            campaign=18).download(quality_bitmask=0)
-        # ^--- exoplanet K2-34b is "EPIC 21211088"
+            target='kepler-138b', mission='kepler', cadence='long',
+            quarter=10).download(quality_bitmask=0)
+        # ^--- exoplanet Kelper-138b is "KIC 7603200"
         print()
         print(
-            'Using default TPF [K2 C18 observations of exoplanet K2-34b '
-            '(EPIC 21211088)].')
+            'Using default TPF [Kepler Q10 observations of exoplanet Kepler'
+            '-138b (KIC 760320)].')
         print()
         shrink *= 0.8
     # pass:if
     try:
         print('TPF filename:', ntpath.basename(tpf.path))
         print('TPF dirname: ', os.path.dirname(tpf.path))
-        assert(tpf.mission == 'K2')
+        assert(tpf.mission == 'Kepler')
         print()
     except Exception:
         print(tpf_filename, '=tpf_filename')
-        print('^--- *** ERROR *** This file does not appear to be a K2 '
+        print('^--- *** ERROR *** This file does not appear to be a Kepler '
               'TargetPixelFile')
         print()
         print('Bye...\n', flush=True)
@@ -250,6 +190,11 @@ if (__name__ == '__main__'):
       sexagesimal=sexagesimal,
       verbose=verbose
     )
+# pass:def
 
-# pass:if (__name__ == '__main__'):
+
+if (__name__ == '__main__'):
+    xmkpy3_kepler_tpf_overlay_v2()
+# pass:if
+
 # EOF

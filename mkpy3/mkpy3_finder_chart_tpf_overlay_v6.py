@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# file://mkpy3_finder_chart_tpf_overlay_v6
+# file://mkpy3_finder_chart_tpf_overlay_v6.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
@@ -197,7 +197,7 @@ Returns: nothing
 # pass:def
 
 
-def mkpy3_finder_chart_tpf_overlay_v6_test():
+def xmkpy3_finder_chart_tpf_overlay_v6():
     import matplotlib.pyplot as plt
     import astropy.units as u
     import sys
@@ -419,7 +419,7 @@ def mkpy3_finder_chart_tpf_overlay_v6_test():
 
 
 if (__name__ == '__main__'):
-    mkpy3_finder_chart_tpf_overlay_v6_test()
+    xmkpy3_finder_chart_tpf_overlay_v6()
 # pass:if
 
 # EOF

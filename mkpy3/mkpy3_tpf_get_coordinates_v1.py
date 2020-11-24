@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 
-__version__ = '2020OCT16T0921 v1.23'  # mkpy3_tpf_get_coordinates_v1.py
+# file://mkpy3_tpf_get_coordinates_v1.py
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# SETI Institute
+# NASA Ames Research Center / SETI Institute
+
+# =============================================================================
 
 
-def mkpy3_tpf_get_coordinates_v1(tpf=None, cadence='all', recreate_bug=False):
+def mkpy3_tpf_get_coordinates_v1(
+  tpf=None,
+  cadence='all',
+  recreate_bug=False):
     """
 Function: mkpy3_tpf_get_coordinates_v1()
 
@@ -116,7 +121,13 @@ ORIGINAL CODE: END
 # pass:if
 
 
-if (__name__ == '__main__'):
+# =============================================================================
+
+
+def xmkpy3_tpf_get_coordinates_v1():
+    """
+Unit test
+    """
     import numpy as np
     import lightkurve as lk
     #
@@ -131,7 +142,7 @@ if (__name__ == '__main__'):
     # pass:def
 
     tpf = lk.search_targetpixelfile(
-        target='kepler-138b', mission='kepler',
+        target='kepler-138b', mission='kepler', cadence='long',
         quarter=10).download(quality_bitmask=0)
 
     w = tpf.wcs  # alias
@@ -220,5 +231,14 @@ if (__name__ == '__main__'):
     print('\ndec_yy0_decx_ll_y0 is_close_to dec_ll_y0 ?')
     ok = np.abs(dec_yy0_decx_ll_y0 - dec_ll_y0) < 0.000001
     msg(ok, 'TEST4')
+# pass:def
+
+
+# =============================================================================
+
+
+if (__name__ == '__main__'):
+    xmkpy3_tpf_get_coordinates_v1()
 # pass:if
+
 # EOF
