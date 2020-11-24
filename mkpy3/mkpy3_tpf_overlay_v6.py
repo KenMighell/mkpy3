@@ -2,16 +2,14 @@
 
 # file://mkpy3_tpf_overlay_v6.py
 
-__version__ = '2020OCT28T1210  v0.63'
-
 # Kenneth John Mighell
 # Kepler Support Scientist
-# SETI Institute
+# NASA Ames Research Center / SETI Institute
 
-###############################################################################
+# =============================================================================
 
 
-def wcs_compass_check_v2(wcs, verbose=False):
+def mkpy3_tpf_overlay_wcs_compass_check_v2(wcs, verbose=False):
     """
 Utility function.
     """
@@ -155,28 +153,7 @@ Utility function.
     return positionAngle_deg, n_pa_deg, mirrored, north_top_half, east_left_half
 # pass:def
 
-
-###############################################################################
-
-def check_file_exists(filename, overwrite):
-    """
-Utility function.
-    """
-    import sys
-    import os
-    assert(isinstance(filename, str))
-    assert(isinstance(overwrite, bool))
-    msg = 'Requested output file already exists (overwrite=False):\n'
-    if (not overwrite):
-        if (os.path.isfile(filename)):
-            print('\n***** ERROR *****\n\n%s' % (msg))
-            print("new_filename='%s'\n" % filename)
-            sys.exit(1)
-        # pass:if
-    # pass:if
-# pass:def
-
-###############################################################################
+# =============================================================================
 
 
 def mkpy3_tpf_overlay_v6(
@@ -309,7 +286,7 @@ ax : (matplotlib axes object) or (None)
 
 # Kenneth John Mighell
 # Kepler Support Scientist
-# SETI Institute
+# NASA Ames Research Center / SETI Institute
     '''
     import matplotlib.pyplot as plt
     import numpy as np
@@ -330,6 +307,7 @@ ax : (matplotlib axes object) or (None)
     import mkpy3_finder_chart_tpf_overlay_v6 as km3
     import mkpy3_vizier_gaia_dr2_cone_get_v2 as km4
     import mkpy3_vizier_vsx_cone_get_v2 as km5
+    import mkpy3_util as km6
 
     func_ = inspect.stack()[0][3]  # function name
 
@@ -370,7 +348,6 @@ ax : (matplotlib axes object) or (None)
 
     if (verbose):
         print(func_, '=func_')
-        print(__version__, '=__version__')
         print(tpf, '=tpf')
         print(frame, '=frame')
         print(survey, '=survey')
@@ -410,7 +387,7 @@ ax : (matplotlib axes object) or (None)
       tpf_mirrored,\
       tpf_north_top_half,\
       tpf_east_left_half \
-      = wcs_compass_check_v2(wcs=tpf.wcs, verbose=verbose)
+      = mkpy3_tpf_overlay_wcs_compass_check_v2(wcs=tpf.wcs, verbose=verbose)
     if (verbose):
         print(tpf_positionAngle_deg, '=tpf_positionAngle_deg')
         print(tpf_n_pa_deg, '=tpf_n_pa_deg')
@@ -431,7 +408,7 @@ ax : (matplotlib axes object) or (None)
       survey_mirrored,\
       survey_north_top_half,\
       survey_east_left_half \
-      = wcs_compass_check_v2(wcs=survey_wcs, verbose=verbose)
+      = mkpy3_tpf_overlay_wcs_compass_check_v2(wcs=survey_wcs, verbose=verbose)
     if (verbose):
         print(survey_positionAngle_deg, '=survey_positionAngle_deg')
         print(survey_n_pa_deg, '=survey_n_pa_deg')
@@ -526,7 +503,7 @@ ax : (matplotlib axes object) or (None)
               survey_mirrored,\
               survey_north_top_half,\
               survey_east_left_half \
-              = wcs_compass_check_v2(wcs=survey_wcs, verbose=verbose)
+              = mkpy3_tpf_overlay_wcs_compass_check_v2(wcs=survey_wcs, verbose=verbose)
             print(survey_rotate_deg, '=survey_rotate_deg')
             if (verbose):
                 print(survey_positionAngle_deg, '=survey_positionAngle_deg [revised]')
@@ -825,7 +802,7 @@ ax : (matplotlib axes object) or (None)
         plot_file = None
     if (plot_file is not None):
         if (plot_file != 'mkpy3_plot.png'):
-            check_file_exists(plot_file, overwrite)
+            km6.mkpy3_util_check_file_exists(plot_file, overwrite)
         plt.savefig(plot_file, dpi=300)  # , bbox_inches = "tight")
         print('\n%s <--- plot_file written\n' % (plot_file))
     # pass:if
@@ -837,7 +814,7 @@ ax : (matplotlib axes object) or (None)
     # pass:if
 
     print()
-    print('DONE:', func_, __version__)
+    print('DONE:', func_)
     print()
 
     return ax
@@ -846,7 +823,7 @@ ax : (matplotlib axes object) or (None)
 ###############################################################################
 
 
-if (__name__ == '__main__'):
+def mkpy3_tpf_overlay_v6_test():
     import matplotlib.pyplot as plt
     import os
     import ntpath
@@ -878,7 +855,6 @@ if (__name__ == '__main__'):
         frame = 1  # USER CUSTOMIZE
         percentile = 99.9  # USER CUSTOMIZE
         title_ = target + ' : TESS : Sector ' + str(sector)  # USER CUSTOMIZE
-        title2_ = title_ + " : Frame " + str(frame)
         print('DOWNLOAD START:', str(datetime.datetime.now()))
         search_results = lk.search_tesscut(target=target, sector=sector)[0]
         tpf = search_results[0].download(cutout_size=(11, 11), quality_bitmask=0)
@@ -894,7 +870,6 @@ if (__name__ == '__main__'):
         frame = 1  # USER CUSTOMIZE
         percentile = 99.9  # USER CUSTOMIZE
         title_ = target + ' : TESS : Sector ' + str(sector)  # USER CUSTOMIZE
-        title2_ = title_ + " : Frame " + str(frame)
         print('DOWNLOAD START:', str(datetime.datetime.now()))
         search_results = lk.search_tesscut(target=target, sector=sector)[0]
         tpf = search_results[0].download(cutout_size=(11, 11), quality_bitmask=0)
@@ -910,7 +885,6 @@ if (__name__ == '__main__'):
         frame = 1  # USER CUSTOMIZE
         percentile = 99.9  # USER CUSTOMIZE
         title_ = target + ' : TESS : Sector ' + str(sector)  # USER CUSTOMIZE
-        title2_ = title_ + " : Frame " + str(frame)
         print('DOWNLOAD START:', str(datetime.datetime.now()))
         search_results = lk.search_tesscut(target=target, sector=sector)[0]
         tpf = search_results[0].download(cutout_size=(11, 11), quality_bitmask=0)
@@ -926,7 +900,6 @@ if (__name__ == '__main__'):
         frame = 1  # USER CUSTOMIZE
         percentile = 99.0  # USER CUSTOMIZE
         title_ = target + ' : Kepler : Quarter ' + str(quarter)  # USER CUSTOMIZE
-        title2_ = title_ + " : Frame " + str(frame)
         print('DOWNLOAD START:', str(datetime.datetime.now()))
         tpf = lk.search_targetpixelfile(
           target=target, mission=mission, quarter=quarter).download(
@@ -944,7 +917,6 @@ if (__name__ == '__main__'):
         frame = 1  # USER CUSTOMIZE
         percentile = 99.0  # USER CUSTOMIZE
         title_ = target + ' : K2 : Campaign ' + str(campaign)  # USER CUSTOMIZE
-        title2_ = title_ + " : Frame " + str(frame)
         print('DOWNLOAD START:', str(datetime.datetime.now()))
         tpf = lk.search_targetpixelfile(
           target=target, mission=mission, campaign=campaign).download(
@@ -962,7 +934,6 @@ if (__name__ == '__main__'):
         north_arm_arcsec = 42    # USER CUSTOMIZE
         percentile = 99.5        # USER CUSTOMIZE
         title_ = target + ' : TESS : Sector ' + str(sector)  # USER CUSTOMIZE
-        title2_ = title_ + " : Frame " + str(frame)          # USER CUSTOMIZE
         #
         radius = 120  # arcsec
         print('DOWNLOAD START:', str(datetime.datetime.now()))
@@ -1141,8 +1112,14 @@ if (__name__ == '__main__'):
     print()
     print('FILE:', __file__)
     print('TIME:', str(datetime.datetime.now()))
-    print('DONE:', __name__, __version__)
+    print('DONE:', __name__)
+# pass:def
 
+# =============================================================================
+
+
+if (__name__ == '__main__'):
+    mkpy3_tpf_overlay_v6_test()
 # pass:if
 
 # EOF

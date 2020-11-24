@@ -197,7 +197,7 @@ Returns: nothing
 # pass:def
 
 
-if (__name__ == '__main__'):
+def mkpy3_finder_chart_tpf_overlay_v6_test():
     import matplotlib.pyplot as plt
     import astropy.units as u
     import sys
@@ -413,6 +413,13 @@ if (__name__ == '__main__'):
 
     plt.close()
 
-# pass#if
+# pass#def
+
+# =============================================================================
+
+
+if (__name__ == '__main__'):
+    mkpy3_finder_chart_tpf_overlay_v6_test()
+# pass:if
 
 # EOF
