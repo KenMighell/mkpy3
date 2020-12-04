@@ -2,7 +2,7 @@
 
 # file://mkpy3_finder_chart_tpf_overlay_v6.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -67,7 +67,7 @@ verbose : bool (optional)
 
 Returns: nothing
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
     """
@@ -80,7 +80,7 @@ Returns: nothing
     import ntpath
     import os
     #
-    import mkpy3_tpf_get_coordinates_v1 as km1
+    import mkpy3
     #
     assert(ax is not None)
     assert(tpf is not None)
@@ -137,11 +137,10 @@ Returns: nothing
     """
     # -----
     # this will work even if using lightkurve.__version__ <= 2.0.dev
-    # get the RA,DEC values for the pixel centers using the
-    # km1.mkpy3_tpf_get_coordinates_v1() function
-    pxrav = km1.mkpy3_tpf_get_coordinates_v1(tpf=tpf)[0][frame].flatten()
+    # get the RA,DEC values for the pixel centers:
+    pxrav = mkpy3.mkpy3_tpf_get_coordinates_v1(tpf=tpf)[0][frame].flatten()
     # ^--- pixel RA vector
-    pxdecv = km1.mkpy3_tpf_get_coordinates_v1(tpf=tpf)[1][frame].flatten()
+    pxdecv = mkpy3.mkpy3_tpf_get_coordinates_v1(tpf=tpf)[1][frame].flatten()
     # ^--- pixel DEC vector
     # ^--- both function calls should succeed
     # -----
@@ -209,9 +208,7 @@ def xmkpy3_finder_chart_tpf_overlay_v6():
     import lightkurve as lk  # ignore PEP8 warning of redefinition
     lk.log.setLevel('INFO')
 
-    import mkpy3_finder_chart_survey_fits_image_get_v1 as km1
-    import mkpy3_finder_chart_image_show_v1 as km2
-    import mkpy3_util as km3
+    import mkpy3
 
     #
     # argparse: BEGIN =========================================================
@@ -231,13 +228,13 @@ def xmkpy3_finder_chart_tpf_overlay_v6():
         '--width_height_arcmin', action="store", type=float, default=2.0,
         help='Width and height size in arcmin (float) [default: 2.0]')
     parser.add_argument(
-        '--show_plot', type=km3.mkpy3_util_str2bool, default=True,
+        '--show_plot', type=mkpy3.mkpy3_util_str2bool, default=True,
         help='If True, show the plot [default=True]')
     parser.add_argument(
         '--plotfile', action="store", type=str, default='mkpy3_plot.png',
         help="Filename of the output plotfile [default: 'mkpy3_plot.png']")
     parser.add_argument(
-        '--overwrite', type=km3.mkpy3_util_str2bool, default=False,
+        '--overwrite', type=mkpy3.mkpy3_util_str2bool, default=False,
         help='If True, overwrite ("clobber") an existing output file '
         '[default: False.')
     parser.add_argument(
@@ -275,7 +272,7 @@ def xmkpy3_finder_chart_tpf_overlay_v6():
         "(str) [default: \"{'edgecolor':'yellow', 's':600, 'facecolor':'None',"
         " 'lw':3, 'zorder':10}\"")
     parser.add_argument(
-        '--verbose', type=km3.mkpy3_util_str2bool, default=False,
+        '--verbose', type=mkpy3.mkpy3_util_str2bool, default=False,
         help='Print extra information if True (bool) [default=False]')
     #
     args = parser.parse_args()
@@ -332,7 +329,7 @@ def xmkpy3_finder_chart_tpf_overlay_v6():
     # pass:if
 
     if (tpf_filename is not None):
-        km3.mkpy3_util_check_file_exists(tpf_filename, True)
+        mkpy3.mkpy3_util_check_file_exists(tpf_filename, True)
         tpf = lk.read(tpf_filename)
     else:
         tpf = lk.search_targetpixelfile(
@@ -363,7 +360,7 @@ def xmkpy3_finder_chart_tpf_overlay_v6():
     # get survey image data
     # survey = '2MASS-J'  # hard-wired option
     survey_hdu, survey_hdr, survey_data, survey_wcs, survey_cframe = \
-        km1.mkpy3_finder_chart_survey_fits_image_get_v1(
+        mkpy3.mkpy3_finder_chart_survey_fits_image_get_v1(
             ra_deg, dec_deg, radius_arcmin=width_height_arcmin,
             survey=survey, verbose=verbose)
 
@@ -374,7 +371,7 @@ def xmkpy3_finder_chart_tpf_overlay_v6():
     ax = plt.subplot(projection=survey_wcs)
 
     # show the survey image
-    km2.mkpy3_finder_chart_image_show_v1(
+    mkpy3.mkpy3_finder_chart_image_show_v1(
         ax=ax, image_data=survey_data,
         percentile=percentile, cmap=cmap, verbose=verbose)
 
@@ -401,7 +398,7 @@ def xmkpy3_finder_chart_tpf_overlay_v6():
 
     if (plotfile != ''):
         if (plotfile != 'mkpy3_plot.png'):
-            km3.mkpy3_util_check_file_exists(plotfile, overwrite)
+            mkpy3.mkpy3_util_check_file_exists(plotfile, overwrite)
         plt.savefig(plotfile, dpi=300)  # , bbox_inches = "tight")
         print('\n%s <--- plotfile written  :-)\n' % (plotfile))
     # pass:if

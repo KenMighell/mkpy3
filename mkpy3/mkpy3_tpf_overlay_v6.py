@@ -2,7 +2,7 @@
 
 # file://mkpy3_tpf_overlay_v6.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -284,7 +284,7 @@ Returns
 ax : (matplotlib axes object) or (None)
     Returns a matplotlib axes object *if* show_plot is False *else* None .
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
     '''
@@ -302,12 +302,7 @@ ax : (matplotlib axes object) or (None)
     import lightkurve as lk
     lk.log.setLevel('INFO')
     #
-    import mkpy3_finder_chart_survey_fits_image_get_v1 as km1
-    import mkpy3_finder_chart_image_show_v1 as km2
-    import mkpy3_finder_chart_tpf_overlay_v6 as km3
-    import mkpy3_vizier_gaia_dr2_cone_get_v2 as km4
-    import mkpy3_vizier_vsx_cone_get_v2 as km5
-    import mkpy3_util as km6
+    import mkpy3
 
     func_ = inspect.stack()[0][3]  # function name
 
@@ -399,7 +394,7 @@ ax : (matplotlib axes object) or (None)
     # get survey image data
     # survey = '2MASS-J'  # 'DSS2 Red' # hard-wired options
     survey_hdu, survey_hdr, survey_data, survey_wcs, survey_cframe = \
-        km1.mkpy3_finder_chart_survey_fits_image_get_v1(
+        mkpy3.mkpy3_finder_chart_survey_fits_image_get_v1(
           ra_deg, dec_deg,
           radius_arcmin=width_height_arcmin, survey=survey, verbose=verbose)
 
@@ -537,12 +532,12 @@ ax : (matplotlib axes object) or (None)
     # HACK: END
 
     # show the survey image
-    km2.mkpy3_finder_chart_image_show_v1(
+    mkpy3.mkpy3_finder_chart_image_show_v1(
       ax=ax, image_data=survey_data,
       percentile=percentile, cmap=cmap, verbose=verbose)
 
     # show the TPF overlay
-    km3.mkpy3_finder_chart_tpf_overlay_v6(
+    mkpy3.mkpy3_finder_chart_tpf_overlay_v6(
       ax=ax, survey_wcs=survey_wcs,
       tpf=tpf, frame=frame, colors=colors, lws=lws, zorders=zorders,
       verbose=verbose)
@@ -598,7 +593,7 @@ ax : (matplotlib axes object) or (None)
     while (proceed):
 
         raj2000, dej2000, sep_arcsec, gaia_dr2_result = \
-            km4.mkpy3_vizier_gaia_dr2_cone_get_v2(
+            mkpy3.mkpy3_vizier_gaia_dr2_cone_get_v2(
               ra_deg=ra_deg, dec_deg=dec_deg,
               radius_arcsec=radius_arcsec, verbose=verbose)
         if (gaia_dr2_result is None):  # nothing found
@@ -689,7 +684,7 @@ ax : (matplotlib axes object) or (None)
     while (proceed):
 
         raj2000, dej2000, sep_arcsec, vsx_result = \
-          km5.mkpy3_vizier_vsx_cone_get_v2(
+          mkpy3.mkpy3_vizier_vsx_cone_get_v2(
             ra_deg=ra_deg, dec_deg=dec_deg,
             radius_arcsec=radius_arcsec, verbose=verbose)
         if (vsx_result is None):  # nothing found
@@ -802,7 +797,7 @@ ax : (matplotlib axes object) or (None)
         plot_file = None
     if (plot_file is not None):
         if (plot_file != 'mkpy3_plot.png'):
-            km6.mkpy3_util_check_file_exists(plot_file, overwrite)
+            mkpy3.mkpy3_util_check_file_exists(plot_file, overwrite)
         plt.savefig(plot_file, dpi=300)  # , bbox_inches = "tight")
         print('\n%s <--- plot_file written\n' % (plot_file))
     # pass:if
@@ -834,7 +829,8 @@ Unit test
     import lightkurve as lk
     from astropy.visualization import ImageNormalize, PercentileInterval,\
       SqrtStretch
-    import mkpy3_plot_add_compass_rose_v5 as km1
+    #
+    import mkpy3
 
     cmap = 'gray_r'
     verbose = False
@@ -982,7 +978,7 @@ Unit test
     print('\n\nPLOT#1 =======================================================')
     ax = tpf.plot(frame=frame, cmap=cmap)
     ax.set_title(title_)
-    km1.mkpy3_plot_add_compass_rose_v5(ax=ax, north_arm_arcsec=north_arm_arcsec,
+    mkpy3.mkpy3_plot_add_compass_rose_v5(ax=ax, north_arm_arcsec=north_arm_arcsec,
       wcs=tpf.wcs, verbose=verbose)
     # mark the target with a yellow circle:
     target_wx0, target_wy0 = tpf.wcs.wcs_world2pix(tpf.ra, tpf.dec, 0)
@@ -1011,7 +1007,7 @@ Unit test
     ax.set_ylabel('Declination (J2000)', size=24)
     fig.suptitle(title_, size=24)
     ax.grid(True, color='palegreen', lw=2, zorder=1)
-    km1.mkpy3_plot_add_compass_rose_v5(ax=ax, north_arm_arcsec=north_arm_arcsec,
+    mkpy3.mkpy3_plot_add_compass_rose_v5(ax=ax, north_arm_arcsec=north_arm_arcsec,
       wcs=tpf.wcs, verbose=verbose)
     marker_kwargs =\
       {'edgecolor': 'yellow', 's': 600, 'facecolor': 'None', 'lw': 3, 'zorder': 10}
@@ -1040,7 +1036,7 @@ Unit test
     ax.tick_params(axis='y', labelsize=16, length=5, width=2, labelright=True,
       labelleft=True)
     ax.grid(True, color='palegreen', lw=2, zorder=1)
-    km1.mkpy3_plot_add_compass_rose_v5(ax=ax, north_arm_arcsec=2 * north_arm_arcsec)
+    mkpy3.mkpy3_plot_add_compass_rose_v5(ax=ax, north_arm_arcsec=2 * north_arm_arcsec)
     oplot4 = 'mkpy3_plot4.png'
     plt.savefig(oplot4, bbox_inches="tight")
     print('\n', oplot4, ' <--- new PNG file written')
@@ -1063,7 +1059,7 @@ Unit test
     ax.tick_params(axis='y', labelsize=16, length=5, width=2, labelright=True,
       labelleft=True)
     ax.grid(True, color='palegreen', lw=2, zorder=1)
-    km1.mkpy3_plot_add_compass_rose_v5(
+    mkpy3.mkpy3_plot_add_compass_rose_v5(
       ax=ax, north_arm_arcsec=2 * north_arm_arcsec)
     oplot3 = 'mkpy3_plot3.png'
     plt.savefig(oplot3, bbox_inches="tight")

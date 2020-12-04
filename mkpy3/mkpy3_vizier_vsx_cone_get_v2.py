@@ -2,7 +2,7 @@
 
 # file://mkpy3_vizier_vsx_cone_get_v2.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -42,12 +42,11 @@ sep_arcsec : float array
 vizier_vsx_result :
     VSX table returned by Vizier
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
-    import mkpy3_vizier_catalog_cone_get_v4 as km1
+    import mkpy3
     if (verbose is None):
         verbose = False
     if ((ra_deg is None) or (dec_deg is None)):
@@ -61,7 +60,7 @@ vizier_vsx_result :
     vizier_catalog = 'B/vsx/vsx'
     try:
         raj2000, dej2000, sep_arcsec, vizier_vsx_result = \
-            km1.mkpy3_vizier_catalog_cone_get_v4(
+            mkpy3.mkpy3_vizier_catalog_cone_get_v4(
               ra_deg=ra_deg,
               dec_deg=dec_deg,
               radius_arcsec=radius_arcsec,

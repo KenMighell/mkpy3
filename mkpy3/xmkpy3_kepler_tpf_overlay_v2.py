@@ -2,7 +2,7 @@
 
 # file://xmkpy3_kepler_tpf_overlay_v2.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -20,8 +20,7 @@ Unit test
     import ast
     import lightkurve as lk
     #
-    import mkpy3_tpf_overlay_v6 as km1
-    import mkpy3_util as km2
+    import mkpy3
     #
     # ===== argparse:BEGIN ====================================================
     #
@@ -43,13 +42,13 @@ Unit test
         '--shrink', type=float, default=1.0,
         help='Survey search radius shrink factor (float) [default: 1.0]')
     parser.add_argument(
-        '--show_plot', type=km2.mkpy3_util_str2bool, default=True,
+        '--show_plot', type=mkpy3.mkpy3_util_str2bool, default=True,
         help='If True, show the plot [default=True]')
     parser.add_argument(
         '--plot_file', action="store", type=str, default='mkpy3_plot.png',
         help='Filename of the output plot [default: "mkpy3_plot.png"]')
     parser.add_argument(
-        '--overwrite', type=km2.mkpy3_util_str2bool, default=False,
+        '--overwrite', type=mkpy3.mkpy3_util_str2bool, default=False,
         help='If True, overwrite ("clobber") an existing output file '
         '[default: False]')
     parser.add_argument(
@@ -104,11 +103,11 @@ Unit test
         help="VSX marker kwargs (string of a dictonary) for ax.scatter() "
         "[Matplotlib] (str) [default: '" + kwargs_ + "'")
     parser.add_argument(
-        '--sexagesimal', type=km2.mkpy3_util_str2bool, default=False,
+        '--sexagesimal', type=mkpy3.mkpy3_util_str2bool, default=False,
         help='Print catalog positions as sexagesimal [hms dms] if True (bool) '
         '[default=False]')
     parser.add_argument(
-        '--verbose', type=km2.mkpy3_util_str2bool, default=False,
+        '--verbose', type=mkpy3.mkpy3_util_str2bool, default=False,
         help='Print extra information if True (bool) [default=False]')
     #
     args = parser.parse_args()
@@ -139,7 +138,7 @@ Unit test
 
     print()
     if (tpf_filename is not None):
-        km2.mkpy3_util_check_file_exists(tpf_filename, True)
+        mkpy3.mkpy3_util_check_file_exists(tpf_filename, True)
         tpf = lk.open(tpf_filename)
     else:
         print('No TargetPixelFile (TPF) filename given.\n')
@@ -168,7 +167,7 @@ Unit test
         sys.exit(1)
     # pass:try
 
-    ax = km1.mkpy3_tpf_overlay_v6(
+    ax = mkpy3.mkpy3_tpf_overlay_v6(
       tpf=tpf,
       frame=frame,
       survey=survey,

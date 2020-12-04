@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# file:// mkpy3_finder_chart_image_show_v1.py
+# file://mkpy3_finder_chart_image_show_v1.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -41,8 +41,8 @@ verbose : bool (optional)
 
 Returns: nothing
 
-# Kenneth John Mighell
-# Kepler / K2 Science Office
+# Kenneth Mighell
+# Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
     """
     from astropy.visualization import ImageNormalize, PercentileInterval,\
@@ -94,14 +94,14 @@ Returns: nothing
 
 
 def xmkpy3_finder_chart_image_show_v1():
-    import lightkurve as lk
-    lk.log.setLevel('INFO')
     import matplotlib.pyplot as plt
     import astropy.units as u
     import os
     import ntpath
+    import lightkurve as lk
+    lk.log.setLevel('INFO')
 
-    import mkpy3_finder_chart_survey_fits_image_get_v1 as km1
+    import mkpy3
 
     # Exoplanet Kelper-138b is "KIC 7603200":
     tpf = lk.search_targetpixelfile(
@@ -121,7 +121,7 @@ def xmkpy3_finder_chart_image_show_v1():
     width_height_arcmin = 3.00
     survey = '2MASS-J'
     survey_hdu, survey_hdr, survey_data, survey_wcs, survey_cframe = \
-        km1.mkpy3_finder_chart_survey_fits_image_get_v1(
+        mkpy3.mkpy3_finder_chart_survey_fits_image_get_v1(
             ra_deg, dec_deg, radius_arcmin=width_height_arcmin, survey=survey,
             verbose=True)
 
@@ -136,8 +136,9 @@ def xmkpy3_finder_chart_image_show_v1():
     mkpy3_finder_chart_image_show_v1(
         ax=ax, image_data=survey_data, percentile=percentile, verbose=True)
 
-    # replace title with a custom title
-    ax.set_title(title_, size=24)
+    # set suptitle
+    ax.set_title('', size=24)  # NUM, ME VEXO?
+    plt.suptitle(title_, size=24)
 
     # put a yellow circle at the target position
     ax.scatter(
