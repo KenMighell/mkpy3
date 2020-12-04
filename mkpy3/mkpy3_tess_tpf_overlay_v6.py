@@ -2,7 +2,7 @@
 
 # file://mkpy3_tess_tpf_overlay_v6.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -134,9 +134,8 @@ Returns
 ax : (matplotlib axes object) or (None)
     A matplotlib axes object *if* show_plot is False *else* None .
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
     """
     import ntpath
@@ -144,7 +143,7 @@ ax : (matplotlib axes object) or (None)
     import sys
     import lightkurve as lk
 
-    import mkpy3_tpf_overlay_v6 as km1
+    import mkpy3
 
     if (tpf is None):
         target = 'V1460 Her'
@@ -175,7 +174,7 @@ ax : (matplotlib axes object) or (None)
         sys.exit(1)
     # pass:try
 
-    ax = km1.mkpy3_tpf_overlay_v6(
+    ax = mkpy3.mkpy3_tpf_overlay_v6(
         tpf=tpf,
         frame=frame,
         survey=survey,
@@ -214,7 +213,7 @@ Unit test
     import argparse
     import ast
     import lightkurve as lk
-    import mkpy3_util as km1
+    import mkpy3
     #
     #
     # ===== argparse:BEGIN ====================================================
@@ -242,13 +241,13 @@ Unit test
         '--shrink', type=float, default=1.0,
         help='Survey search radius shrink factor (float) [default: 1.0]')
     parser.add_argument(
-        '--show_plot', type=km1.mkpy3_util_str2bool, default=True,
+        '--show_plot', type=mkpy3.mkpy3_util_str2bool, default=True,
         help='If True, show the plot [default=True]')
     parser.add_argument(
         '--plot_file', action="store", type=str, default='mkpy3_plot.png',
         help='Filename of the output plot [default: "mkpy3_plot.png"]')
     parser.add_argument(
-        '--overwrite', type=km1.mkpy3_util_str2bool, default=False,
+        '--overwrite', type=mkpy3.mkpy3_util_str2bool, default=False,
         help='If True, overwrite ("clobber") an existing output file '
         '[default: False]')
     parser.add_argument(
@@ -291,7 +290,7 @@ Unit test
     kwargs_ = "{'edgecolor':'cyan', 's':150, 'facecolor':'None', 'lw':3, "\
         "'zorder':20}"
     parser.add_argument(
-        '--print_gaia_dr2', type=km1.mkpy3_util_str2bool, default=True,
+        '--print_gaia_dr2', type=mkpy3.mkpy3_util_str2bool, default=True,
         help='If True, print the GAIA DR2 catalog results [default=True]')
     parser.add_argument(
         '--gaia_dr2_kwargs_str', action="store",
@@ -301,7 +300,7 @@ Unit test
     kwargs_ = "{'s':900, 'color':'lawngreen', 'marker':'x', 'lw':5, "\
         "'zorder':30}"
     parser.add_argument(
-        '--print_vsx', type=km1.mkpy3_util_str2bool, default=True,
+        '--print_vsx', type=mkpy3.mkpy3_util_str2bool, default=True,
         help='If True, print the VSX catalog results [default=True]')
     parser.add_argument(
         '--vsx_kwargs_str', action="store",
@@ -309,11 +308,11 @@ Unit test
         help="VSX marker kwargs (string of a dictonary) for ax.scatter() "
         "[Matplotlib] (str) [default: '" + kwargs_ + "'")
     parser.add_argument(
-        '--sexagesimal', type=km1.mkpy3_util_str2bool, default=False,
+        '--sexagesimal', type=mkpy3.mkpy3_util_str2bool, default=False,
         help='Print catalog positions as sexagesimal [hms dms] if True (bool) '
         '[default=False]')
     parser.add_argument(
-        '--verbose', type=km1.mkpy3_util_str2bool, default=False,
+        '--verbose', type=mkpy3.mkpy3_util_str2bool, default=False,
         help='Print extra information if True (bool) [default=False]')
     #
     args = parser.parse_args()
@@ -346,7 +345,7 @@ Unit test
     verbose = args.verbose
 
     if (tpf_filename is not None):
-        km1.mkpy3_util_check_file_exists(tpf_filename, True)
+        mkpy3.mkpy3_util_check_file_exists(tpf_filename, True)
         tpf = lk.open(tpf_filename, quality_bitmask=0)
     # pass:if
 

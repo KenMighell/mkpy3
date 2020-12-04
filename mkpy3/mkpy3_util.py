@@ -2,7 +2,7 @@
 
 # file://mkpy3_util.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 

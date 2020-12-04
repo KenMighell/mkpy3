@@ -2,7 +2,7 @@
 
 # file://mkpy3_finder_chart_survey_fits_image_get_v1.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -52,8 +52,8 @@ wcs :
 cframe :
     coordinate frame of the survey data
 
-# Kenneth John Mighell
-# Kepler/K2 Support Scientist
+# Kenneth Mighell
+# Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
     """
     import astropy.units as u
@@ -139,7 +139,8 @@ def xmkpy3_finder_chart_survey_fits_image_get_v1():
 
     ax.set_xlabel('Right Ascension (J2000)')
     ax.set_ylabel('Declination (J2000)')
-    ax.set_title(target)
+    ax.set_title('')
+    plt.suptitle(target)
 
     # put a yellow circle at the target position
     ax.scatter(ra_deg * u.deg, dec_deg * u.deg,

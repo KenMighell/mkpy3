@@ -2,7 +2,7 @@
 
 # file://mkpy3_plot_add_compass_rose_v5.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -80,7 +80,7 @@ plt.close()
 print(plot_file, ' <--- new PNG file written')
 #==========
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
     """

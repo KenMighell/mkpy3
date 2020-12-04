@@ -2,7 +2,7 @@
 
 # file://mkpy3_vizier_catalog_cone_get_v4.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -47,7 +47,7 @@ sep_arcsec : float array
 vizier_catalog_result :
     catalog table returned by Vizier
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
     """

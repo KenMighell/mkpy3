@@ -2,7 +2,7 @@
 
 # file://check_mkpy3.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -13,7 +13,7 @@ def check_mkpy3():
     """
 Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
     """
@@ -53,9 +53,11 @@ Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
     # pass:for
     print()
     if (good == sz):
-        print('\nAll %d files PASS  :-)' % good)
+        msg_ = '\nAll %d files PASS  :-)' % good
+        print(CGREEN + msg_ + CEND)
     else:
-        print('%d of %d files FAIL  8=X' % (bad, sz))
+        msg_ = '%d of %d files FAIL  8=X' % (bad, sz)
+        print(CRED + msg_ + CEND)
     # pass:if
     print()
 # pass:def

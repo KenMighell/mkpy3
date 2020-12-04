@@ -4,4 +4,6 @@ __pycache__
 *.gz
 mkpy3_plot*.png
 x*.ipynb
-
+.old
+.archive
+mkpy3.egg-info

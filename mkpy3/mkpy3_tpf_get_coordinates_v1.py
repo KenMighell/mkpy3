@@ -2,7 +2,7 @@
 
 # file://mkpy3_tpf_get_coordinates_v1.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -40,9 +40,8 @@ ra : numpy array, same shape as tpf.flux[cadence]
 dec : numpy array, same shape as tpf.flux[cadence]
     Array containing Dec values at pixel location.'
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
-# Kepler / K2 Science Office
 # NASA Ames Research Center / SETI Institute
 
 ORIGINAL CODE: BEGIN

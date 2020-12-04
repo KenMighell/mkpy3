@@ -2,7 +2,7 @@
 
 # file://mkpy3_bad_radec_bug_v1.py
 
-# Kenneth John Mighell
+# Kenneth Mighell
 # Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
 
@@ -27,8 +27,8 @@ Returns
 bad_radec : bool
     if True, the tpf.get_coordinates radec bug exists
 
-# Kenneth John Mighell
-# Kepler/K2 Support Scientist
+# Kenneth Mighell
+# Kepler Support Scientist
 # NASA Ames Research Center / SETI Institute
     """
     import numpy as np
