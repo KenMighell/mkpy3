@@ -1,7 +1,7 @@
 # mkpy3
 mkpy3 : Python3 tools for working with data from NASA's TESS/K2/Kepler missions.
 
-Kenneth John Mighell  
+Kenneth Mighell  
 Kepler Support Scientist   
 NASA Ames Research Center / SETI Institute
 
@@ -9,25 +9,29 @@ NASA Ames Research Center / SETI Institute
 
 #### Making a finder chart for 2-min TESS observations of CD Ind using mkpy3
 
+<!-- original: works with GitHub
 <p float="left">
-  <img src="mkpy3_plot_figa.png" width="320" />
-  <img src="mkpy3_plot_figb.png" width="240" /> 
+  <img src="./mkpy3_plot_figa.png" width="320" />
+  <img src="./mkpy3_plot_figb.png" width="240" /> 
+</p>
+-->
+
+<!-- revised: works with GitHub *and* test.pypi.org -->
+<p float="left">
+  <img src="https://github.com/KenMighell/mkpy3/raw/master/mkpy3_plot_figa.png" width="320" />
+  <img src="https://github.com/KenMighell/mkpy3/raw/master/mkpy3_plot_figb.png" width="240" /> 
 </p>
 
 
-* BLUE SQUARES show the TESS target pixel file overlay.
-* RED SQUARES show the TESS target piexl file aperture overlay.
-
-* YELLOW CIRCLE marks the target (CD Ind).
-
-* CYAN CIRCLES show some of the GAIA DR2 catalog stars in the field.
-* GREEN X shows the only VSX catalog star in the field (the target).
-
-* Compass rose:
-    * LONG ARM of the compass rose points NORTH.
-    * SHORT ARM of the compass rose points EAST.
-  
-* GREEN LINES show the Right Ascension / Declination grid.
+* *blue squares* show the TESS target pixel file overlay.
+* *red squares* show the TESS target piexl file aperture overlay.
+* *green lines* show the Right Ascension / Declination grid.
+* *yellow circle* marks the target (CD Ind).
+* *cyan circles* show some of the GAIA DR2 catalog stars in the field.
+* *green X* shows the only VSX catalog star in the field (the target).
+* *Compass rose*:
+    * *long arm* of the compass rose points NORTH.
+    * *short arm* of the compass rose points EAST.
 
 **Click the following link to see a Jupyter notebook that creates the above two plots:**
 
