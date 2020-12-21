@@ -48,13 +48,14 @@ search_results = lk.search_targetpixelfile('CD Ind', radius=60,
   mission='TESS', sector=1)    
 tpf = search_results[0].download(quality_bitmask=0)
 #
+import mkpy3
+#
 # show the TPF overlay on rotated "DSS2 Red" survey image
-import mkpy3_tpf_overlay_v6 as km1
-import mkpy3_plot_add_compass_rose_v5 as km2
-ax = km1.mkpy3_tpf_overlay_v6(tpf=tpf, survey='DSS2 Red', 
+ax = mkpy3.mkpy3_tpf_overlay_v6(tpf=tpf, survey='DSS2 Red', 
   rotationAngle_deg='tpf', width_height_arcmin=6, percentile=99.5,
   shrink=0.4, show_plot=False, plot_file='',
   title='CD Ind : TESS : Sector 1', print_gaia_dr2=False)
+#
 ax.coords[0].set_major_formatter('d.dd')
 ax.coords[1].set_major_formatter('d.dd')
 ax.tick_params(axis='x', labelsize=16, length=5, width=2,
@@ -62,7 +63,7 @@ ax.tick_params(axis='x', labelsize=16, length=5, width=2,
 ax.tick_params(axis='y', labelsize=16, length=5, width=2,
   labelright=True, labelleft=True)
 ax.grid(True, color='palegreen', lw=2, zorder=1)  # show RA/DEC grid
-km2.mkpy3_plot_add_compass_rose_v5(ax=ax, north_arm_arcsec=50)
+mkpy3.mkpy3_plot_add_compass_rose_v5(ax=ax, north_arm_arcsec=50)
 #
 # save, show, and close the plot
 import matplotlib.pyplot as plt
@@ -82,7 +83,7 @@ tpf = search_results[0].download(quality_bitmask=0)
 # show the first frame of the TPF with RA/DEC axis and grid
 import matplotlib.pyplot as plt
 import astropy.visualization as av
-import mkpy3_plot_add_compass_rose_v5 as km1
+import mkpy3
 fig = plt.figure(figsize=(7, 7))
 ax = plt.subplot(projection=tpf.wcs)
 interval = av.PercentileInterval(99.9)
@@ -101,7 +102,7 @@ ax.tick_params(axis='y', labelsize=16, length=5, width=2,
 ax.coords[0].set_major_formatter('d.dd')
 ax.coords[1].set_major_formatter('d.dd')
 ax.grid(True, color='palegreen', lw=2, zorder=1)
-km1.mkpy3_plot_add_compass_rose_v5(ax=ax,  # add a compass rose
+mkpy3.mkpy3_plot_add_compass_rose_v5(ax=ax,  # add a compass rose
   north_arm_arcsec=50, wcs=tpf.wcs)
 marker_kwargs = {'edgecolor': 'yellow',  
   's': 600, 'facecolor': 'None', 'lw': 3, 'zorder': 10}
