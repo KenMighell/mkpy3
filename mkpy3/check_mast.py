@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# file://check_mkpy3.py
+# file://check_mast.py
 
 # Kenneth Mighell
 # SETI Institute
@@ -10,14 +10,14 @@
 
 def check_mkpy3():
     """
-Purpose: Unit tests for mkpy3  (https://github.com/KenMighell/mkpy3)
+Purpose: check MAST availibilty with mkpy3_bad_radec_bug_v1.py
 
 Kenneth Mighell
 SETI Institute
     """
-    import os
-    import glob
     import subprocess
+    import datetime
+    import time
 
     # ASCII color codes
     CEND = "\33[0m"
@@ -26,19 +26,18 @@ SETI Institute
     # CGREEN = '\33[32m'  # green
     CGREEN = "\33[1;32m"  # bold green
 
-    cwd = os.getcwd()
-    print(cwd, " =$PWD")
+    file = "./mkpy3_bad_radec_bug_v1.py"
+    print(file)
+
     good = 0
     bad = 0
-    filel = sorted(glob.glob("./mkpy3_*.py"))
-    filel += sorted(glob.glob("./xmkpy3_*.py"))
-    sz = len(filel)
-    print()
-    print(sz, "files to check")
-    print()
-    for k, name in enumerate(filel, start=1):
-        print("[%d] %s : " % (k, name.strip()), end="")
-        result = subprocess.run(["python3", name], capture_output=True)
+    nloops = 10
+    for k in range(nloops):
+        timestamp = str(datetime.datetime.now())
+        print(k, timestamp, "sent...")
+        result = subprocess.run(["python3", file], capture_output=True)
+        timestamp = str(datetime.datetime.now())
+        print(k, timestamp, "...received")
         returncode = result.returncode
         if returncode != 0:
             bad += 1
@@ -48,18 +47,17 @@ SETI Institute
             good += 1
             print(CGREEN + "OK" + CEND)
             # fi
+        timestamp = str(datetime.datetime.now())
+        # print(k, file, timestamp)
+        delay_sec = 10
+        if k < (nloops - 1):
+            time.sleep(delay_sec)
+            print("wait", delay_sec, "seconds...")
         # rof
+
     print()
-    if good == sz:
-        msg_ = "\nAll %d files PASS  :-)" % good
-        print(CGREEN + msg_ + CEND)
-    else:
-        msg_ = "%d of %d files FAIL  8=X" % (bad, sz)
-        print(CRED + msg_ + CEND)
-        # fi
-    print()
-    return None
-    # fed
+    print(good, "=good")
+    print(bad, "=bad")
 
 
 # =============================================================================

@@ -3,8 +3,7 @@
 # file://mkpy3_vizier_catalog_cone_get_v4.py
 
 # Kenneth Mighell
-# Kepler Support Scientist
-# NASA Ames Research Center / SETI Institute
+# SETI Institute
 
 # =============================================================================
 
@@ -17,7 +16,7 @@ def mkpy3_vizier_catalog_cone_get_v4(
   verbose=None
 ):
     """
-Function : mkpy3_vizier_catalog_cone_get_v4()
+Function : mkpy3_vizier_catalog_cone_get_v4
 
 Purpose: Perform a cone search of a Vizier catalog using astroquery.
 
@@ -47,16 +46,14 @@ sep_arcsec : float array
 vizier_catalog_result :
     catalog table returned by Vizier
 
-# Kenneth Mighell
-# Kepler Support Scientist
-# NASA Ames Research Center / SETI Institute
+Kenneth Mighell
+SETI Institute
     """
     import numpy as np
     from astropy.coordinates import SkyCoord
     import astropy.units as u
     from astroquery.vizier import Vizier
     import copy
-    #
     #
     assert(ra_deg is not None)
     assert(dec_deg is not None)
@@ -86,7 +83,7 @@ vizier_catalog_result :
         print(dec_deg, '=dec_deg')
         print(radius_arcsec, '=radius_arcsec')
         print(vizier_catalog, '=vizier_catalog')
-    # pass:if
+        # fi
     #
     # target
     sc = SkyCoord(ra_deg, dec_deg, frame='icrs', unit='deg')
@@ -136,10 +133,9 @@ vizier_catalog_result :
         print('#index RAJ2000 DEJ000 sep_arcsec')
         for j in range(RAJ2000.size):
             print(j, RAJ2000[j], DEJ2000[j], sep_arcsec[j])
-        # pass:for
-    # pass:if
+        # fi
     return (RAJ2000, DEJ2000, sep_arcsec, vizier_result)
-# pass:def
+    # fed
 
 
 # =============================================================================
@@ -164,7 +160,7 @@ def xmkpy3_vizier_catalog_cone_get_v4():
               vizier_catalog=vizier_catalog, verbose=verbose)
     except Exception:
         proceed = False
-    # pass:try
+        # yrt
     #
     assert(proceed is True)
     print('\n#VSX:')
@@ -192,7 +188,7 @@ def xmkpy3_vizier_catalog_cone_get_v4():
               vizier_catalog=vizier_catalog, verbose=verbose)
     except Exception:
         proceed = False
-    # pass:try
+        # yrt
     #
     if (proceed):
         print('\n#VSX:')
@@ -202,8 +198,8 @@ def xmkpy3_vizier_catalog_cone_get_v4():
         # pass:for
     else:
         print('\nSearch catalog is empty!  (as expected)\n')
-    # pass:if
-# pass:def
+        # fi
+    # fed
 
 
 # =============================================================================
@@ -211,6 +207,7 @@ def xmkpy3_vizier_catalog_cone_get_v4():
 
 if (__name__ == '__main__'):
     xmkpy3_vizier_catalog_cone_get_v4()
-# pass:if
+    # fi
+    
 
 # EOF

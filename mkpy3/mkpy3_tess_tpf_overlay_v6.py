@@ -3,28 +3,28 @@
 # file://mkpy3_tess_tpf_overlay_v6.py
 
 # Kenneth Mighell
-# Kepler Support Scientist
-# NASA Ames Research Center / SETI Institute
+# SETI Institute
 
 # =============================================================================
+
 
 def mkpy3_tess_tpf_overlay_v6(
     tpf=None,
     frame=0,
-    survey='2MASS-J',
+    survey="2MASS-J",
     rotationAngle_deg=None,  # None or '123.456' (float) or 'tpf'
     width_height_arcmin=6.0,
     shrink=1.0,
     show_plot=True,
-    plot_file='mkpy3_plot.png',
+    plot_file="mkpy3_plot.png",
     overwrite=False,
-    figsize_str='[9,9]',
+    figsize_str="[9,9]",
     title=None,
     percentile=99.5,
-    cmap='gray_r',
+    cmap="gray_r",
     colors_str="[None,'dodgerblue','red']",
-    lws_str='[0,3,4]',
-    zorders_str='[0,2,4]',
+    lws_str="[0,3,4]",
+    zorders_str="[0,2,4]",
     marker_kwargs_str="{'edgecolor':'yellow', 's':600, 'facecolor':'None', "
     "'lw':3, 'zorder':10}",  # or 'None'
     print_gaia_dr2=True,
@@ -34,10 +34,10 @@ def mkpy3_tess_tpf_overlay_v6(
     vsx_kwargs_str="{'s':900, 'color':'lawngreen', 'marker':'x', 'lw':5, "
     "'zorder':30}",  # or 'None'
     sexagesimal=False,
-    verbose=False
+    verbose=False,
 ):
     """
-Function: mkpy3_tess_tpf_overlay_v6()
+Function: mkpy3_tess_tpf_overlay_v6
 
 Purpose: Plot a TESS TargetPixelFile (TPF) overlay on a sky survey image.
 
@@ -134,9 +134,8 @@ Returns
 ax : (matplotlib axes object) or (None)
     A matplotlib axes object *if* show_plot is False *else* None .
 
-# Kenneth Mighell
-# Kepler Support Scientist
-# NASA Ames Research Center / SETI Institute
+Kenneth Mighell
+SETI Institute
     """
     import ntpath
     import os
@@ -145,34 +144,36 @@ ax : (matplotlib axes object) or (None)
 
     import mkpy3
 
-    if (tpf is None):
-        target = 'V1460 Her'
+    if tpf is None:
+        target = "V1460 Her"
         sector = 24
         # alternative:
         # target = 'XZ Cyg'
         # sector = 14
-        title = target + ' : TESS : Sector ' + str(sector)
+        title = target + " : TESS : Sector " + str(sector)
         search_result = lk.search_tesscut(target=target, sector=sector)[0]
         tpf = search_result.download(cutout_size=(11, 13), quality_bitmask=0)
-    # pass:if
+        # fi
 
-    assert(tpf is not None)
+    assert tpf is not None
     tpf_filename = ntpath.basename(tpf.path)
     tpf_dirname = os.path.dirname(tpf.path)
     try:
         print()
-        print('TPF filename:', tpf_filename)
-        print('TPF dirname: ', tpf_dirname)
-        assert(tpf.mission == 'TESS')
+        print("TPF filename:", tpf_filename)
+        print("TPF dirname: ", tpf_dirname)
+        assert tpf.mission == "TESS"
         print()
     except Exception:
-        print(tpf_filename, '=tpf_filename')
-        print('^--- *** ERROR *** This file does not appear to be a TESS '
-          'TargetPixelFile')
+        print(tpf_filename, "=tpf_filename")
+        print(
+            "^--- *** ERROR *** This file does not appear to be a TESS "
+            "TargetPixelFile"
+        )
         print()
-        print('Bye...\n', flush=True)
+        print("Bye...\n", flush=True)
         sys.exit(1)
-    # pass:try
+        # yrt
 
     ax = mkpy3.mkpy3_tpf_overlay_v6(
         tpf=tpf,
@@ -197,123 +198,201 @@ ax : (matplotlib axes object) or (None)
         print_vsx=print_vsx,
         vsx_kwargs_str=vsx_kwargs_str,
         sexagesimal=sexagesimal,
-        verbose=verbose)
+        verbose=verbose,
+    )
 
     return ax
-# pass:def
+    pass  # fed
 
 
 # =============================================================================
 
 
 def xmkpy3_tess_tpf_overlay_v6():
-    """
-Unit test
-    """
+    """Unit test"""
     import argparse
     import ast
     import lightkurve as lk
     import mkpy3
-    #
+
     #
     # ===== argparse:BEGIN ====================================================
     #
     parser = argparse.ArgumentParser()
     #
     parser.add_argument(
-        '--tpf_filename', action="store", type=str, default=None,
-        help="Filename of the Target Pixel File (TPF) [default: None]")
+        "--tpf_filename",
+        action="store",
+        type=str,
+        default=None,
+        help="Filename of the Target Pixel File (TPF) [default: None]",
+    )
     parser.add_argument(
-        '--frame', action="store", type=int, default=0,
-        help='Frame number (integer) [default: 0]')
+        "--frame",
+        action="store",
+        type=int,
+        default=0,
+        help="Frame number (integer) [default: 0]",
+    )
     parser.add_argument(
-        '--survey', action="store", type=str, default='2MASS-J',
-        help="Survey name (str) [default: '2MASS-J']")
+        "--survey",
+        action="store",
+        type=str,
+        default="2MASS-J",
+        help="Survey name (str) [default: '2MASS-J']",
+    )
     parser.add_argument(
-        '--rotationAngle_deg', action="store",
-        type=ast.literal_eval, default=None,
+        "--rotationAngle_deg",
+        action="store",
+        type=ast.literal_eval,
+        default=None,
         help="Rotation angle in degrees (string) [default: None] "
-        "[examples: None or 12.345 (float) or 'tpf'")
+        "[examples: None or 12.345 (float) or 'tpf'",
+    )
     parser.add_argument(
-        '--width_height_arcmin', action="store", type=float, default=6.0,
-        help='Width and height size in arcmin (float) [default: 6.0]')
+        "--width_height_arcmin",
+        action="store",
+        type=float,
+        default=6.0,
+        help="Width and height size in arcmin (float) [default: 6.0]",
+    )
     parser.add_argument(
-        '--shrink', type=float, default=1.0,
-        help='Survey search radius shrink factor (float) [default: 1.0]')
+        "--shrink",
+        type=float,
+        default=1.0,
+        help="Survey search radius shrink factor (float) [default: 1.0]",
+    )
     parser.add_argument(
-        '--show_plot', type=mkpy3.mkpy3_util_str2bool, default=True,
-        help='If True, show the plot [default=True]')
+        "--show_plot",
+        type=mkpy3.mkpy3_util_str2bool,
+        default=True,
+        help="If True, show the plot [default=True]",
+    )
     parser.add_argument(
-        '--plot_file', action="store", type=str, default='mkpy3_plot.png',
-        help='Filename of the output plot [default: "mkpy3_plot.png"]')
+        "--plot_file",
+        action="store",
+        type=str,
+        default="mkpy3_plot.png",
+        help='Filename of the output plot [default: "mkpy3_plot.png"]',
+    )
     parser.add_argument(
-        '--overwrite', type=mkpy3.mkpy3_util_str2bool, default=False,
+        "--overwrite",
+        type=mkpy3.mkpy3_util_str2bool,
+        default=False,
         help='If True, overwrite ("clobber") an existing output file '
-        '[default: False]')
+        "[default: False]",
+    )
     parser.add_argument(
-        '--figsize_str', action="store",
-        type=ast.literal_eval, default="[9,9]",
+        "--figsize_str",
+        action="store",
+        type=ast.literal_eval,
+        default="[9,9]",
         help="string of a 2-item list of figure width and height [Matplotlib] "
-        "(str) [default: '[9,9]'")
+        "(str) [default: '[9,9]'",
+    )
     parser.add_argument(
-        '--title', action="store", type=str, default=None,
-        help='Title of the finder chart (str) [default: None]')
+        "--title",
+        action="store",
+        type=str,
+        default=None,
+        help="Title of the finder chart (str) [default: None]",
+    )
     parser.add_argument(
-        '--percentile', action="store", type=float, default=99.5,
-        help='Percentile [percentage of pixels to keep: 0.0 to 100.0] '
-        '(float) [default: 99.5]')
+        "--percentile",
+        action="store",
+        type=float,
+        default=99.5,
+        help="Percentile [percentage of pixels to keep: 0.0 to 100.0] "
+        "(float) [default: 99.5]",
+    )
     parser.add_argument(
-        '--cmap', action="store", type=str, default=None,
-        help="Colormap name [Matplotlib] (str) [default: 'gray_r']")
+        "--cmap",
+        action="store",
+        type=str,
+        default=None,
+        help="Colormap name [Matplotlib] (str) [default: 'gray_r']",
+    )
     parser.add_argument(
-        '--colors_str', action="store",
-        type=ast.literal_eval, default="[None,'dodgerblue','red']",
+        "--colors_str",
+        action="store",
+        type=ast.literal_eval,
+        default="[None,'dodgerblue','red']",
         help="string of a 3-item list of overlay color names [Matplotlib] "
-        "(str) [default: \"['None','dodgerblue','red']\"")
+        "(str) [default: \"['None','dodgerblue','red']\"",
+    )
     parser.add_argument(
-        '--lws_str', action="store",
-        type=ast.literal_eval, default="[0,3,4]",
+        "--lws_str",
+        action="store",
+        type=ast.literal_eval,
+        default="[0,3,4]",
         help="string of a 3-item list of overlay line widths [Matplotlib] "
-        "(str) [default: \"[0,3,4]\"")
+        '(str) [default: "[0,3,4]"',
+    )
     parser.add_argument(
-        '--zorders_str', action="store",
-        type=ast.literal_eval, default="[0,2,4]",
+        "--zorders_str",
+        action="store",
+        type=ast.literal_eval,
+        default="[0,2,4]",
         help="string of a 3-item list of overlay zorder values [Matplotlib] "
-        "(str) [default: \"[0,2,4]\"")
-    kwargs_ = "{'edgecolor':'yellow', 's':600, 'facecolor':'None', 'lw':3, "\
-        "'zorder':10}"
+        '(str) [default: "[0,2,4]"',
+    )
+    kwargs_ = (
+        "{'edgecolor':'yellow', 's':600, 'facecolor':'None', 'lw':3, " "'zorder':10}"
+    )
     parser.add_argument(
-        '--marker_kwargs_str', action="store",
-        type=ast.literal_eval, default=kwargs_,
+        "--marker_kwargs_str",
+        action="store",
+        type=ast.literal_eval,
+        default=kwargs_,
         help="marker kwargs (string of a dictonary) for ax.scatter() "
-        "[Matplotlib] " + '(str) [default: "' + kwargs_ + '"')
-    kwargs_ = "{'edgecolor':'cyan', 's':150, 'facecolor':'None', 'lw':3, "\
-        "'zorder':20}"
+        "[Matplotlib] " + '(str) [default: "' + kwargs_ + '"',
+    )
+    kwargs_ = (
+        "{'edgecolor':'cyan', 's':150, 'facecolor':'None', 'lw':3, " "'zorder':20}"
+    )
     parser.add_argument(
-        '--print_gaia_dr2', type=mkpy3.mkpy3_util_str2bool, default=True,
-        help='If True, print the GAIA DR2 catalog results [default=True]')
+        "--print_gaia_dr2",
+        type=mkpy3.mkpy3_util_str2bool,
+        default=True,
+        help="If True, print the GAIA DR2 catalog results [default=True]",
+    )
     parser.add_argument(
-        '--gaia_dr2_kwargs_str', action="store",
-        type=ast.literal_eval, default=kwargs_,
+        "--gaia_dr2_kwargs_str",
+        action="store",
+        type=ast.literal_eval,
+        default=kwargs_,
         help="GAIA DR2 marker kwargs (string of a dictonary) for ax.scatter() "
-        "[Matplotlib] "'(str) [default: "' + kwargs_ + '"')
-    kwargs_ = "{'s':900, 'color':'lawngreen', 'marker':'x', 'lw':5, "\
-        "'zorder':30}"
+        "[Matplotlib] "
+        '(str) [default: "' + kwargs_ + '"',
+    )
+    kwargs_ = "{'s':900, 'color':'lawngreen', 'marker':'x', 'lw':5, " "'zorder':30}"
     parser.add_argument(
-        '--print_vsx', type=mkpy3.mkpy3_util_str2bool, default=True,
-        help='If True, print the VSX catalog results [default=True]')
+        "--print_vsx",
+        type=mkpy3.mkpy3_util_str2bool,
+        default=True,
+        help="If True, print the VSX catalog results [default=True]",
+    )
     parser.add_argument(
-        '--vsx_kwargs_str', action="store",
-        type=ast.literal_eval, default=kwargs_,
+        "--vsx_kwargs_str",
+        action="store",
+        type=ast.literal_eval,
+        default=kwargs_,
         help="VSX marker kwargs (string of a dictonary) for ax.scatter() "
-        "[Matplotlib] (str) [default: '" + kwargs_ + "'")
+        "[Matplotlib] (str) [default: '" + kwargs_ + "'",
+    )
     parser.add_argument(
-        '--sexagesimal', type=mkpy3.mkpy3_util_str2bool, default=False,
-        help='Print catalog positions as sexagesimal [hms dms] if True (bool) '
-        '[default=False]')
+        "--sexagesimal",
+        type=mkpy3.mkpy3_util_str2bool,
+        default=False,
+        help="Print catalog positions as sexagesimal [hms dms] if True (bool) "
+        "[default=False]",
+    )
     parser.add_argument(
-        '--verbose', type=mkpy3.mkpy3_util_str2bool, default=False,
-        help='Print extra information if True (bool) [default=False]')
+        "--verbose",
+        type=mkpy3.mkpy3_util_str2bool,
+        default=False,
+        help="Print extra information if True (bool) [default=False]",
+    )
     #
     args = parser.parse_args()
     #
@@ -344,46 +423,48 @@ Unit test
     sexagesimal = args.sexagesimal
     verbose = args.verbose
 
-    if (tpf_filename is not None):
+    if tpf_filename is not None:
         mkpy3.mkpy3_util_check_file_exists(tpf_filename, True)
         tpf = lk.open(tpf_filename, quality_bitmask=0)
-    # pass:if
+        # fi
 
-    if (tpf_filename is None):
+    if tpf_filename is None:
         tpf = None
-    # pass:if
 
     shrink = 0.4
     ax = mkpy3_tess_tpf_overlay_v6(
-      tpf=tpf,
-      frame=frame,
-      survey=survey,
-      rotationAngle_deg=rotationAngle_deg,
-      width_height_arcmin=width_height_arcmin,
-      shrink=shrink,
-      show_plot=show_plot,
-      plot_file=plot_file,
-      overwrite=overwrite,
-      figsize_str=figsize_str,
-      title=title,
-      percentile=percentile,
-      cmap=cmap,
-      colors_str=colors_str,
-      lws_str=lws_str,
-      zorders_str=zorders_str,
-      marker_kwargs_str=marker_kwargs_str,
-      print_gaia_dr2=print_gaia_dr2,
-      gaia_dr2_kwargs_str=gaia_dr2_kwargs_str,
-      print_vsx=print_vsx,
-      vsx_kwargs_str=vsx_kwargs_str,
-      sexagesimal=sexagesimal,
-      verbose=verbose
+        tpf=tpf,
+        frame=frame,
+        survey=survey,
+        rotationAngle_deg=rotationAngle_deg,
+        width_height_arcmin=width_height_arcmin,
+        shrink=shrink,
+        show_plot=show_plot,
+        plot_file=plot_file,
+        overwrite=overwrite,
+        figsize_str=figsize_str,
+        title=title,
+        percentile=percentile,
+        cmap=cmap,
+        colors_str=colors_str,
+        lws_str=lws_str,
+        zorders_str=zorders_str,
+        marker_kwargs_str=marker_kwargs_str,
+        print_gaia_dr2=print_gaia_dr2,
+        gaia_dr2_kwargs_str=gaia_dr2_kwargs_str,
+        print_vsx=print_vsx,
+        vsx_kwargs_str=vsx_kwargs_str,
+        sexagesimal=sexagesimal,
+        verbose=verbose,
     )
-# pass:def
+
+    return None
+    # fed
 
 
-if (__name__ == '__main__'):
+if __name__ == "__main__":
     xmkpy3_tess_tpf_overlay_v6()
-# pass:if
+    # fi
+
 
 # EOF

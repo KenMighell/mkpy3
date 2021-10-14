@@ -16,8 +16,8 @@ from .mkpy3_vizier_vsx_cone_get_v2 import *
 from .xmkpy3_k2_tpf_overlay_v2 import *
 from .xmkpy3_kepler_tpf_overlay_v2 import *
 
-if (__name__ == '__main__'):
+if __name__ == "__main__":
     pass
-# pass:if
+    # fi
 
 # EOF

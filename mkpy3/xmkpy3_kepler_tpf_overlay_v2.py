@@ -3,16 +3,13 @@
 # file://xmkpy3_kepler_tpf_overlay_v2.py
 
 # Kenneth Mighell
-# Kepler Support Scientist
-# NASA Ames Research Center / SETI Institute
+# SETI Institute
 
 # =============================================================================
 
 
 def xmkpy3_kepler_tpf_overlay_v2():
-    """
-Unit test
-    """
+    """Unit test"""
     import os
     import sys
     import ntpath
@@ -152,7 +149,7 @@ Unit test
             '-138b (KIC 760320)].')
         print()
         shrink *= 0.8
-    # pass:if
+        # fi
     try:
         print('TPF filename:', ntpath.basename(tpf.path))
         print('TPF dirname: ', os.path.dirname(tpf.path))
@@ -165,7 +162,7 @@ Unit test
         print()
         print('Bye...\n', flush=True)
         sys.exit(1)
-    # pass:try
+        # yrt
 
     ax = mkpy3.mkpy3_tpf_overlay_v6(
       tpf=tpf,
@@ -189,11 +186,14 @@ Unit test
       sexagesimal=sexagesimal,
       verbose=verbose
     )
-# pass:def
+    
+    return None
+    # fed
 
 
 if (__name__ == '__main__'):
     xmkpy3_kepler_tpf_overlay_v2()
-# pass:if
+    # fi
+
 
 # EOF
