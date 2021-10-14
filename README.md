@@ -1,9 +1,8 @@
 # mkpy3
 mkpy3 : Python3 tools for working with data from NASA's TESS/K2/Kepler missions.
 
-Kenneth Mighell  
-Kepler Support Scientist   
-NASA Ames Research Center / SETI Institute
+Kenneth Mighell   
+SETI Institute
 
 ---
 
